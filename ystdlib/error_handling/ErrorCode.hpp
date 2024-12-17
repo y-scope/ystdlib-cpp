@@ -1,12 +1,12 @@
-#ifndef CLP_ERROR_HANDLING_ERRORCODE_HPP
-#define CLP_ERROR_HANDLING_ERRORCODE_HPP
+#ifndef YSTDLIB_ERROR_HANDLING_ERRORCODE_HPP
+#define YSTDLIB_ERROR_HANDLING_ERRORCODE_HPP
 
 #include <concepts>
 #include <string>
 #include <system_error>
 #include <type_traits>
 
-namespace clp::error_handling {
+namespace ystdlib::error_handling {
 /**
  * Concept that defines a template parameter of an integer-based error code enumeration.
  * @tparam Type
@@ -132,19 +132,19 @@ template <typename ErrorCodeEnum>
 auto make_error_code(ErrorCode<ErrorCodeEnum> error) -> std::error_code {
     return {error.get_error_num(), ErrorCode<ErrorCodeEnum>::get_category()};
 }
-}  // namespace clp::error_handling
+}  // namespace ystdlib::error_handling
 
 /**
  * The macro to create a specialization of `std::is_error_code_enum` for a given type T. Only types
- * that are marked with this macro will be considered as a valid CLP error code enum, and thus used
- * to specialize `ErrorCode` and `ErrorCategory` templates.
+ * that are marked with this macro will be considered as a valid YSTDLIB error code enum, and thus
+ * used to specialize `ErrorCode` and `ErrorCategory` templates.
  */
 // NOLINTBEGIN(bugprone-macro-parentheses, cppcoreguidelines-macro-usage)
-#define CLP_ERROR_HANDLING_MARK_AS_ERROR_CODE_ENUM(T) \
+#define YSTDLIB_ERROR_HANDLING_MARK_AS_ERROR_CODE_ENUM(T) \
     template <> \
-    struct std::is_error_code_enum<clp::error_handling::ErrorCode<T>> : std::true_type { \
+    struct std::is_error_code_enum<ystdlib::error_handling::ErrorCode<T>> : std::true_type { \
         static_assert(std::is_enum_v<T>); \
     };
 // NOLINTEND(bugprone-macro-parentheses, cppcoreguidelines-macro-usage)
 
-#endif  // CLP_ERROR_HANDLING_ERRORCODE_HPP
+#endif  // YSTDLIB_ERROR_HANDLING_ERRORCODE_HPP

@@ -26,7 +26,7 @@ endfunction()
 # HDRS: List of public header files for the library
 # SRCS: List of source files for the library
 # DEPS: List of other libraries to be linked in to the binary targets
-function(clp_cpp_library)
+function(ystdlib_cpp_library)
   set(options "")
   set(oneValueArgs NAME)
   set(multiValueArgs HDRS SRCS DEPS)
@@ -40,7 +40,7 @@ function(clp_cpp_library)
   if(YSTDLIB_CPP_ENABLE_INSTALL)
     set(_TARGET_LIB_NAME "${arg_ystdlib_cpp_lib_NAME}")
   else()
-    set(_TARGET_LIB_NAME "clp_${arg_ystdlib_cpp_lib_NAME}")
+    set(_TARGET_LIB_NAME "ystdlib_${arg_ystdlib_cpp_lib_NAME}")
   endif()
 
   check_if_header_only_library(arg_ystdlib_cpp_lib_SRCS _TARGET_LIB_IS_INTERFACE)
@@ -59,11 +59,11 @@ function(clp_cpp_library)
     PUBLIC ${arg_ystdlib_cpp_lib_DEPS}
   )
 
-  add_library(clp::${arg_ystdlib_cpp_lib_NAME} ALIAS ${_TARGET_LIB_NAME})
+  add_library(ystdlib::${arg_ystdlib_cpp_lib_NAME} ALIAS ${_TARGET_LIB_NAME})
 
   if(YSTDLIB_CPP_ENABLE_INSTALL)
     install(
-      FILES ${arg_clp_cpp_lib_HDRS}
+      FILES ${arg_ystdlib_cpp_lib_HDRS}
       DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/ystdlib/${arg_ystdlib_cpp_lib_NAME}"
     )
     install(TARGETS ${_TARGET_LIB_NAME}
