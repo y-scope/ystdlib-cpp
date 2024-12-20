@@ -1,0 +1,8 @@
+# Build-related directories and files
+.task
+build
+cmake-build-*
+
+# Generated lint configs
+.clang-format
+.clang-tidy
