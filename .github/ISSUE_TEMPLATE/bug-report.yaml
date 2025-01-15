@@ -6,9 +6,11 @@ body:
     attributes:
       value: |
         Use this form to report any functional or performance bugs you've found in the software.
+
         Be sure to check if your [issue](https://github.com/y-scope/ystdlib-cpp/issues) has already
         been reported.
-  - type: "textarea"
+
+    - type: "textarea"
     attributes:
       label: "Bug"
       description: "Describe what's wrong and if applicable, what you expected instead."
