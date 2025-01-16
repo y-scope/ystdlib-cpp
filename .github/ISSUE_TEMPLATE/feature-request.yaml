@@ -6,7 +6,6 @@ body:
     attributes:
       value: |
         Use this form to request a feature/change in the software, or the project as a whole.
- 
   - type: "textarea"
     attributes:
       label: "Request"
