@@ -29,8 +29,10 @@ To run all linting checks AND automatically fix any fixable issues:
 task lint:fix
 ```
 
-To see which linters are available and how to run a specific linter:
+To see which linters are available and how to run a specific linter, run
 ```shell
 task --list-all
 ```
+and check for all tasks under the `lint` namespace (marked with the `lint:` prefix).
+
 [Task]: https://taskfile.dev
