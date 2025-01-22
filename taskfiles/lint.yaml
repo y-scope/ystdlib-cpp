@@ -16,7 +16,7 @@ tasks:
       - task: "yaml-check"
 
   fix:
-    desc: "Runs the full suite of linters and automatically fixes any fixable issues."
+    desc: "Runs the full suite of linters and fixes some violations."
     cmds:
       - task: "yaml-fix"
 

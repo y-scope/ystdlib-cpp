@@ -9,7 +9,7 @@ vars:
 
 tasks:
   clean:
-    desc: "Removes project builds."
+    desc: "Removes the project build directory."
     cmds:
       - "rm -rf '{{.G_BUILD_DIR}}'"
 
