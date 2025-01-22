@@ -16,8 +16,8 @@ git submodule update --init --recursive
 ```
 
 ## Linting
-Before submitting a pull request, ensure you’ve run the linting commands below to fix violations or
-suppress warnings.
+Before submitting a pull request, ensure you’ve run the linting commands below and either fixed any
+violations or suppressed the warnings.
 
 To run all linting checks:
 ```shell
@@ -29,9 +29,9 @@ To run all linting checks AND automatically fix any fixable issues:
 task lint:fix
 ```
 
-To see which linters are available and how to run a specific linter, run
+To see which linters are available and run the linters for a specific file type, run
 ```shell
-task --list-all
+task -a
 ```
 and check for all tasks under the `lint` namespace (marked with the `lint:` prefix).
 
