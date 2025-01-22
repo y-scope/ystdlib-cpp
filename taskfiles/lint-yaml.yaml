@@ -5,6 +5,7 @@ tasks:
     aliases:
       - "yaml-check"
       - "yaml-fix"
+    desc: "Runs the YAML linters. Only checks for warnings and violations."
     deps:
       - "venv"
     dir: "{{.ROOT_DIR}}"

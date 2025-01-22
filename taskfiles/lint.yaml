@@ -11,10 +11,13 @@ vars:
 
 tasks:
   check:
+    desc: |-
+      Runs the full suite of linters for various file tyes and checks for warnings or violations.
     cmds:
       - task: "yaml-check"
 
   fix:
+    desc: "Runs the full suite of linters and automatically fixes any fixable issues."
     cmds:
       - task: "yaml-fix"
 
