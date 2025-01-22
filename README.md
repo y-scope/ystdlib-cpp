@@ -29,10 +29,10 @@ To run all linting checks AND automatically fix any fixable issues:
 task lint:fix
 ```
 
-To see which linters are available and run the linters for a specific file type, run
+To see how to run a subset of linters for a specific file type:
 ```shell
 task -a
 ```
-and check for all tasks under the `lint` namespace (marked with the `lint:` prefix).
+Look for all tasks under the `lint` namespace (identified by the `lint:` prefix).
 
 [Task]: https://taskfile.dev
