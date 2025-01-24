@@ -19,6 +19,9 @@ tasks:
         vars:
           FLAGS: "--in-place"
 
+  # Lint all CMake files, excluding those located in build directories.
+  #
+  # @param {string} FLAGS Options passed into the CMake linter gersemi.
   cmake:
     internal: true
     requires:
@@ -29,7 +32,9 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          -path ./build -prune \
-          -o -name CMakeLists.txt \
-          -print0 | \
-            xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
+          -path ./build -prune -o \( \
+          -name "CMakeLists.txt" -o \
+          -name "*.cmake" -o \
+          -name "*.cmake.in" \
+        \) -print0 | \
+          xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
