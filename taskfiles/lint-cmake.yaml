@@ -1,0 +1,35 @@
+version: "3"
+
+tasks:
+  cmake-check:
+    desc: "Runs the CMake linters."
+    deps:
+      - "venv"
+    cmds:
+      - task: "cmake"
+        vars:
+          FLAGS: "--diff --color"
+
+  cmake-fix:
+    desc: "Runs the CMake linters and fixes all violations."
+    deps:
+      - "venv"
+    cmds:
+      - task: "cmake"
+        vars:
+          FLAGS: "--in-place"
+
+  cmake:
+    internal: true
+    requires:
+      vars:
+        - "FLAGS"
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - |-
+        . "{{.G_LINT_VENV_DIR}}/bin/activate"
+        find . \
+          -path ./build -prune \
+          -o -name CMakeLists.txt \
+          -print0 | \
+            xargs -0 --no-run-if-empty gersemi {{.FLAGS}}

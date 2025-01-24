@@ -1,6 +1,9 @@
 version: "3"
 
 includes:
+  cmake:
+    flatten: true
+    taskfile: "./lint-cmake.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
@@ -13,11 +16,13 @@ tasks:
   check:
     desc: "Runs the full suite of linters to identify warnings and violations."
     cmds:
+      - task: "cmake-check"
       - task: "yaml-check"
 
   fix:
     desc: "Runs the full suite of linters and fixes some violations."
     cmds:
+      - task: "cmake-fix"
       - task: "yaml-fix"
 
   venv:
@@ -31,6 +36,7 @@ tasks:
       - "lint-requirements.txt"
     generates:
       - "{{.CHECKSUM_FILE}}"
+    run: "once"
     deps:
       - ":init"
       - task: ":utils:validate-checksum"
