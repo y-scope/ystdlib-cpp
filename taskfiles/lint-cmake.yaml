@@ -9,6 +9,8 @@ tasks:
       - "{{.ROOT_DIR}}/**/CMakeLists.txt"
       - "{{.TASKFILE}}"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
+      - exclude: "{{.ROOT_DIR}}/**/submodules/*"
+      - exclude: "{{.ROOT_DIR}}/**/tools/*"
     deps:
       - "venv"
     cmds:
@@ -40,7 +42,7 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          -path ./build -prune -o \
+          \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
           \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
           -print0 | \
             xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
