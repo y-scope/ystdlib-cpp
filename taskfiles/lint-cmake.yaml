@@ -3,15 +3,26 @@ version: "3"
 tasks:
   cmake-check:
     desc: "Runs the CMake linters."
+    sources: &cmake_format_src_files
+      - "{{.ROOT_DIR}}/**/*.cmake"
+      - "{{.ROOT_DIR}}/**/*.cmake.in"
+      - "{{.ROOT_DIR}}/**/CMakeLists.txt"
+      - "{{.TASKFILE}}"
+      - exclude: "{{.ROOT_DIR}}/**/build/*"
     deps:
       - "venv"
     cmds:
       - task: "cmake"
         vars:
           FLAGS: "--diff --color"
+      - task: "cmake"
+        silent: true
+        vars:
+          FLAGS: "--check"
 
   cmake-fix:
     desc: "Runs the CMake linters and fixes all violations."
+    sources: *cmake_format_src_files
     deps:
       - "venv"
     cmds:
@@ -19,9 +30,6 @@ tasks:
         vars:
           FLAGS: "--in-place"
 
-  # Lint all CMake files, excluding those located in build directories.
-  #
-  # @param {string} FLAGS Options passed into the CMake linter gersemi.
   cmake:
     internal: true
     requires:
@@ -32,9 +40,7 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          -path ./build -prune -o \( \
-          -name "CMakeLists.txt" -o \
-          -name "*.cmake" -o \
-          -name "*.cmake.in" \
-        \) -print0 | \
-          xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
+          -path ./build -prune -o \
+          \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
+          -print0 | \
+            xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
