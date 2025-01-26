@@ -1,0 +1,56 @@
+version: "3"
+
+tasks:
+  cpp-check:
+    cmds:
+      - task: "cpp-format-check"
+
+  cpp-fix:
+    cmds:
+      - task: "cpp-format-fix"
+
+  cpp-format-check:
+    sources: &cpp_format_src_files
+      - "{{.ROOT_DIR}}/**/*.cpp"
+      - "{{.ROOT_DIR}}/**/*.h"
+      - "{{.ROOT_DIR}}/**/*.hpp"
+      - "{{.ROOT_DIR}}/**/*.inc"
+      - "{{.ROOT_DIR}}/.clang-format"
+      - "{{.TASKFILE}}"
+    dir: "{{.ROOT_DIR}}"
+    deps:
+      - "cpp-configs"
+      - "venv"
+    cmds:
+      - task: ":utils:clang-format"
+        vars:
+          FLAGS: "--dry-run"
+          SRC_PATHS:
+            ref: ".G_LINT_CPP_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+
+  cpp-format-fix:
+    dir: "{{.ROOT_DIR}}"
+    deps:
+      - "cpp-configs"
+      - "venv"
+    cmds:
+      - task: ":utils:clang-format"
+        vars:
+          FLAGS: "-i"
+          SRC_PATHS:
+            ref: ".G_LINT_CPP_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+
+  cpp-configs:
+    internal: true
+    sources:
+      - "{{.ROOT_DIR}}/tools/yscope-dev-utils/lint-configs/.clang-format"
+      - "{{.ROOT_DIR}}/tools/yscope-dev-utils/lint-configs/.clang-tidy"
+      - "{{.TASKFILE}}"
+    generates:
+      - "{{.ROOT_DIR}}/.clang-format"
+      - "{{.ROOT_DIR}}/.clang-tidy"
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - "tools/yscope-dev-utils/lint-configs/symlink-cpp-lint-configs.sh"

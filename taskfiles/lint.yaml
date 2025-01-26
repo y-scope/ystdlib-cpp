@@ -1,6 +1,9 @@
 version: "3"
 
 includes:
+  cpp:
+    flatten: true
+    taskfile: "./lint-cpp.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
@@ -8,16 +11,20 @@ includes:
 vars:
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
+  G_LINT_CPP_DIRS:
+    - "{{.G_YSTDLIB_CPP_SRC_DIR}}"
 
 tasks:
   check:
     desc: "Runs the full suite of linters to identify warnings and violations."
     cmds:
+      - task: "cpp-check"
       - task: "yaml-check"
 
   fix:
     desc: "Runs the full suite of linters and fixes some violations."
     cmds:
+      - task: "cpp-fix"
       - task: "yaml-fix"
 
   venv:
@@ -31,6 +38,7 @@ tasks:
       - "lint-requirements.txt"
     generates:
       - "{{.CHECKSUM_FILE}}"
+    run: "once"
     deps:
       - ":init"
       - task: ":utils:validate-checksum"
