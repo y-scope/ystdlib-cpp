@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  target:
+    desc: "Builds ystdlib-cpp."
+    vars:
+      TARGETS:
+        ref: "default (list \"all\") .TARGETS"
+    deps:
+      - ":config-cmake-project"
+    cmds:
+      - >-
+        cmake
+        --build "{{.G_BUILD_DIR}}"
+        --parallel {{numCPU}}
+        --target {{range .TARGETS}}{{.}} {{end}}
+
+  clean:
+    desc: "Removes all built artifacts."
+    deps:
+      - ":config-cmake-project"
+    cmds:
+      - >-
+        cmake
+        --build "{{.G_BUILD_DIR}}"
+        --parallel {{numCPU}}
+        --target clean

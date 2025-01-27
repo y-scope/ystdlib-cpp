@@ -1,6 +1,7 @@
 version: "3"
 
 includes:
+  build: "./taskfiles/build.yaml"
   lint: "./taskfiles/lint.yaml"
   utils: "tools/yscope-dev-utils/taskfiles/utils.yml"
 
