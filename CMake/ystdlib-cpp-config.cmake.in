@@ -1,7 +1,0 @@
-# ystdlib-cpp CMake configuration file
-
-# gersemi: off
-@PACKAGE_INIT@
-# gersemi: on
-
-include("${CMAKE_CURRENT_LIST_DIR}/@TARGET_EXPORT_NAME@.cmake")
