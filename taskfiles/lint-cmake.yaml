@@ -4,6 +4,7 @@ tasks:
   cmake-check:
     desc: "Runs the CMake linters."
     sources: &cmake_format_src_files
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
       - "{{.ROOT_DIR}}/**/*.cmake"
       - "{{.ROOT_DIR}}/**/*.cmake.in"
       - "{{.ROOT_DIR}}/**/CMakeLists.txt"
@@ -11,6 +12,8 @@ tasks:
       - exclude: "{{.ROOT_DIR}}/**/build/*"
       - exclude: "{{.ROOT_DIR}}/**/submodules/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
+    deps:
+      - "venv"
     cmds:
       - task: "gersemi"
         vars:
@@ -22,6 +25,8 @@ tasks:
   cmake-fix:
     desc: "Runs the CMake linters and fixes all violations."
     sources: *cmake_format_src_files
+    deps:
+      - "venv"
     cmds:
       - task: "gersemi"
         vars:

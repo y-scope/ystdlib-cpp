@@ -7,15 +7,16 @@ tasks:
       - "yaml-fix"
     desc: "Runs the YAML linters. Only checks for warnings and violations."
     sources:
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
       - "{{.ROOT_DIR}}/**/*.yaml"
       - "{{.ROOT_DIR}}/**/*.yml"
       - "{{.TASKFILE}}"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
       - exclude: "{{.ROOT_DIR}}/**/submodules/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
+    dir: "{{.ROOT_DIR}}"
     deps:
       - "venv"
-    dir: "{{.ROOT_DIR}}"
     cmds:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
