@@ -16,7 +16,6 @@ tasks:
         vars:
           FLAGS: "--diff --color"
       - task: "gersemi"
-        silent: true
         vars:
           FLAGS: "--check"
 
