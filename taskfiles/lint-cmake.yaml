@@ -1,0 +1,46 @@
+version: "3"
+
+tasks:
+  cmake-check:
+    desc: "Runs the CMake linters."
+    sources: &cmake_format_src_files
+      - "{{.ROOT_DIR}}/**/*.cmake"
+      - "{{.ROOT_DIR}}/**/*.cmake.in"
+      - "{{.ROOT_DIR}}/**/CMakeLists.txt"
+      - "{{.TASKFILE}}"
+      - exclude: "{{.ROOT_DIR}}/**/build/*"
+      - exclude: "{{.ROOT_DIR}}/**/submodules/*"
+      - exclude: "{{.ROOT_DIR}}/**/tools/*"
+    cmds:
+      - task: "gersemi"
+        vars:
+          FLAGS: "--diff --color"
+      - task: "gersemi"
+        silent: true
+        vars:
+          FLAGS: "--check"
+
+  cmake-fix:
+    desc: "Runs the CMake linters and fixes all violations."
+    sources: *cmake_format_src_files
+    cmds:
+      - task: "gersemi"
+        vars:
+          FLAGS: "--in-place"
+
+  gersemi:
+    internal: true
+    requires:
+      vars:
+        - "FLAGS"
+    dir: "{{.ROOT_DIR}}"
+    deps:
+      - "venv"
+    cmds:
+      - |-
+        . "{{.G_LINT_VENV_DIR}}/bin/activate"
+        find . \
+          \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
+          \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
+          -print0 | \
+            xargs -0 --no-run-if-empty gersemi {{.FLAGS}}

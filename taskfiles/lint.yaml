@@ -1,6 +1,9 @@
 version: "3"
 
 includes:
+  cmake:
+    flatten: true
+    taskfile: "./lint-cmake.yaml"
   cpp:
     flatten: true
     taskfile: "./lint-cpp.yaml"
@@ -18,12 +21,14 @@ tasks:
   check:
     desc: "Runs the full suite of linters to identify warnings and violations."
     cmds:
+      - task: "cmake-check"
       - task: "cpp-check"
       - task: "yaml-check"
 
   fix:
     desc: "Runs the full suite of linters and fixes some violations."
     cmds:
+      - task: "cmake-fix"
       - task: "cpp-fix"
       - task: "yaml-fix"
 
