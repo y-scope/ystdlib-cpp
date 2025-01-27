@@ -2,14 +2,19 @@ version: "3"
 
 tasks:
   cpp-check:
+    desc: "Runs the C++ linters."
     cmds:
       - task: "cpp-format-check"
+      - task: "cpp-static-check"
 
   cpp-fix:
+    desc: "Runs the C++ linters to fix all formatting issues and perform static code analysis. "
     cmds:
       - task: "cpp-format-fix"
+      - task: "cpp-static-fix"
 
   cpp-format-check:
+    desc: "Runs the C++ linters that identify formatting issues."
     sources: &cpp_format_src_files
       - "{{.ROOT_DIR}}/**/*.cpp"
       - "{{.ROOT_DIR}}/**/*.h"
@@ -30,6 +35,8 @@ tasks:
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-format-fix:
+    desc: "Runs the C++ linters and fixes all formatting issues."
+    sources: *cpp_format_src_files
     dir: "{{.ROOT_DIR}}"
     deps:
       - "cpp-configs"
@@ -38,6 +45,37 @@ tasks:
       - task: ":utils:clang-format"
         vars:
           FLAGS: "-i"
+          SRC_PATHS:
+            ref: ".G_LINT_CPP_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+
+  cpp-static-check:
+    # Alias task to `cpp-static-fix` since we don't currently support automatic fixes.
+    # NOTE: clang-tidy does have the ability to fix some errors, but the fixes can be inaccurate.
+    # When we eventually determine which errors can be safely fixed, we'll allow clang-tidy to
+    # fix them.
+    desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
+    aliases:
+      - "cpp-static-fix"
+    sources:
+      - "{{.G_CMAKE_CACHE}}"
+      - "{{.G_COMPILE_COMMANDS_DB}}"
+      - "{{.ROOT_DIR}}/**/*.cpp"
+      - "{{.ROOT_DIR}}/**/*.h"
+      - "{{.ROOT_DIR}}/**/*.hpp"
+      - "{{.ROOT_DIR}}/**/*.inc"
+      - "{{.ROOT_DIR}}/.clang-tidy"
+      - "{{.TASKFILE}}"
+    deps:
+      - ":config-cmake-project"
+      - "cpp-configs"
+      - "venv"
+    cmds:
+      - task: ":utils:clang-tidy"
+        vars:
+          FLAGS: >-
+            --config-file "{{.ROOT_DIR}}/.clang-tidy"
+            -p "{{.G_COMPILE_COMMANDS_DB}}"
           SRC_PATHS:
             ref: ".G_LINT_CPP_DIRS"
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
