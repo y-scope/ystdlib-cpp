@@ -23,8 +23,6 @@ tasks:
   cmake-fix:
     desc: "Runs the CMake linters and fixes all violations."
     sources: *cmake_format_src_files
-    deps:
-      - "venv"
     cmds:
       - task: "gersemi"
         vars:
@@ -36,6 +34,8 @@ tasks:
       vars:
         - "FLAGS"
     dir: "{{.ROOT_DIR}}"
+    deps:
+      - "venv"
     cmds:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
