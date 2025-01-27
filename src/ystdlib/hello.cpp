@@ -1,3 +1,4 @@
+#include <ystdlib/array/Array.hpp>
 #include <iostream>
 
 [[nodiscard]] auto main() -> int {
