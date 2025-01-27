@@ -42,4 +42,4 @@ tasks:
           \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
           \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
           -print0 | \
-            xargs -0 --no-run-if-empty gersemi {{.FLAGS}}
+            xargs -0 gersemi {{.FLAGS}}
