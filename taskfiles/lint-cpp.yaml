@@ -22,7 +22,6 @@ tasks:
       - "{{.ROOT_DIR}}/**/*.inc"
       - "{{.ROOT_DIR}}/.clang-format"
       - "{{.TASKFILE}}"
-    dir: "{{.ROOT_DIR}}"
     deps:
       - "cpp-configs"
       - "venv"
@@ -37,7 +36,6 @@ tasks:
   cpp-format-fix:
     desc: "Runs the C++ linters and fixes all formatting issues."
     sources: *cpp_format_src_files
-    dir: "{{.ROOT_DIR}}"
     deps:
       - "cpp-configs"
       - "venv"
