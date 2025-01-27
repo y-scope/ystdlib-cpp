@@ -11,13 +11,11 @@ tasks:
       - exclude: "{{.ROOT_DIR}}/**/build/*"
       - exclude: "{{.ROOT_DIR}}/**/submodules/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
-    deps:
-      - "venv"
     cmds:
-      - task: "cmake"
+      - task: "gersemi"
         vars:
           FLAGS: "--diff --color"
-      - task: "cmake"
+      - task: "gersemi"
         silent: true
         vars:
           FLAGS: "--check"
@@ -28,11 +26,11 @@ tasks:
     deps:
       - "venv"
     cmds:
-      - task: "cmake"
+      - task: "gersemi"
         vars:
           FLAGS: "--in-place"
 
-  cmake:
+  gersemi:
     internal: true
     requires:
       vars:
