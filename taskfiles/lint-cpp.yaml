@@ -16,6 +16,7 @@ tasks:
   cpp-format-check:
     desc: "Runs the C++ linters that identify formatting issues."
     sources: &cpp_format_src_files
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
       - "{{.ROOT_DIR}}/**/*.cpp"
       - "{{.ROOT_DIR}}/**/*.h"
       - "{{.ROOT_DIR}}/**/*.hpp"
@@ -58,6 +59,7 @@ tasks:
     sources:
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
       - "{{.ROOT_DIR}}/**/*.cpp"
       - "{{.ROOT_DIR}}/**/*.h"
       - "{{.ROOT_DIR}}/**/*.hpp"
