@@ -4,6 +4,9 @@ includes:
   cmake:
     flatten: true
     taskfile: "./lint-cmake.yaml"
+  cpp:
+    flatten: true
+    taskfile: "./lint-cpp.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
@@ -11,18 +14,22 @@ includes:
 vars:
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
+  G_LINT_CPP_DIRS:
+    - "{{.G_YSTDLIB_CPP_SRC_DIR}}"
 
 tasks:
   check:
     desc: "Runs the full suite of linters to identify warnings and violations."
     cmds:
       - task: "cmake-check"
+      - task: "cpp-check"
       - task: "yaml-check"
 
   fix:
     desc: "Runs the full suite of linters and fixes some violations."
     cmds:
       - task: "cmake-fix"
+      - task: "cpp-fix"
       - task: "yaml-fix"
 
   venv:
