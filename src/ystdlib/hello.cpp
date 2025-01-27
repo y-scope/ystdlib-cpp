@@ -1,7 +1,7 @@
-#include <ystdlib/array/Array.hpp>
 #include <iostream>
+#include <ystdlib/array/Array.hpp>
 
 [[nodiscard]] auto main() -> int {
-    std::cout << "Hello, world!" << '\n';
+    std::cout << ystdlib::hello() << '\n';
     return 0;
 }
