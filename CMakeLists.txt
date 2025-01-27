@@ -12,5 +12,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 add_executable(dummy)
-target_sources(dummy PRIVATE ystdlib/hello.cpp)
+target_sources(dummy PRIVATE src/ystdlib/hello.cpp)
 target_compile_features(dummy PRIVATE cxx_std_20)

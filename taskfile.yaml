@@ -9,7 +9,7 @@ vars:
   G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
   G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
   # Project-specific variables
-  G_YSTDLIB_CPP_SRC_DIR: "{{.ROOT_DIR}}/ystdlib"
+  G_YSTDLIB_CPP_SRC_DIR: "{{.ROOT_DIR}}/src/ystdlib"
 
 tasks:
   clean:
