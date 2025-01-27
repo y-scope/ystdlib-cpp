@@ -16,7 +16,7 @@ git submodule update --init --recursive
 ```
 
 # Building
-To build `ystdlib-cpp`:
+To build all targets in `ystdlib-cpp`:
 ```shell
 task build:target
 ```
