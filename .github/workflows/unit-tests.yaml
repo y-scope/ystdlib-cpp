@@ -50,5 +50,6 @@ jobs:
           tar --version
           task --version
 
-      # TODO: Run any existing unit tests after building ystdlib-cpp
+      # TODO: Change the task to run all unittests once any unittest is added. Until then we check
+      # that building the project succeeds.
       - run: "task build:target"
