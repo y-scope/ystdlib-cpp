@@ -6,15 +6,23 @@ tasks:
       - "yaml-check"
       - "yaml-fix"
     desc: "Runs the YAML linters. Only checks for warnings and violations."
+    sources:
+      - "{{.ROOT_DIR}}/**/*.yaml"
+      - "{{.ROOT_DIR}}/**/*.yml"
+      - "{{.TASKFILE}}"
+      - exclude: "{{.ROOT_DIR}}/**/build/*"
+      - exclude: "{{.ROOT_DIR}}/**/submodules/*"
+      - exclude: "{{.ROOT_DIR}}/**/tools/*"
     deps:
       - "venv"
     dir: "{{.ROOT_DIR}}"
     cmds:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
-        yamllint \
-          --config-file "tools/yscope-dev-utils/lint-configs/.yamllint.yml" \
-          --strict \
-          .github \
-          taskfile.yaml \
-          taskfiles/
+        find . \
+          \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
+          \( -iname "*.yaml" -o -iname "*.yml" \) \
+          -print0 | \
+            xargs -0 yamllint \
+              --config-file "tools/yscope-dev-utils/lint-configs/.yamllint.yml" \
+              --strict
