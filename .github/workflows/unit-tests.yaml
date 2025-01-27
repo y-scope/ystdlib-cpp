@@ -1,4 +1,4 @@
-name: "code-linting-checks"
+name: "unit-tests"
 
 on:
   pull_request:
@@ -17,12 +17,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-check:
+  build-ystdlib-cpp:
     strategy:
       matrix:
         os:
           - "macos-latest"
-          - "ubuntu-latest"
+          - "ubuntu-22.04"
+          - "ubuntu-24.04"
     runs-on: "${{matrix.os}}"
     steps:
       - uses: "actions/checkout@v4"
@@ -48,6 +49,5 @@ jobs:
           tar --version
           task --version
 
-      - name: "Run lint task"
-        shell: "bash"
-        run: "task lint:check"
+      # TODO: Run any existing unit tests after building ystdlib-cpp
+      - run: "task build:target"
