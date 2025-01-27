@@ -9,6 +9,8 @@ tasks:
       - "{{.ROOT_DIR}}/**/*.cmake.in"
       - "{{.ROOT_DIR}}/**/CMakeLists.txt"
       - "{{.TASKFILE}}"
+      - "{{.ROOT_DIR}}/.gersemirc"
+      - "{{.G_YSTDLIB_CPP_SRC_DIR}}/.gersemirc"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
       - exclude: "{{.ROOT_DIR}}/**/cmake_install.cmake"
       - exclude: "{{.ROOT_DIR}}/**/CMakeFiles/*"
@@ -46,8 +48,8 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          \( -path '**/build' -o -path '**/CMakeFiles' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
-          ! -path "**/cmake_install.cmake" \
+          \( -path '**/build' -o -path '**/cmake_install.cmake' -o -path '**/CMakeFiles' \
+          -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
           \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
           -print0 | \
             xargs -0 gersemi {{.FLAGS}}
