@@ -1,7 +1,0 @@
-# yamllint disable-line rule:line-length
-# yaml-language-server: $schema=https://raw.githubusercontent.com/BlankSpruce/gersemi/master/gersemi/configuration.schema.json
-
-definitions: ["../../CMake/ystdlib-cpp-helpers.cmake"]
-indent: 2
-line_length: 0  # gersemi is unable to expand the list across multiple lines when using custom commands
-list_expansion: "favour-expansion"

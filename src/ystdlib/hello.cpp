@@ -1,5 +1,5 @@
 #include <iostream>
-#include <ystdlib/array/Array.hpp>
+#include <ystdlib/hello/hello.hpp>
 
 [[nodiscard]] auto main() -> int {
     std::cout << ystdlib::hello() << '\n';
