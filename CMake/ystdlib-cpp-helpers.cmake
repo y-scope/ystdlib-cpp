@@ -1,5 +1,5 @@
-set(LIB_BUILD_INTERFACE ${YSTDLIB_CPP_BUILD_INCLUDE_DIRS})
-set(LIB_INSTALL_INTERFACE ${YSTDLIB_CPP_INSTALL_INCLUDE_DIRS})
+set(CPP_LIB_BUILD_INTERFACE ${YSTDLIB_CPP_BUILD_INCLUDE_DIRS})
+set(CPP_LIB_INSTALL_INTERFACE ${YSTDLIB_CPP_INSTALL_INCLUDE_DIRS})
 
 # cpp_library()
 #
@@ -15,21 +15,15 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs)
-    cmake_parse_arguments(
-        arg_cpp_lib #
-        "${options}"
-        "${oneValueArgs}"
-        "${multiValueArgs}"
-        ${ARGN}
-    )
+    cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    add_library(${_TARGET_LIB_NAME} INTERFACE)
+    add_library(${arg_cpp_lib_NAME} INTERFACE)
     target_include_directories(
-        ${_TARGET_LIB_NAME}
+        ${arg_cpp_lib_NAME}
         INTERFACE
-            "$<BUILD_INTERFACE:${LIB_BUILD_INTERFACE}>"
-            "$<INSTALL_INTERFACE:${LIB_INSTALL_INTERFACE}>"
+            "$<BUILD_INTERFACE:${CPP_LIB_BUILD_INTERFACE}>"
+            "$<INSTALL_INTERFACE:${CPP_LIB_INSTALL_INTERFACE}>"
     )
-    target_compile_features(${_TARGET_LIB_NAME} INTERFACE cxx_std_20)
-    add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${_TARGET_LIB_NAME})
+    target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
+    add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 endfunction()
