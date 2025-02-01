@@ -1,5 +1,5 @@
-#ifndef YSTDLIB_ARRAY_HPP
-#define YSTDLIB_ARRAY_HPP
+#ifndef YSTDLIB_HELLO_HPP
+#define YSTDLIB_HELLO_HPP
 
 #include <string>
 
@@ -9,4 +9,4 @@ namespace ystdlib {
 }
 }  // namespace ystdlib
 
-#endif  // YSTDLIB_ARRAY_HPP
+#endif  // YSTDLIB_HELLO_HPP
