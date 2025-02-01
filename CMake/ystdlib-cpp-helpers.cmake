@@ -1,20 +1,17 @@
 set(CPP_LIB_BUILD_INTERFACE ${YSTDLIB_CPP_BUILD_INCLUDE_DIRS})
 set(CPP_LIB_INSTALL_INTERFACE ${YSTDLIB_CPP_INSTALL_INCLUDE_DIRS})
 
-# cpp_library()
-#
 # CMake function for adding C++ libraries with sources, dependencies, and build settings.
 #
-# Parameters:
-# NAME: name of the library target
-# NAMESPACE: namespace of the library
+# @param NAME
+# @param NAMESPACE
 function(cpp_library)
-    set(options)
+    set(options "")
     set(oneValueArgs
         NAME
         NAMESPACE
     )
-    set(multiValueArgs)
+    set(multiValueArgs "")
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     add_library(${arg_cpp_lib_NAME} INTERFACE)
