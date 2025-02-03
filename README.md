@@ -2,6 +2,18 @@ ystdlib-cpp
 ===================================
 An open-source C++ library developed and used at YScope.
 
+# Usage
+Clone `ystdlib-cpp` into your project. Then, in your project's `CMakeLists.txt`, add the following:
+```cmake
+add_subdirectory(/path/to/ystdlib-cpp EXCLUDE_FROM_ALL)
+target_link_libraries(<target_name> <link_options>
+    ystdlib::<lib_1> ystdlib::<lib_2> ... ystdlib::<lib_N>
+    # other libs...
+)
+```
+Ensure that `ystdlib-cpp` is either within a subdirectory of the folder containing `CMakeLists.txt`
+or at the same level.
+
 # Contributing
 Follow the steps below to develop and contribute to the project.
 
@@ -15,7 +27,7 @@ Initialize and update submodules:
 git submodule update --init --recursive
 ```
 
-# Building
+## Building
 To build all targets in `ystdlib-cpp`:
 ```shell
 task build:target

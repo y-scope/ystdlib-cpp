@@ -5,11 +5,15 @@ tasks:
     desc: "Runs the CMake linters."
     sources: &cmake_format_src_files
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
+      - "{{.G_YSTDLIB_CPP_SRC_DIR}}/.gersemirc"
       - "{{.ROOT_DIR}}/**/*.cmake"
       - "{{.ROOT_DIR}}/**/*.cmake.in"
       - "{{.ROOT_DIR}}/**/CMakeLists.txt"
+      - "{{.ROOT_DIR}}/.gersemirc"
       - "{{.TASKFILE}}"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
+      - exclude: "{{.ROOT_DIR}}/**/cmake_install.cmake"
+      - exclude: "{{.ROOT_DIR}}/**/CMakeFiles/*"
       - exclude: "{{.ROOT_DIR}}/**/submodules/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
     deps:
@@ -44,7 +48,8 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
+          \( -path '**/build' -o -path '**/cmake_install.cmake' -o -path '**/CMakeFiles' \
+          -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
           \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
           -print0 | \
             xargs -0 gersemi {{.FLAGS}}
