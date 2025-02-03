@@ -1,6 +1,9 @@
-set(CPP_LIB_BUILD_INTERFACE ${YSTDLIB_CPP_BUILD_INCLUDE_DIRS})
+# Set up include paths for building the project and for external projects that incorporate this
+# project using the add_subdirectory() function.
+set(CPP_LIB_BUILD_INTERFACE "${PROJECT_SOURCE_DIR}/src")
 
-# CMake function for adding C++ libraries with sources, dependencies, and build settings.
+# Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
+# NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
 # @param NAME
 # @param NAMESPACE
