@@ -6,12 +6,20 @@ set -e
 # Error on undefined variable
 set -u
 
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-  g++ \
-  g++-10 \
-  gcc \
-  gcc-10
+echo "Checking for elevated privileges..."
+privileged_command_prefix=""
+if [ ${EUID:-$(id -u)} -ne 0 ] ; then
+  sudo echo "Script can elevate privileges."
+  privileged_command_prefix="${privileged_command_prefix} sudo"
+fi
+
+${privileged_command_prefix} apt-get update
+DEBIAN_FRONTEND=noninteractive ${privileged_command_prefix} apt-get install \
+  --no-install-recommends -y \
+    g++ \
+    g++-10 \
+    gcc \
+    gcc-10
 
 # Add alternatives for cpp-10, gcc-10, and g++-10
 # NOTE: We use a low priority to avoid affecting the prioritization of any existing alternatives
