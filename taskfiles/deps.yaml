@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task: "pkgs"
+
+  pkgs:
+    cmds:
+      - task: "linux-pkgs"
+      - task: "macos-pkgs"
+
+  linux-pkgs:
+    internal: true
+    platforms:
+      - "linux"
+    dir: "{{.G_SCRIPT_DIR}}/lib_install/linux"
+    cmds:
+      - "./install-all.sh"
+
+  macos-pkgs:
+    internal: true
+    platforms:
+      - "darwin"
+    dir: "{{.G_SCRIPT_DIR}}/lib_install/macos"
+    cmds:
+      - "./install-all.sh"
