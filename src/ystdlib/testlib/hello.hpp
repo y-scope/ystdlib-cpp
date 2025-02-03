@@ -7,6 +7,6 @@ namespace ystdlib::testlib {
 [[nodiscard]] inline auto hello() -> std::string {
     return "Hello, world!";
 }
-}  // namespace ystdlib
+}  // namespace ystdlib::testlib
 
 #endif  // YSTDLIB_TESTLIB_HELLO_HPP
