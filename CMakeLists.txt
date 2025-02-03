@@ -17,8 +17,12 @@ include(ystdlib-cpp-helpers)
 
 add_subdirectory(src/ystdlib)
 
-# Test dummy project
-add_executable(dummy)
-target_sources(dummy PRIVATE src/main.cpp)
-target_link_libraries(dummy PRIVATE ystdlib::testlib)
-target_compile_features(dummy PRIVATE cxx_std_20)
+set(SOURCE_FILES_unitTest
+    src/ystdlib/container/Array.hpp
+    tests/test-Array.cpp
+    tests/test-main.cpp
+)
+add_executable(unitTest ${SOURCE_FILES_unitTest})
+target_include_directories(unitTest PRIVATE "${CMAKE_CURRENT_LIST_DIR}/submodules")
+target_link_libraries(unitTest PRIVATE ystdlib::container)
+target_compile_features(unitTest PRIVATE cxx_std_20)
