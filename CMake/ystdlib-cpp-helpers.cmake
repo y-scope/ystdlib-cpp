@@ -3,8 +3,8 @@
 #
 # @param NAME
 # @param NAMESPACE
-# @param [LIB_BUILD_INTERFACE] The list of include paths for building the library and for external
-#                              projects that link against it via the add_subdirectory() function.
+# @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
+# the library and for external projects that link against it via the add_subdirectory() function.
 function(cpp_library)
     set(options "")
     set(oneValueArgs
