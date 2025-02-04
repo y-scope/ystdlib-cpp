@@ -33,6 +33,7 @@ tasks:
       vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
     platforms: ["linux"]
     cmd: |-
+      . "{{.VENV_DIR}}/bin/activate"
       find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
         -path '**/macos' -prune -o -type f -iname "*.sh" \
         -print0 | \
@@ -44,6 +45,7 @@ tasks:
       vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
     platforms: ["darwin"]
     cmd: |-
+      . "{{.VENV_DIR}}/bin/activate"
       find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
         -path '**/linux' -prune -o -type f -iname "*.sh" \
         -print0 | \

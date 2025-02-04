@@ -19,7 +19,7 @@ fi
 # Check if the system is running Ubuntu and determine the version
 if [[ -f /etc/os-release ]]; then
   source /etc/os-release
-  if [[ "$ID" == "ubuntu" &&
+  if [[ "${ID}" == "ubuntu" &&
       ( "${VERSION_CODENAME}" == "focal" ||
         "${VERSION_CODENAME}" == "jammy" ||
         "${VERSION_CODENAME}" == "noble" ) ]]; then
