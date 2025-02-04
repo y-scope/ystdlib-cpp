@@ -9,7 +9,7 @@ tasks:
     sources:
       - "{{.ROOT_DIR}}/taskfile.yaml"
       - "{{.TASKFILE}}"
-      - "lint-requirements.txt"
+      - "{{.ROOT_DIR}}/lint-requirements.txt"
     generates:
       - "{{.CHECKSUM_FILE}}"
     run: "once"
@@ -24,7 +24,7 @@ tasks:
         vars:
           LABEL: "lint"
           OUTPUT_DIR: "{{.OUTPUT_DIR}}"
-          REQUIREMENTS_FILE: "lint-requirements.txt"
+          REQUIREMENTS_FILE: "{{.ROOT_DIR}}/lint-requirements.txt"
       # This command must be last
       - task: ":utils:compute-checksum"
         vars:

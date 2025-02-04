@@ -10,6 +10,9 @@ includes:
   venv:
     flatten: true
     taskfile: "./lint-venv.yaml"
+  sh:
+    flatten: true
+    taskfile: "./lint-sh.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
@@ -17,6 +20,8 @@ includes:
 vars:
   G_LINT_CPP_DIRS:
     - "{{.G_CPP_SRC_DIR}}"
+  G_LINT_SH_DIRS:
+    - "{{.G_SCRIPT_DIR}}"
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
 
@@ -26,6 +31,7 @@ tasks:
     cmds:
       - task: "cmake-check"
       - task: "cpp-check"
+      - task: "sh-check"
       - task: "yaml-check"
 
   fix:
@@ -33,4 +39,5 @@ tasks:
     cmds:
       - task: "cmake-fix"
       - task: "cpp-fix"
+      - task: "sh-fix"
       - task: "yaml-fix"

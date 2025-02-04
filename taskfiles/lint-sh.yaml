@@ -1,0 +1,32 @@
+version: "3"
+
+tasks:
+  sh-check:
+    # NOTE: shellcheck does not have the ability to fix errors.
+    aliases:
+      - "sh-fix"
+    desc: "Runs the shell script linters. Only checks for warnings and violations."
+    sources:
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
+      - "{{.G_SCRIPT_DIR}}/**/*.sh"
+      - "{{.TASKFILE}}"
+      - exclude: "{{.ROOT_DIR}}/**/.shellcheckrc"
+    deps:
+      - "venv"
+    cmds:
+      - task: "shellcheck"
+        vars:
+          FLAGS: "--enable=all --severity=style --external-sources --norc"
+          SRC_PATHS:
+            ref: ".G_LINT_SH_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+
+  shellcheck:
+    internal: true
+    requires:
+      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+    cmd: |-
+      . "{{.VENV_DIR}}/bin/activate"
+      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+        -type f -iname "*.sh" -print0 | \
+          xargs -0 shellcheck {{.FLAGS}}

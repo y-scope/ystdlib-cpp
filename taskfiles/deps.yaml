@@ -2,10 +2,12 @@ version: "3"
 
 tasks:
   default:
+    desc: "Install all required dependencies."
     cmds:
       - task: "pkgs"
 
   pkgs:
+    desc: "Install dependencies from prebuilt packages or build them from source packages."
     cmds:
       - task: "linux-pkgs"
       - task: "macos-pkgs"
@@ -23,4 +25,4 @@ tasks:
     platforms:
       - "darwin"
     cmds:
-      - "echo 'Nothing to be installed for macOS.'"
+      - "echo 'Nothing pckages required to be installed for macOS.'"

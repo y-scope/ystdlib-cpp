@@ -52,9 +52,9 @@ tasks:
     # NOTE: clang-tidy does have the ability to fix some errors, but the fixes can be inaccurate.
     # When we eventually determine which errors can be safely fixed, we'll allow clang-tidy to
     # fix them.
-    desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
     aliases:
       - "cpp-static-fix"
+    desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
     sources:
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"
