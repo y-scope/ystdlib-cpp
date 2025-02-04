@@ -26,7 +26,7 @@ if [[ -f /etc/os-release ]]; then
     dist_dir="${script_dir}/ubuntu-${VERSION_CODENAME}"
     for exe_file in \
         "${dist_dir}/install-prebuilt-packages.sh" "${dist_dir}/install-packages-from-source.sh"; do
-	  [[ -f "${exe_file}"  ]] && "${privileged_command_prefix} ${exe_file}"
+	  [[ -f "${exe_file}"  ]] && ${privileged_command_prefix} "${exe_file}"
     done
     exit 0
   fi
