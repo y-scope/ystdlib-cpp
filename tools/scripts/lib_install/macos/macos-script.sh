@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # This should only be lintable on macos.
-source /Applications
+source /System/Library/CoreServices/SystemVersion.plist
