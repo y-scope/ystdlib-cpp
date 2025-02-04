@@ -15,18 +15,31 @@ tasks:
       - "venv"
     cmds:
       - task: "shellcheck"
+        platforms:
+          - "linux"
         vars:
           FLAGS: "--enable=all --severity=style --external-sources --norc"
           SRC_PATHS:
             ref: ".G_LINT_SH_DIRS"
+          OS: "linux"
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   shellcheck:
     internal: true
     requires:
-      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+      vars: ["FLAGS", "SRC_PATHS", "OS", "VENV_DIR"]
+    deps:
+      - "venv"
     cmd: |-
       . "{{.VENV_DIR}}/bin/activate"
-      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
-        -type f -iname "*.sh" -print0 | \
+      { \
+        # All shell scripts excluding the OS-specific ones
+        find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+          \( -path '**/linux' -o -path '**/macos' \) -prune -o \
+          -type f -iname "*.sh" -print0;
+        # All shell scripts exclusive to the specified OS
+        find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+          -type d -name "{{.OS}}" \
+            -exec find {} -type f -iname "*.sh" -print0 \; ; \
+      } | \
           xargs -0 shellcheck {{.FLAGS}}
