@@ -1,9 +1,9 @@
 #include <iostream>
-// #include <vector>
+#include <vector>
 #include <ystdlib/testlib/hello.hpp>
 
 [[nodiscard]] auto main() -> int {
-    // constexpr std::vector<int> cV;
+    constexpr std::vector<int> cV;
     std::cout << ystdlib::testlib::hello() << '\n';
     constexpr auto c23{202'101L};
     constexpr auto c20{202'002L};
