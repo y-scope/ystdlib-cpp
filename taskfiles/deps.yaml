@@ -22,6 +22,5 @@ tasks:
     internal: true
     platforms:
       - "darwin"
-    dir: "{{.G_SCRIPT_DIR}}/lib_install/macos"
     cmds:
-      - "./install-all.sh"
+      - echo "Nothing to be installed for macOS."
