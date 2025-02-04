@@ -7,15 +7,18 @@ includes:
   cpp:
     flatten: true
     taskfile: "./lint-cpp.yaml"
+  venv:
+    flatten: true
+    taskfile: "./lint-venv.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
 
 vars:
+  G_LINT_CPP_DIRS:
+    - "{{.G_CPP_SRC_DIR}}"
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
-  G_LINT_CPP_DIRS:
-    - "{{.G_YSTDLIB_CPP_SRC_DIR}}"
 
 tasks:
   check:
@@ -31,33 +34,3 @@ tasks:
       - task: "cmake-fix"
       - task: "cpp-fix"
       - task: "yaml-fix"
-
-  venv:
-    internal: true
-    vars:
-      CHECKSUM_FILE: "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      OUTPUT_DIR: "{{.G_LINT_VENV_DIR}}"
-    sources:
-      - "{{.ROOT_DIR}}/taskfile.yaml"
-      - "{{.TASKFILE}}"
-      - "lint-requirements.txt"
-    generates:
-      - "{{.CHECKSUM_FILE}}"
-    run: "once"
-    deps:
-      - ":init"
-      - task: ":utils:validate-checksum"
-        vars:
-          CHECKSUM_FILE: "{{.CHECKSUM_FILE}}"
-          DATA_DIR: "{{.OUTPUT_DIR}}"
-    cmds:
-      - task: ":utils:create-venv"
-        vars:
-          LABEL: "lint"
-          OUTPUT_DIR: "{{.OUTPUT_DIR}}"
-          REQUIREMENTS_FILE: "lint-requirements.txt"
-      # This command must be last
-      - task: ":utils:compute-checksum"
-        vars:
-          DATA_DIR: "{{.OUTPUT_DIR}}"
-          OUTPUT_FILE: "{{.CHECKSUM_FILE}}"
