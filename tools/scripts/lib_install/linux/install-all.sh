@@ -8,12 +8,6 @@ set -u
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-OS=$(uname)
-if [[ "Linux" != "${OS}" ]]; then
-  echo "This is a Linux-specific script."
-  exit 0
-fi
-
 echo "Checking for elevated privileges..."
 privileged_command_prefix=""
 USER_ID=${EUID:-$(id -u)}
