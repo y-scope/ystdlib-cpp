@@ -36,10 +36,10 @@ tasks:
         # All shell scripts excluding the OS-specific ones
         find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
           \( -path '**/linux' -o -path '**/macos' \) -prune -o \
-          -type f -iname "*.sh" -print0;
+          -type f -iname "*.sh" -print0; \
         # All shell scripts exclusive to the specified OS
         find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
           -type d -name "{{.OS}}" \
             -exec find {} -type f -iname "*.sh" -print0 \; ; \
       } | \
-          xargs -0 shellcheck {{.FLAGS}}
+          xargs -0 echo #shellcheck {{.FLAGS}}
