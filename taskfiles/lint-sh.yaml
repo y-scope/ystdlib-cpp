@@ -14,32 +14,37 @@ tasks:
     deps:
       - "venv"
     cmds:
-      - task: "shellcheck"
-        platforms:
-          - "linux"
+      - task: "linux-shellcheck"
         vars:
           FLAGS: "--enable=all --severity=style --external-sources --norc"
           SRC_PATHS:
             ref: ".G_LINT_SH_DIRS"
-          OS: "linux"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+      - task: "macos-shellcheck"
+        vars:
+          FLAGS: "--enable=all --severity=style --external-sources --norc"
+          SRC_PATHS:
+            ref: ".G_LINT_SH_DIRS"
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
-  shellcheck:
+  linux-shellcheck:
     internal: true
     requires:
-      vars: ["FLAGS", "SRC_PATHS", "OS", "VENV_DIR"]
-    deps:
-      - "venv"
+      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+    platforms: ["linux"]
     cmd: |-
-      . "{{.VENV_DIR}}/bin/activate"
-      { \
-        # All shell scripts excluding the OS-specific ones
-        find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
-          \( -path '**/linux' -o -path '**/macos' \) -prune -o \
-          -type f -iname "*.sh" -print0; \
-        # All shell scripts exclusive to the specified OS
-        find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
-          -type d -name "{{.OS}}" \
-            -exec find {} -type f -iname "*.sh" -print0 \; ; \
-      } | \
-          xargs -0 echo #shellcheck {{.FLAGS}}
+      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+        -path '**/macos' -prune -o -type f -iname "*.sh" \
+        -print0 | \
+          xargs -0 shellcheck {{.FLAGS}}
+
+  macos-shellcheck:
+    internal: true
+    requires:
+      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+    platforms: ["darwin"]
+    cmd: |-
+      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+        -path '**/linux' -prune -o -type f -iname "*.sh" \
+        -print0 | \
+          xargs -0 shellcheck {{.FLAGS}}
