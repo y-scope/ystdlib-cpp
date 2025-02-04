@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-sw_vers
+# This should only be lintable on macos.
+source /Applications
