@@ -1,0 +1,66 @@
+version: "3"
+
+tasks:
+  sh:
+    # NOTE: shellcheck does not have the ability to fix errors.
+    aliases:
+      - "sh-check"
+      - "sh-fix"
+    desc: "Runs the shell script linters. Only checks for warnings and violations."
+    vars:
+      SHELLCHECK_FLAGS: "--enable=all --severity=style --external-sources --norc"
+    sources:
+      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
+      - "{{.G_SCRIPT_DIR}}/**/*.sh"
+      - "{{.TASKFILE}}"
+    deps:
+      - "venv"
+    cmds:
+      - task: "linux-shellcheck"
+        vars:
+          FLAGS: "{{.SHELLCHECK_FLAGS}}"
+          SRC_PATHS:
+            ref: ".G_LINT_SH_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+      - task: "macos-shellcheck"
+        vars:
+          FLAGS: "{{.SHELLCHECK_FLAGS}}"
+          SRC_PATHS:
+            ref: ".G_LINT_SH_DIRS"
+          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
+
+  linux-shellcheck:
+    internal: true
+    vars:
+      EXCLUDES:
+        - "**/macos"
+        - "**/centos-stream-9"
+    requires:
+      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+    platforms: ["linux"]  # Requires raw strings and cannot interpret variable substitutions
+    cmd: |-
+      . "{{.VENV_DIR}}/bin/activate"
+      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+        \( {{- range $i, $path := .EXCLUDES }}{{if $i}} -o {{end}} -path '{{ $path }}'{{end}} \) \
+        -prune -o \
+        -type f -iname "*.sh" \
+        -print0 | \
+          xargs -0 shellcheck {{.FLAGS}}
+
+  macos-shellcheck:
+    internal: true
+    vars:
+      EXCLUDES:
+        - "**/linux"
+        - "**/centos-stream-9"
+    requires:
+      vars: ["FLAGS", "SRC_PATHS", "VENV_DIR"]
+    platforms: ["darwin"]
+    cmd: |-
+      . "{{.VENV_DIR}}/bin/activate"
+      find {{- range .SRC_PATHS}} "{{.}}" {{- end}} \
+        \( {{- range $i, $path := .EXCLUDES }}{{if $i}} -o {{end}} -path '{{ $path }}'{{end}} \) \
+        -prune -o \
+        -type f -iname "*.sh" \
+        -print0 | \
+          xargs -0 shellcheck {{.FLAGS}}
