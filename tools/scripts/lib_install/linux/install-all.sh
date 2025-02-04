@@ -8,6 +8,13 @@ set -u
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+echo "Checking for elevated privileges..."
+privileged_command_prefix=""
+if [ ${EUID:-$(id -u)} -ne 0 ] ; then
+  sudo echo "Script can elevate privileges."
+  privileged_command_prefix="${privileged_command_prefix} sudo"
+fi
+
 # Check if the system is running Ubuntu and determine the version
 if [[ -f /etc/os-release ]]; then
   source /etc/os-release
@@ -16,8 +23,9 @@ if [[ -f /etc/os-release ]]; then
         "$VERSION_CODENAME" == "jammy" ||
         "$VERSION_CODENAME" == "noble" ) ]]; then
     dist_dir="$script_dir/ubuntu-$VERSION_CODENAME"
-    for exe_file in "$dist_dir/install-prebuilt-packages.sh" "$dist_dir/install-packages-from-source.sh"; do
-	  [[ -f "$exe_file"  ]] && $exe_file
+    for exe_file in \
+        "$dist_dir/install-prebuilt-packages.sh" "$dist_dir/install-packages-from-source.sh"; do
+	  [[ -f "$exe_file"  ]] && ${privileged_command_prefix} $exe_file
     done
     exit 0
   fi

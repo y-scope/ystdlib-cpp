@@ -6,28 +6,26 @@ set -e
 # Error on undefined variable
 set -u
 
-echo "Checking for elevated privileges..."
-privileged_command_prefix=""
-if [ ${EUID:-$(id -u)} -ne 0 ] ; then
-  sudo echo "Script can elevate privileges."
-  privileged_command_prefix="${privileged_command_prefix} sudo"
-fi
-
-${privileged_command_prefix} apt-get update
-DEBIAN_FRONTEND=noninteractive ${privileged_command_prefix} apt-get install \
-  --no-install-recommends -y \
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     g++ \
-    g++-10 \
+    g++-11 \
     gcc \
-    gcc-10
+    gcc-11
 
 # Add alternatives for cpp-10, gcc-10, and g++-10
 # NOTE: We use a low priority to avoid affecting the prioritization of any existing alternatives
 # on the user's system.
-${privileged_command_prefix} update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-10 0 \
+update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-11 0 \
   --slave /usr/share/man/man1/cc.1.gz cc.1.gz /usr/share/man/man1/gcc.1.gz
-${privileged_command_prefix} update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-10 0 \
+update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-11 0 \
   --slave /usr/share/man/man1/c++.1.gz c++.1.gz /usr/share/man/man1/g++.1.gz
-${privileged_command_prefix} update-alternatives --install /lib/cpp cpp /usr/bin/cpp-10 0
+update-alternatives --install /lib/cpp cpp /usr/bin/cpp-11 0
 
-${privileged_command_prefix} update-alternatives --config cc
+update-alternatives --config cc
+
+update-alternatives --set cc /usr/bin/gcc-11
+update-alternatives --set c++ /usr/bin/g++-11
+update-alternatives --set cpp /usr/bin/cpp-11
+
+update-alternatives --config cc
