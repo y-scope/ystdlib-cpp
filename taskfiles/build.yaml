@@ -14,7 +14,6 @@ tasks:
         --build "{{.G_BUILD_DIR}}"
         --parallel {{numCPU}}
         --target {{range .TARGETS}}{{.}} {{end}}
-      - "./build/dummy"
 
   clean:
     desc: "Removes all built artifacts."

@@ -48,8 +48,6 @@ jobs:
 
       - name: "Log tool versions"
         run: |-
-          g++ --version
-          gcc --version
           md5sum --version
           python --version
           tar --version
