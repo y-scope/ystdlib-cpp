@@ -30,4 +30,4 @@ ${privileged_command_prefix} update-alternatives --install /usr/bin/c++ c++ /usr
   --slave /usr/share/man/man1/c++.1.gz c++.1.gz /usr/share/man/man1/g++.1.gz
 ${privileged_command_prefix} update-alternatives --install /lib/cpp cpp /usr/bin/cpp-10 0
 
-${privileged_command_prefix} update-alternatives --config gcc
+${privileged_command_prefix} update-alternatives --config cc
