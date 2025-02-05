@@ -16,7 +16,7 @@ tasks:
         --target {{range .TARGETS}}{{.}} {{end}}
 
   run-all-tests:
-    desc: "Builds ystdlib-cpp and run unit tests for all libraries."
+    desc: "Builds ystdlib-cpp and runs unit tests for all libraries."
     deps:
       - ":config-cmake-project"
       - "target"
