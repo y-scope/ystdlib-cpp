@@ -50,6 +50,8 @@ jobs:
           echo "export CC=/usr/bin/gcc-10" >> ~/.bashrc
           echo "export CXX=/usr/bin/g++-10" >> ~/.bashrc
           source ~/.bashrc
+          ls ~/.bashrc
+          cat ~/.bashrc
 
       - name: "Log tool versions"
         run: |-
