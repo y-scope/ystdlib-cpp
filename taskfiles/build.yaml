@@ -15,6 +15,14 @@ tasks:
         --parallel {{numCPU}}
         --target {{range .TARGETS}}{{.}} {{end}}
 
+  unit-test:
+    desc: "Builds ystdlib-cpp and run unit tests all libraries."
+    deps:
+      - ":config-cmake-project"
+      - "target"
+    cmds:
+      - "{{.G_BUILD_DIR}}/unitTest"
+
   clean:
     desc: "Removes all built artifacts."
     deps:
