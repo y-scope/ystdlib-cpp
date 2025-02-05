@@ -43,6 +43,10 @@ jobs:
         name: "Install coreutils (for md5sum)"
         run: "brew install coreutils"
 
+      - if: "matrix.os == 'ubuntu-20.04'"
+        name: "Install gcc-10 (for c++20)"
+        run: "sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh"
+
       - name: "Log tool versions"
         run: |-
           md5sum --version
