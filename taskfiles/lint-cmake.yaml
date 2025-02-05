@@ -5,7 +5,6 @@ tasks:
     desc: "Runs the CMake linters."
     sources: &cmake_format_src_files
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_YSTDLIB_CPP_SRC_DIR}}/.gersemirc"
       - "{{.ROOT_DIR}}/**/*.cmake"
       - "{{.ROOT_DIR}}/**/*.cmake.in"
       - "{{.ROOT_DIR}}/**/CMakeLists.txt"
