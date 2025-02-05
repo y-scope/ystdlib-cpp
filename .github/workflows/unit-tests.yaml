@@ -45,7 +45,13 @@ jobs:
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
-        run: "sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh"
+        run: |-
+          apt-get update DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+              g++-10 \
+              gcc-10
+          ln -s -f /usr/bin/gcc-10 /usr/bin/cc
+          ln -s -f /usr/bin/g++-10 /usr/bin/c++
+          ln -s -f /usr/bin/cpp-10 /usr/bin/cpp
 
       - name: "Log tool versions"
         run: |-
