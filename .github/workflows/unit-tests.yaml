@@ -43,12 +43,23 @@ jobs:
         name: "Install coreutils (for md5sum)"
         run: "brew install coreutils"
 
+      - if: "matrix.os == 'ubuntu-20.04'"
+        name: "Install gcc-10 (for c++20)"
+        run: |-
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+              g++-10 \
+              gcc-10
+          sudo ln --symbolic --force /usr/bin/gcc-10 /usr/bin/cc
+          sudo ln --symbolic --force /usr/bin/g++-10 /usr/bin/c++
+          sudo ln --symbolic --force /usr/bin/cpp-10 /usr/bin/cpp
+
       - name: "Log tool versions"
         run: |-
-          md5sum --version
-          python --version
-          tar --version
-          task --version
+          command -v md5sum
+          command -v python
+          command -v tar
+          command -v task
 
       # TODO: Change the task to run all unittests once any unittest is added. Until then we check
       # that building the project succeeds.
