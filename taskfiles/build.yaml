@@ -15,8 +15,8 @@ tasks:
         --parallel {{numCPU}}
         --target {{range .TARGETS}}{{.}} {{end}}
 
-  unit-test:
-    desc: "Builds ystdlib-cpp and run unit tests all libraries."
+  run-all-tests:
+    desc: "Builds ystdlib-cpp and run unit tests for all libraries."
     deps:
       - ":config-cmake-project"
       - "target"

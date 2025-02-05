@@ -62,4 +62,4 @@ jobs:
           command -v task
 
       - name: "Run unit tests"
-      - run: "task build:unit-test"
+      - run: "task build:run-all-tests"
