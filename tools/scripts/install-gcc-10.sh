@@ -21,3 +21,7 @@ update-alternatives --install /usr/bin/cc cc /usr/bin/gcc-10 0 \
 update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-10 0 \
   --slave /usr/share/man/man1/c++.1.gz c++.1.gz /usr/share/man/man1/g++.1.gz
 update-alternatives --install /lib/cpp cpp /usr/bin/cpp-10 0
+
+update-alternatives --set cc /usr/bin/gcc-10
+update-alternatives --set c++ /usr/bin/g++-10
+update-alternatives --set cpp /usr/bin/cpp-10
