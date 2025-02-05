@@ -45,15 +45,14 @@ jobs:
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
-        run: |-
-          sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh
+        run: "sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh"
 
       - name: "Log tool versions"
         run: |-
-          md5sum --version
-          python --version
-          tar --version
-          task --version
+          command -v md5sum
+          command -v python
+          command -v tar
+          command -v task
 
       # TODO: Change the task to run all unittests once any unittest is added. Until then we check
       # that building the project succeeds.
