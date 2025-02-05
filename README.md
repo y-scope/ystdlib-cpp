@@ -33,6 +33,12 @@ To build all targets in `ystdlib-cpp`:
 task build:target
 ```
 
+## Testing
+To run unit tests for all targets in `ystdlib-cpp`:
+```shell
+task build:run-all-test
+```
+
 ## Linting
 Before submitting a pull request, ensure you’ve run the linting commands below and have fixed all
 violations and suppressed all warnings.
