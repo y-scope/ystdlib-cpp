@@ -12,3 +12,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     g++-10 \
     gcc \
     gcc-10
+
+ln -s -f /usr/bin/gcc-10 /usr/bin/cc
+ln -s -f /usr/bin/g++-10 /usr/bin/c++
+ln -s -f /usr/bin/cpp-10 /usr/bin/cpp
