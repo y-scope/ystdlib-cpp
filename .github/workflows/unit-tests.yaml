@@ -45,7 +45,11 @@ jobs:
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
-        run: "sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh"
+        run: |-
+          sudo ${{github.workspace}}/tools/scripts/install-gcc-10.sh
+          echo "export CC=/usr/bin/gcc-10" >> ~/.bashrc
+          echo "export CXX=/usr/bin/g++-10" >> ~/.bashrc
+          source ~/.bashrc
 
       - name: "Log tool versions"
         run: |-

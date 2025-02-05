@@ -12,8 +12,3 @@ DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     g++-10 \
     gcc \
     gcc-10
-
-echo "export CC=/usr/bin/gcc-10" >> ~/.bashrc
-echo "export CXX=/usr/bin/g++-10" >> ~/.bashrc
-
-source ~/.bashrc
