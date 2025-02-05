@@ -52,6 +52,8 @@ jobs:
           source ~/.bashrc
           ls ~/.bashrc
           cat ~/.bashrc
+          command -v gcc-10
+          command -v g++-10
 
       - name: "Log tool versions"
         run: |-
