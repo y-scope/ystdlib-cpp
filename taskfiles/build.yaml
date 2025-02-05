@@ -11,6 +11,8 @@ tasks:
     cmds:
       - >-
         cmake
+        -DCMAKE_C_COMPILER=/usr/bin/gcc-10
+        -DCMAKE_CXX_COMPILER=/usr/bin/g++-10
         --build "{{.G_BUILD_DIR}}"
         --parallel {{numCPU}}
         --target {{range .TARGETS}}{{.}} {{end}}
