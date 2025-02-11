@@ -18,19 +18,6 @@ tasks:
     cmds:
       - "rm -rf '{{.G_BUILD_DIR}}'"
 
-  config-cmake-project:
-    internal: true
-    deps:
-      - "deps:install-all"
-    sources:
-      - "CMakeLists.txt"
-      - "{{.TASKFILE}}"
-    generates:
-      - "{{.G_CMAKE_CACHE}}"
-      - "{{.G_COMPILE_COMMANDS_DB}}"
-    cmds:
-      - "cmake -S '{{.ROOT_DIR}}' -B '{{.G_BUILD_DIR}}'"
-
   init:
     internal: true
     silent: true

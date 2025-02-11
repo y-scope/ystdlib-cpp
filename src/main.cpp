@@ -1,5 +1,9 @@
+#define CATCH_CONFIG_MAIN
+
 #include <concepts>
 #include <iostream>
+
+#include <catch2/catch_all.hpp>
 #include <ystdlib/testlib/hello.hpp>
 
 namespace {
@@ -10,7 +14,6 @@ requires std::integral<T>
 }
 };  // namespace
 
-[[nodiscard]] auto main() -> int {
-    std::cout << square(ystdlib::testlib::hello().size()) << '\n';
-    return 0;
+TEST_CASE("dummy") {
+  REQUIRE((169 == square(ystdlib::testlib::hello().size())));
 }
