@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 find_package(Catch2 3.8.0 REQUIRED)
-if (Catch2_FOUND)
+if(Catch2_FOUND)
     message(STATUS "Found Catch2 ${Catch2_VERSION}.")
 else()
     message(FATAL_ERROR "Could not find libraries for Catch2.")
@@ -26,5 +26,10 @@ add_subdirectory(src/ystdlib)
 
 add_executable(unitTest)
 target_sources(unitTest PRIVATE src/main.cpp)
-target_link_libraries(unitTest PRIVATE ystdlib::testlib Catch2::Catch2WithMain)
+target_link_libraries(
+    unitTest
+    PRIVATE
+        ystdlib::testlib
+        Catch2::Catch2WithMain
+)
 target_compile_features(unitTest PRIVATE cxx_std_20)

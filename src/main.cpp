@@ -1,9 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
+#include <catch2/catch_test_macros.hpp>
 #include <concepts>
-#include <iostream>
-
-#include <catch2/catch_all.hpp>
 #include <ystdlib/testlib/hello.hpp>
 
 namespace {
@@ -15,5 +13,5 @@ requires std::integral<T>
 };  // namespace
 
 TEST_CASE("dummy") {
-  REQUIRE((169 == square(ystdlib::testlib::hello().size())));
+    REQUIRE((169 == square(ystdlib::testlib::hello().size())));
 }

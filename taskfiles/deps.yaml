@@ -7,7 +7,7 @@ vars:
       "Catch2": "v3.8.0"
     }
   G_DEPS_RELEASES:
-    ref: 'fromJson .G_DEPS_RELEASES_JSON'
+    ref: "fromJson .G_DEPS_RELEASES_JSON"
 
 tasks:
   install-all:
