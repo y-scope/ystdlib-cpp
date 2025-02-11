@@ -1,0 +1,58 @@
+version: "3"
+
+vars:
+  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
+  G_DEPS_RELEASES_JSON: >-
+    {
+      "Catch2": "v3.8.0"
+    }
+  G_DEPS_RELEASES:
+    ref: 'fromJson .G_DEPS_RELEASES_JSON'
+
+tasks:
+  install-all:
+    desc: "Install all dependencies required by ystdlib-cpp."
+    deps:
+      - task: "install-dep"
+        vars:
+          NAME: "Catch2"
+          ORG: "catchorg"
+          RELEASE: "{{.G_DEPS_RELEASES.Catch2}}"
+          SOURCE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
+
+  install-dep:
+    internal: true
+    label: "install-{{.NAME}}-{{.VERSION}}-{{.CONF_ARGS}}"
+    vars:
+      BUILD_DIR: >-
+        {{default (printf "%s/%s-build" .G_DEPS_DIR .NAME) .BUILD_DIR}}
+      CONF_ARGS: >-
+        {{default "" .CONF_ARGS}}
+      INSTALL_PREFIX: >-
+        {{default (printf "%s/%s-install" .G_DEPS_DIR .NAME) .INSTALL_PREFIX}}
+      SOURCE_DIR: >-
+        {{default (printf "%s/%s-src" .G_DEPS_DIR .NAME) .SOURCE_DIR}}
+    requires:
+      vars:
+        - "NAME"
+        - "ORG"
+        - "RELEASE"
+        - "SOURCE_SHA256"
+    sources:
+      - "{{.G_DEPS_DIR}}/{{.NAME}}-src.md5"
+    cmds:
+      - task: ":utils:download-and-extract-tar"
+        vars:
+          FILE_SHA256: "{{.SOURCE_SHA256}}"
+          OUTPUT_DIR: "{{.SOURCE_DIR}}"
+          URL: >-
+            {{printf "https://github.com/%s/%s/archive/refs/tags/%s.tar.gz" .ORG .NAME .RELEASE}}
+      - task: ":utils:cmake-config-and-build"
+        vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
+          CONF_ARGS: "{{.CONF_ARGS}}"
+          SOURCE_DIR: "{{.SOURCE_DIR}}"
+      - task: ":utils:cmake-install"
+        vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
+          INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"

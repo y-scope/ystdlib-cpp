@@ -2,6 +2,7 @@ version: "3"
 
 includes:
   build: "./taskfiles/build.yaml"
+  deps: "./taskfiles/deps.yaml"
   lint: "./taskfiles/lint.yaml"
   utils: "tools/yscope-dev-utils/taskfiles/utils.yaml"
 
@@ -19,6 +20,8 @@ tasks:
 
   config-cmake-project:
     internal: true
+    deps:
+      - "deps:install-all"
     sources:
       - "CMakeLists.txt"
       - "{{.TASKFILE}}"
