@@ -1,21 +1,35 @@
 version: "3"
 
+vars:
+  G_BUILD_CONF_ARGS_DEPS_INSTALL_PREFIXES: >-
+    -DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2-install
+  G_BUILD_CONF_ARGS: >-
+    {{.G_BUILD_CONF_ARGS_DEPS_INSTALL_PREFIXES}}
+
 tasks:
   target:
     desc: "Builds ystdlib-cpp."
+    deps:
+      - ":deps:install-all"
     cmds:
       - task: ":utils:cmake-config-and-build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          SOURCE_DIR: "{{.ROOT_DIR}}"
-          CONF_ARGS: >-
-            -DCatch2_ROOT="{{.G_DEPS_DIR}}/Catch2-install"
+          CONF_ARGS: "{{.G_BUILD_CONF_ARGS}}"
           JOBS: "{{numCPU}}"
+          SOURCE_DIR: "{{.ROOT_DIR}}"
+      # TODO: move this into a separate task
+      - "{{.G_BUILD_DIR}}/unitTest"
 
+  # TODO: move this into yscope-dev-utils
   clean:
     desc: "Removes all built artifacts."
     deps:
-      - ":config-cmake-project"
+      - task: ":build:cmake-config"
+        vars:
+          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          CONF_ARGS: "{{.G_BUILD_CONF_ARGS}}"
+          SOURCE_DIR: "{{.ROOT_DIR}}"
     cmds:
       - >-
         cmake
@@ -23,13 +37,27 @@ tasks:
         --parallel {{numCPU}}
         --target clean
 
-  config-cmake-project:
+  # TODO: move this into yscope-dev-utils
+  cmake-config:
     internal: true
+    label: "{{.TASK}}-{{.SOURCE_DIR}}-{{.BUILD_DIR}}-{{.CONF_ARGS}}"
+    vars:
+      CONF_ARGS: >-
+        {{default "" .CONF_ARGS}}
+    requires:
+      vars:
+        - "BUILD_DIR"
+        - "SOURCE_DIR"
     sources:
-      - "CMakeLists.txt"
-      - "{{.TASKFILE}}"
+      - "{{.SOURCE_DIR}}/CMakeLists.txt"
     generates:
-      - "{{.G_CMAKE_CACHE}}"
-      - "{{.G_COMPILE_COMMANDS_DB}}"
+      - "{{.BUILD_DIR}}/CMakeCache.txt"
+      - "{{.BUILD_DIR}}/compile_commands.json"
+    deps:
+      - ":deps:install-all"
     cmds:
-      - "cmake -S '{{.ROOT_DIR}}' -B '{{.G_BUILD_DIR}}'"
+      - >-
+        cmake
+        -S "{{.SOURCE_DIR}}"
+        -B "{{.BUILD_DIR}}"
+        {{.CONF_ARGS}}
