@@ -17,6 +17,13 @@ tasks:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
           JOBS: "{{numCPU}}"
 
+  clean:
+    desc: "Removes all built artifacts."
+    deps:
+      - task: ":utils:cmake-clean"
+        vars:
+          BUILD_DIR: "{{.G_BUILD_DIR}}"
+
   cmake-generate:
     internal: true
     deps:
@@ -35,10 +42,3 @@ tasks:
           EXTRA_ARGS:
             ref: ".G_CMAKE_CONF_ARGS"
           SOURCE_DIR: "{{.ROOT_DIR}}"
-
-  clean:
-    desc: "Removes all built artifacts."
-    deps:
-      - task: ":utils:cmake-clean"
-        vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"

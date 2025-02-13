@@ -10,7 +10,7 @@ tasks:
     internal: true
     sources:
       - "{{.G_DEPS_DIR}}/Catch2-install/*"
-      - "{{.G_DEPS_DIR}}/Catch2-src.md5"
+      - "{{.TASKFILE}}"
     generates:
       - "{{.G_DEPS_DIR}}/Catch2-src.md5"
     cmds:
