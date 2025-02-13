@@ -7,8 +7,8 @@ vars:
   G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
 
 tasks:
-  unittest:
-    desc: "Builds and runs ystdlib-cpp's unittest."
+  all:
+    desc: "Builds ystdlib-cpp."
     deps:
       - "cmake-generate"
     cmds:
@@ -16,8 +16,6 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
           JOBS: "{{numCPU}}"
-          TARGETS:
-            - "unitTest"
 
   cmake-generate:
     internal: true
@@ -29,6 +27,7 @@ tasks:
     generates:
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"
+    run: "once"
     cmds:
       - task: ":utils:cmake-generate"
         vars:
