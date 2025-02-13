@@ -65,10 +65,11 @@ tasks:
       - "{{.ROOT_DIR}}/.clang-tidy"
       - "{{.TASKFILE}}"
     deps:
-      - task: ":build:cmake-config"
+      - task: ":utils:cmake-generate"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          CONF_ARGS: "{{.G_BUILD_CONF_ARGS}}"
+          EXTRA_ARGS:
+            ref: ".G_CMAKE_CONF_ARGS"
           SOURCE_DIR: "{{.ROOT_DIR}}"
       - "cpp-configs"
       - "venv"

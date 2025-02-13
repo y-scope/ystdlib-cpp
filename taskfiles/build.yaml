@@ -1,63 +1,31 @@
 version: "3"
 
 vars:
-  G_BUILD_CONF_ARGS_DEPS_INSTALL_PREFIXES: >-
-    -DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2-install
-  G_BUILD_CONF_ARGS: >-
-    {{.G_BUILD_CONF_ARGS_DEPS_INSTALL_PREFIXES}}
+  G_CMAKE_CONF_ARGS:
+    - "-DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2-install"
 
 tasks:
-  target:
-    desc: "Builds ystdlib-cpp."
+  unittest:
+    desc: "Builds and runs ystdlib-cpp's unittest."
     deps:
       - ":deps:install-all"
     cmds:
-      - task: ":utils:cmake-config-and-build"
+      - task: ":utils:cmake-generate"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          CONF_ARGS: "{{.G_BUILD_CONF_ARGS}}"
-          JOBS: "{{numCPU}}"
+          EXTRA_ARGS:
+            ref: ".G_CMAKE_CONF_ARGS"
           SOURCE_DIR: "{{.ROOT_DIR}}"
-      # TODO: move this into a separate task
-      - "{{.G_BUILD_DIR}}/unitTest"
+      - task: ":utils:cmake-build"
+        vars:
+          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          JOBS: "{{numCPU}}"
+          TARGETS:
+            - "unitTest"
 
-  # TODO: move this into yscope-dev-utils
   clean:
     desc: "Removes all built artifacts."
     deps:
-      - task: ":build:cmake-config"
+      - task: ":utils:cmake-clean"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          CONF_ARGS: "{{.G_BUILD_CONF_ARGS}}"
-          SOURCE_DIR: "{{.ROOT_DIR}}"
-    cmds:
-      - >-
-        cmake
-        --build "{{.G_BUILD_DIR}}"
-        --parallel {{numCPU}}
-        --target clean
-
-  # TODO: move this into yscope-dev-utils
-  cmake-config:
-    internal: true
-    label: "{{.TASK}}-{{.SOURCE_DIR}}-{{.BUILD_DIR}}-{{.CONF_ARGS}}"
-    vars:
-      CONF_ARGS: >-
-        {{default "" .CONF_ARGS}}
-    requires:
-      vars:
-        - "BUILD_DIR"
-        - "SOURCE_DIR"
-    sources:
-      - "{{.SOURCE_DIR}}/CMakeLists.txt"
-    generates:
-      - "{{.BUILD_DIR}}/CMakeCache.txt"
-      - "{{.BUILD_DIR}}/compile_commands.json"
-    deps:
-      - ":deps:install-all"
-    cmds:
-      - >-
-        cmake
-        -S "{{.SOURCE_DIR}}"
-        -B "{{.BUILD_DIR}}"
-        {{.CONF_ARGS}}

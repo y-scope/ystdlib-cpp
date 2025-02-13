@@ -63,4 +63,4 @@ jobs:
 
       # TODO: Change the task to run all unittests once any unittest is added. Until then we check
       # that building the project succeeds.
-      - run: "task build:target"
+      - run: "task build:unittest"
