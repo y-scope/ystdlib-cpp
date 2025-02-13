@@ -1,14 +1,34 @@
 version: "3"
 
 vars:
+  G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
   G_CMAKE_CONF_ARGS:
     - "-DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2-install"
+  G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
 
 tasks:
   unittest:
     desc: "Builds and runs ystdlib-cpp's unittest."
     deps:
+      - "cmake-generate"
+    cmds:
+      - task: ":utils:cmake-build"
+        vars:
+          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          JOBS: "{{numCPU}}"
+          TARGETS:
+            - "unitTest"
+
+  cmake-generate:
+    internal: true
+    deps:
       - ":deps:install-all"
+    sources:
+      - "{{.ROOT_DIR}}/CMakeLists.txt"
+      - "{{.TASKFILE}}"
+    generates:
+      - "{{.G_CMAKE_CACHE}}"
+      - "{{.G_COMPILE_COMMANDS_DB}}"
     cmds:
       - task: ":utils:cmake-generate"
         vars:
@@ -16,12 +36,6 @@ tasks:
           EXTRA_ARGS:
             ref: ".G_CMAKE_CONF_ARGS"
           SOURCE_DIR: "{{.ROOT_DIR}}"
-      - task: ":utils:cmake-build"
-        vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"
-          JOBS: "{{numCPU}}"
-          TARGETS:
-            - "unitTest"
 
   clean:
     desc: "Removes all built artifacts."
