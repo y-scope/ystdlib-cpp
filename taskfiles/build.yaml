@@ -3,7 +3,7 @@ version: "3"
 vars:
   G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
   G_CMAKE_CONF_ARGS:
-    - "-DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2-install"
+    - "-DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2/Catch2-install"
   G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
 
 tasks:
