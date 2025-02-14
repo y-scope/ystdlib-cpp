@@ -12,7 +12,6 @@ tasks:
       - "{{.ROOT_DIR}}/**/*.yml"
       - "{{.TASKFILE}}"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
-      - exclude: "{{.ROOT_DIR}}/**/submodules/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
     dir: "{{.ROOT_DIR}}"
     deps:
@@ -21,7 +20,7 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          \( -path '**/build' -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
+          \( -path '**/build' -o -path '**/tools' \) -prune -o \
           \( -iname "*.yaml" -o -iname "*.yml" \) \
           -print0 | \
             xargs -0 yamllint \
