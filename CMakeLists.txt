@@ -4,7 +4,7 @@ project(YSTDLIB_CPP LANGUAGES CXX)
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
 # find_package() uses upper-case <PACKAGENAME>_ROOT variables and prefers the paths specified by
-# these variables.
+# these variables when looking for library packages.
 cmake_policy(SET CMP0144 NEW)
 
 # Enable exporting compile commands
