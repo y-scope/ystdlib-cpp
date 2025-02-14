@@ -16,8 +16,8 @@ tasks:
       - "{{.WORK_DIR}}/{{.NAME}}-install/**/*"
     run: "once"
     status:
-      - test -d "{{.WORK_DIR}}/{{.NAME}}-install"
-      - test -f "{{.WORK_DIR}}/{{.NAME}}-src.md5"
+      - "test -d {{.WORK_DIR}}/{{.NAME}}-install"
+      - "test -f {{.WORK_DIR}}/{{.NAME}}-src.md5"
     cmds:
       - task: ":utils:cmake-install-remote-tar"
         vars:
