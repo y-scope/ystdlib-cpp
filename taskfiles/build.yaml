@@ -28,9 +28,6 @@ tasks:
     internal: true
     deps:
       - ":deps:install-all"
-    sources:
-      - "{{.ROOT_DIR}}/CMakeLists.txt"
-      - "{{.TASKFILE}}"
     generates:
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"

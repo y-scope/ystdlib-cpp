@@ -11,13 +11,7 @@ tasks:
     vars:
       NAME: "Catch2"
       WORK_DIR: "{{.G_DEPS_DIR}}/{{.NAME}}"
-    sources:
-      - "{{.TASKFILE}}"
-      - "{{.WORK_DIR}}/{{.NAME}}-install/**/*"
     run: "once"
-    status:
-      - "test -d {{.WORK_DIR}}/{{.NAME}}-install"
-      - "test -f {{.WORK_DIR}}/{{.NAME}}-src.md5"
     cmds:
       - task: ":utils:cmake-install-remote-tar"
         vars:
@@ -25,4 +19,3 @@ tasks:
           WORK_DIR: "{{.WORK_DIR}}"
           FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
-          JOBS: "{{numCPU}}"
