@@ -6,7 +6,7 @@
 #
 # @param NAME
 # @param NAMESPACE
-# @parms TESTS
+# @parms TESTS_SOURCES
 # @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
 # the library and for external projects that link against it via the add_subdirectory() function.
 function(cpp_library)
@@ -16,7 +16,7 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs
-        TESTS
+        TESTS_SOURCES
         LIB_BUILD_INTERFACE
     )
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -44,7 +44,7 @@ function(cpp_library)
     if(BUILD_TESTING)
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
         add_executable(${_UNIT_TEST_TARGET})
-        target_sources(${_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
+        target_sources(${_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
         target_link_libraries(
             ${_UNIT_TEST_TARGET}
             PRIVATE
@@ -61,7 +61,7 @@ function(cpp_library)
         )
 
         # Link against unified unit test
-        target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
+        target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
         target_link_libraries(
             ${UNIFIED_UNIT_TEST_TARGET}
             PRIVATE
