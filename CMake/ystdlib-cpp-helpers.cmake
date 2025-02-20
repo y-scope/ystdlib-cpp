@@ -2,7 +2,7 @@
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
 # If `BUILD_TESTING` is ON, build the unit tests specific to the current library, and link this
-# library against the global unit test target for the entire `ystdlib-cpp`.
+# library against the unified unit test target for the entire `ystdlib-cpp`.
 #
 # @param NAME
 # @param NAMESPACE
@@ -60,13 +60,12 @@ function(cpp_library)
                     ${CMAKE_BINARY_DIR}/testbin
         )
 
-        if(BUILD_GLOBAL_TESTING)
-            target_sources(${GLOBAL_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
-            target_link_libraries(
-                ${GLOBAL_UNIT_TEST_TARGET}
-                PRIVATE
-                    ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
-            )
-        endif()
+        # Link against unified unit test
+        target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
+        target_link_libraries(
+            ${UNIFIED_UNIT_TEST_TARGET}
+            PRIVATE
+                ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
+        )
     endif()
 endfunction()
