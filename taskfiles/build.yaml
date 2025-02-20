@@ -17,11 +17,11 @@ tasks:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
   target:
-    desc: "Builds a specific ystdlib-cpp target."
+    desc: "Builds specified ystdlib-cpp targets."
     summary: |-
-      Builds a specific ystdlib-cpp target.
+      Builds specified ystdlib-cpp targets.
 
-      Usage: task build:target -- <target_name>
+      Usage: task build:target -- <target0> <target1> ...
     deps:
       - "init"
     cmds:
@@ -34,10 +34,10 @@ tasks:
   unit-test:
     desc: "Builds ystdlib-cpp unit test targets."
     summary: |-
-      Builds a specific ystdlib-cpp unit test target, or build the global unit test target if no
+      Builds specified ystdlib-cpp unit test targets, or run the global unit test target if no
       library is specified.
 
-      Usage: task build:unit-test -- <lib_name>
+      Usage: task build -- <lib_name0> <lib_name1> ...
     vars:
       TARGET_NAME: "{{ .CLI_ARGS | default `all` }}"
     cmds:
