@@ -16,15 +16,15 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
-  unitTest:
-    desc: "Builds ystdlib-cpp's unitTest target."
+  unit-test:
+    desc: "Builds ystdlib-cpp's unit-test target."
     deps:
       - "init"
     cmds:
       - task: ":utils:cmake-build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          TARGETS: ["unitTest"]
+          TARGETS: ["unit-test"]
 
   clean:
     desc: "Removes all built artifacts."

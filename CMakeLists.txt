@@ -28,7 +28,7 @@ set(LIB_DEPS_unitTest "Catch2::Catch2WithMain" CACHE INTERNAL "")
 
 add_subdirectory(src/ystdlib)
 
-add_executable(unitTest)
-target_sources(unitTest PRIVATE ${SOURCE_FILES_unitTest})
-target_link_libraries(unitTest PRIVATE ${LIB_DEPS_unitTest})
-target_compile_features(unitTest PRIVATE cxx_std_20)
+add_executable(unit-test)
+target_sources(unit-test PRIVATE ${SOURCE_FILES_unitTest})
+target_link_libraries(unit-test PRIVATE ${LIB_DEPS_unitTest})
+target_compile_features(unit-test PRIVATE cxx_std_20)
