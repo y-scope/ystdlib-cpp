@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  all:
+    desc: "Runs the entire suite of ystdlib-cpp's unit tests."
+    deps:
+      - ":build:unitTest"
+    cmds:
+      - "{{.G_BUILD_DIR}}/unitTest"
