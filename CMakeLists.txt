@@ -22,14 +22,13 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 include(ystdlib-cpp-helpers)
 
+# Initiate unit test global list variables
+set(SOURCE_FILES_unitTest "" CACHE INTERNAL "")
+set(LIB_DEPS_unitTest "Catch2::Catch2WithMain" CACHE INTERNAL "")
+
 add_subdirectory(src/ystdlib)
 
 add_executable(unitTest)
-target_sources(unitTest PRIVATE src/main.cpp)
-target_link_libraries(
-    unitTest
-    PRIVATE
-        ystdlib::testlib
-        Catch2::Catch2WithMain
-)
+target_sources(unitTest PRIVATE ${SOURCE_FILES_unitTest})
+target_link_libraries(unitTest PRIVATE ${LIB_DEPS_unitTest})
 target_compile_features(unitTest PRIVATE cxx_std_20)
