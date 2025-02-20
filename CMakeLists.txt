@@ -11,6 +11,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
+option(BUILD_TESTING "If ON, unit tests will be built." ON)
+
 find_package(Catch2 3.8.0 REQUIRED)
 if(Catch2_FOUND)
     message(STATUS "Found Catch2 ${Catch2_VERSION}.")
@@ -22,13 +24,10 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 include(ystdlib-cpp-helpers)
 
-# Initiate unit test global list variables
-set(SOURCE_FILES_unitTest "" CACHE INTERNAL "")
-set(LIB_DEPS_unitTest "Catch2::Catch2WithMain" CACHE INTERNAL "")
+# Set up the global unit test target
+set(GLOBAL_UNIT_TEST_TARGET "unit-test")
+add_executable(${GLOBAL_UNIT_TEST_TARGET})
+target_link_libraries(${GLOBAL_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
+target_compile_features(${GLOBAL_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
 
 add_subdirectory(src/ystdlib)
-
-add_executable(unit-test)
-target_sources(unit-test PRIVATE ${SOURCE_FILES_unitTest})
-target_link_libraries(unit-test PRIVATE ${LIB_DEPS_unitTest})
-target_compile_features(unit-test PRIVATE cxx_std_20)
