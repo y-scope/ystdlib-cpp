@@ -1,8 +1,8 @@
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
-# If `BUILD_TESTING` is ON, build the unit tests for this library only, and link this library
-# against the global unit test target for the entire `ystdlib-cpp`.
+# If `BUILD_TESTING` is ON, build the unit tests specific to the current library, and link this
+# library against the global unit test target for the entire `ystdlib-cpp`.
 #
 # @param NAME
 # @param NAMESPACE
@@ -42,8 +42,7 @@ function(cpp_library)
     add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(BUILD_TESTING)
-        # Build the unit test target specific to the current library.
-        set(_UNIT_TEST_TARGET "unit-test-binary-${arg_cpp_lib_NAME}")
+        set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
         add_executable(${_UNIT_TEST_TARGET})
         target_sources(${_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
         target_link_libraries(
@@ -53,13 +52,21 @@ function(cpp_library)
                 ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
         )
         target_compile_features(${_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
-
-		# Link the current library against the global unit test target.
-        target_sources(${GLOBAL_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
-        target_link_libraries(
-            ${GLOBAL_UNIT_TEST_TARGET}
-            PRIVATE
-                ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
+        set_property(
+            TARGET
+                ${_UNIT_TEST_TARGET}
+            PROPERTY
+                RUNTIME_OUTPUT_DIRECTORY
+                    ${CMAKE_BINARY_DIR}/testbin
         )
+
+        if(BUILD_GLOBAL_TESTING)
+            target_sources(${GLOBAL_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS})
+            target_link_libraries(
+                ${GLOBAL_UNIT_TEST_TARGET}
+                PRIVATE
+                    ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
+            )
+        endif()
     endif()
 endfunction()

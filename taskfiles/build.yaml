@@ -16,15 +16,35 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
-  unit-test:
-    desc: "Builds ystdlib-cpp's unit-test target."
+  target:
+    desc: "Builds a specific ystdlib-cpp target."
+    summary: |-
+      Builds a specific ystdlib-cpp target.
+
+      Usage: task build:target -- <target_name>
     deps:
       - "init"
     cmds:
       - task: ":utils:cmake-build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          TARGETS: ["unit-test"]
+          TARGETS:
+            - "{{.CLI_ARGS}}"
+
+  unit-test:
+    desc: "Builds ystdlib-cpp unit test targets."
+    summary: |-
+      Builds a specific ystdlib-cpp unit test target, or build the global unit test target if no
+      library is specified.
+
+      Usage: task build:unit-test -- <lib_name>
+    vars:
+      TARGET_NAME: "{{ .CLI_ARGS | default `all` }}"
+    cmds:
+      - task: "target"
+        vars:
+          CLI_ARGS: >-
+            {{ (printf "unit-test-%s" .TARGET_NAME) }}
 
   clean:
     desc: "Removes all built artifacts."

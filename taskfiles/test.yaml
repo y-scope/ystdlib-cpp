@@ -1,9 +1,18 @@
 version: "3"
 
 tasks:
-  all:
-    desc: "Runs the entire suite of ystdlib-cpp's unit tests."
+  default:
+    desc: "Runs ystdlib-cpp unit test targets."
+    summary: |-
+      Runs a specific ystdlib-cpp unit test target, or run the global unit test target if no
+      library is specified.
+
+      Usage: task test -- <lib_name>
+    vars:
+      TARGET_NAME: "{{ .CLI_ARGS | default `all` }}"
     deps:
-      - ":build:unit-test"
+      - task: ":build:unit-test"
+        vars:
+          CLI_ARGS: "{{.TARGET_NAME}}"
     cmds:
-      - "{{.G_BUILD_DIR}}/unit-test"
+      - "{{.G_BUILD_DIR}}/testbin/unit-test-{{.TARGET_NAME}}"

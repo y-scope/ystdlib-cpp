@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 option(BUILD_TESTING "If ON, unit tests will be built." ON)
+option(BUILD_GLOBAL_TESTING "If ON, the global unit test will be built." ON)
 
 find_package(Catch2 3.8.0 REQUIRED)
 if(Catch2_FOUND)
@@ -24,10 +25,21 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 include(ystdlib-cpp-helpers)
 
-# Set up the global unit test target
-set(GLOBAL_UNIT_TEST_TARGET "unit-test")
-add_executable(${GLOBAL_UNIT_TEST_TARGET})
-target_link_libraries(${GLOBAL_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
-target_compile_features(${GLOBAL_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+if(BUILD_TESTING)
+    # Set up the global unit test target
+    if(BUILD_GLOBAL_TESTING)
+        set(GLOBAL_UNIT_TEST_TARGET "unit-test-all")
+        add_executable(${GLOBAL_UNIT_TEST_TARGET})
+        target_link_libraries(${GLOBAL_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
+        target_compile_features(${GLOBAL_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+        set_property(
+            TARGET
+                ${GLOBAL_UNIT_TEST_TARGET}
+            PROPERTY
+                RUNTIME_OUTPUT_DIRECTORY
+                    ${CMAKE_BINARY_DIR}/testbin
+        )
+    endif()
+endif()
 
 add_subdirectory(src/ystdlib)
