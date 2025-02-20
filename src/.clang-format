@@ -1,8 +1,8 @@
 BasedOnStyle: "InheritParentConfig"
 
 IncludeCategories:
-  # NOTE: A header is grouped by first matching regex
-  # Library headers. Update when adding new libraries.
+  # NOTE: A header is grouped by first matching regex library headers. Update when adding new 
+  # libraries.
   # NOTE: clang-format retains leading white-space on a line in violation of the YAML spec.
   - Regex: "<(ystdlib)"
     Priority: 3
