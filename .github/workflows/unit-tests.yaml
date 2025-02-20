@@ -62,4 +62,4 @@ jobs:
           command -v task
 
       - name: "Run unit tests"
-      - run: "task test"
+        run: "task test"
