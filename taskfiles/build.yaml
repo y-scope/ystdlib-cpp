@@ -10,7 +10,7 @@ tasks:
   all:
     desc: "Builds ystdlib-cpp."
     deps:
-      - "cmake-generate"
+      - "init"
     cmds:
       - task: ":utils:cmake-build"
         vars:
@@ -23,7 +23,7 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
-  cmake-generate:
+  init:
     internal: true
     deps:
       - ":deps:install-all"

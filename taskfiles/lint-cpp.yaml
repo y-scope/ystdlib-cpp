@@ -65,7 +65,7 @@ tasks:
       - "{{.ROOT_DIR}}/.clang-tidy"
       - "{{.TASKFILE}}"
     deps:
-      - ":build:cmake-generate"
+      - ":build:init"
       - "cpp-configs"
       - "venv"
     cmds:
