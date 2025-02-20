@@ -2,31 +2,20 @@ version: "3"
 
 includes:
   build: "./taskfiles/build.yaml"
+  deps: "./taskfiles/deps.yaml"
   lint: "./taskfiles/lint.yaml"
-  utils: "tools/yscope-dev-utils/taskfiles/utils.yml"
+  utils: "tools/yscope-dev-utils/taskfiles/utils.yaml"
 
 vars:
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
-  G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
-  G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
   G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
+  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
 
 tasks:
   clean:
     desc: "Removes the project build directory."
     cmds:
       - "rm -rf '{{.G_BUILD_DIR}}'"
-
-  config-cmake-project:
-    internal: true
-    sources:
-      - "CMakeLists.txt"
-      - "{{.TASKFILE}}"
-    generates:
-      - "{{.G_CMAKE_CACHE}}"
-      - "{{.G_COMPILE_COMMANDS_DB}}"
-    cmds:
-      - "cmake -S '{{.ROOT_DIR}}' -B '{{.G_BUILD_DIR}}'"
 
   init:
     internal: true

@@ -11,14 +11,25 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
+find_package(Catch2 3.8.0 REQUIRED)
+if(Catch2_FOUND)
+    message(STATUS "Found Catch2 ${Catch2_VERSION}.")
+else()
+    message(FATAL_ERROR "Could not find libraries for Catch2.")
+endif()
+
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 include(ystdlib-cpp-helpers)
 
 add_subdirectory(src/ystdlib)
 
-# Test dummy project
-add_executable(dummy)
-target_sources(dummy PRIVATE src/main.cpp)
-target_link_libraries(dummy PRIVATE ystdlib::testlib)
-target_compile_features(dummy PRIVATE cxx_std_20)
+add_executable(unitTest)
+target_sources(unitTest PRIVATE src/main.cpp)
+target_link_libraries(
+    unitTest
+    PRIVATE
+        ystdlib::testlib
+        Catch2::Catch2WithMain
+)
+target_compile_features(unitTest PRIVATE cxx_std_20)

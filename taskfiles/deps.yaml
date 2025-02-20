@@ -1,0 +1,21 @@
+version: "3"
+
+tasks:
+  install-all:
+    desc: "Install all dependencies required by ystdlib-cpp."
+    deps:
+      - "install-Catch2"
+
+  install-Catch2:
+    internal: true
+    vars:
+      NAME: "Catch2"
+      WORK_DIR: "{{.G_DEPS_DIR}}/{{.NAME}}"
+    run: "once"
+    cmds:
+      - task: ":utils:cmake-install-remote-tar"
+        vars:
+          NAME: "{{.NAME}}"
+          WORK_DIR: "{{.WORK_DIR}}"
+          FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
+          URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
