@@ -8,7 +8,7 @@ vars:
 
 tasks:
   all:
-    desc: "Builds ystdlib-cpp."
+    desc: "Builds all of ystdlib-cpp."
     deps:
       - "init"
     cmds:
@@ -16,12 +16,10 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
-  target:
-    desc: "Builds specified ystdlib-cpp targets."
-    summary: |-
-      Builds specified ystdlib-cpp targets.
-
-      Usage: task build:target -- <target0> <target1> ...
+  target-*:
+    desc: "Builds a CMake target."
+    vars:
+      TARGET: "{{index .MATCH 0}}"
     deps:
       - "init"
     cmds:
@@ -29,27 +27,15 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
           TARGETS:
-            ref: >-
-                trim .CLI_ARGS | splitList " "
+            - "{{.TARGET}}"
 
-  unit-test:
-    desc: "Builds ystdlib-cpp unit test targets."
-    summary: |-
-      Builds specified ystdlib-cpp unit test targets, or run the unified unit test target if no
-      libraries are specified.
-
-      Usage: task build -- <lib_name0> <lib_name1> ...
+  unit-test-*:
+    desc: "Builds a unit test target."
     vars:
-      TARGET_LIBS:
-        ref: >-
-          .CLI_ARGS | default "all" | splitList " "
+      TEST_TARGET: >-
+        {{printf "unit-test-%s" (index .MATCH 0)}}
     cmds:
-      - task: "target"
-        vars:
-          CLI_ARGS: >-
-             {{- range .TARGET_LIBS}}
-             {{(printf "unit-test-%s" .)}}
-             {{- end}}
+      - task: "target-{{.TEST_TARGET}}"
 
   clean:
     desc: "Removes all built artifacts."

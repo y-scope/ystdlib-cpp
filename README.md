@@ -33,25 +33,25 @@ To build all targets:
 task build:all
 ```
 
-To build a unified executable containing all unit tests:
+To build an executable containing all unit tests:
 ```shell
-task build:unit-test
+task build:unit-test-all
 ```
 
-To build individual unit test executables for a subset of libraries:
+To build an executable containing a single library's unit tests:
 ```shell
-task build:unit-test -- <lib_name0> <lib_name1> ...
+task build:unit-test-<lib_name>
 ```
 
 ## Testing
 To build and run all unit tests:
 ```shell
-task test
+task test:all
 ```
 
-To build and run unit tests for a subset of libraries:
+To build and run unit tests for a single library:
 ```shell
-task test -- <lib_name0> <lib_name1> ...
+task test:run-<lib_name>
 ```
 
 ## Linting

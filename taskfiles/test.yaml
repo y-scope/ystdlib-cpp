@@ -1,23 +1,15 @@
 version: "3"
 
 tasks:
-  default:
-    desc: "Runs ystdlib-cpp unit test targets."
-    summary: |-
-      Runs specified ystdlib-cpp unit test targets, or run the unified unit test target if no
-      libraries are specified.
+  all:
+    desc: "Runs all unit tests."
+    cmds:
+      - task: "run-all"
 
-      Usage: task test -- <lib_name0> <lib_name1> ...
+  run-*:
+    desc: "Runs a unit test target."
     vars:
-      TARGET_LIBS:
-        ref: >-
-          .CLI_ARGS | default "all" | splitList " "
-    dir: "{{.G_TEST_BIN_DIR}}"
+      LIBRARY: "{{index .MATCH 0}}"
     deps:
-      - task: ":build:unit-test"
-        vars:
-          CLI_ARGS: "{{.CLI_ARGS}}"
-    cmd: |-
-      {{- range .TARGET_LIBS}}
-      ./unit-test-{{.}}
-      {{- end}}
+      - task: ":build:unit-test-{{.LIBRARY}}"
+    cmd: "{{.G_TEST_BIN_DIR}}/unit-test-{{.LIBRARY}}"
