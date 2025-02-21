@@ -1,16 +1,33 @@
 version: "3"
 
-tasks:
-  all:
-    desc: "Runs all unit tests."
-    cmds:
-      - task: "run-all"
+vars:
+  YSTDLIBS:
+    - "testlib"
 
-  run-*:
-    desc: "Runs unit test for the specified library."
-    vars:
-      TEST_TARGET: >-
-        {{printf "unit-test-%s" (index .MATCH 0)}}
+tasks:
+  test-all:
+    desc: "Runs all unit tests."
     deps:
-      - task: ":build:{{.TEST_TARGET}}"
-    cmd: "{{.G_TEST_BIN_DIR}}/{{.TEST_TARGET}}"
+      - "build:unit-test-all"
+    cmds:
+      - "{{.G_TEST_BIN_DIR}}/unit-test-all"
+
+  test-*:
+    desc: "Runs unit tests for the specified library."
+    vars:
+      LIBRARY: >-
+        {{index .MATCH 0}}
+      TEST_TARGET: >-
+        {{printf "unit-test-%s" .LIBRARY}}
+    preconditions:
+      - sh: >-
+          {{ has .LIBRARY .YSTDLIBS }}
+        msg: |-
+          {{.LIBRARY}} is not a valid ystdlib-cpp library!
+          List of libraries:
+          {{- range .YSTDLIBS }}
+          {{.}}
+          {{- end}}
+    cmds:
+      - task: "build:{{.TEST_TARGET}}"
+      - "{{.G_TEST_BIN_DIR}}/{{.TEST_TARGET}}"
