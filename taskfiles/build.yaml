@@ -42,6 +42,7 @@ tasks:
         msg: |-
           {{.LIBRARY}} is not a valid ystdlib-cpp library!
           List of libraries:
+            all (if you don't wish to provide a specific library)
           {{- range .G_YSTDLIBS }}
             {{.}}
           {{- end}}
