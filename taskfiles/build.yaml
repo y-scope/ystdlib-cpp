@@ -38,12 +38,12 @@ tasks:
         {{printf "unit-test-%s" .LIBRARY}}
     preconditions:
       - sh: >-
-          {{ has .LIBRARY .G_YSTDLIBS }}
+          {{or (eq .LIBRARY `all`) (has .LIBRARY .G_YSTDLIBS)}}
         msg: |-
           {{.LIBRARY}} is not a valid ystdlib-cpp library!
           List of libraries:
           {{- range .G_YSTDLIBS }}
-          {{.}}
+            {{.}}
           {{- end}}
     cmds:
       - task: "target-{{.TEST_TARGET}}"
