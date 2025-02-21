@@ -30,7 +30,7 @@ tasks:
             - "{{.TARGET}}"
 
   unit-test-*:
-    desc: "Builds a unit test target."
+    desc: "Builds unit test target for the specified library."
     vars:
       TEST_TARGET: >-
         {{printf "unit-test-%s" (index .MATCH 0)}}

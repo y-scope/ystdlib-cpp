@@ -7,9 +7,10 @@ tasks:
       - task: "run-all"
 
   run-*:
-    desc: "Runs a unit test target."
+    desc: "Runs unit test for the specified library."
     vars:
-      LIBRARY: "{{index .MATCH 0}}"
+      TEST_TARGET: >-
+        {{printf "unit-test-%s" (index .MATCH 0)}}
     deps:
-      - task: ":build:unit-test-{{.LIBRARY}}"
-    cmd: "{{.G_TEST_BIN_DIR}}/unit-test-{{.LIBRARY}}"
+      - task: ":build:{{.TEST_TARGET}}"
+    cmd: "{{.G_TEST_BIN_DIR}}/{{.TEST_TARGET}}"
