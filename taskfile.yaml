@@ -27,8 +27,15 @@ tasks:
     cmds:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
 
+  test-all:
+    desc: "Runs all unit tests."
+    deps:
+      - "build:unit-test-all"
+    cmds:
+      - "{{.G_TEST_BIN_DIR}}/unit-test-all"
+
   test-*:
-    desc: "Runs unit tests for the specified library, or run all tests with `test-all`."
+    desc: "Runs unit tests for the specified library."
     vars:
       TEST_TARGET: >-
         {{printf "unit-test-%s" (index .MATCH 0)}}
