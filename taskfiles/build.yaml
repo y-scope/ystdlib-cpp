@@ -32,8 +32,19 @@ tasks:
   unit-test-*:
     desc: "Builds the unit test target for the specified library."
     vars:
+      LIBRARY: >-
+        {{index .MATCH 0}}
       TEST_TARGET: >-
-        {{printf "unit-test-%s" (index .MATCH 0)}}
+        {{printf "unit-test-%s" .LIBRARY}}
+    preconditions:
+      - sh: >-
+          {{ has .LIBRARY .G_YSTDLIBS }}
+        msg: |-
+          {{.LIBRARY}} is not a valid ystdlib-cpp library!
+          List of libraries:
+          {{- range .G_YSTDLIBS }}
+          {{.}}
+          {{- end}}
     cmds:
       - task: "target-{{.TEST_TARGET}}"
 
