@@ -11,25 +11,33 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-find_package(Catch2 3.8.0 REQUIRED)
-if(Catch2_FOUND)
-    message(STATUS "Found Catch2 ${Catch2_VERSION}.")
-else()
-    message(FATAL_ERROR "Could not find libraries for Catch2.")
-endif()
+option(BUILD_TESTING "If ON, unit tests will be built." ON)
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+
+if(BUILD_TESTING)
+    find_package(Catch2 3.8.0 REQUIRED)
+    if(Catch2_FOUND)
+        message(STATUS "Found Catch2 ${Catch2_VERSION}.")
+    else()
+        message(FATAL_ERROR "Could not find libraries for Catch2.")
+    endif()
+
+    # Set up the unified unit test target
+    set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
+    add_executable(${UNIFIED_UNIT_TEST_TARGET})
+    target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
+    target_compile_features(${UNIFIED_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+    set_property(
+        TARGET
+            ${UNIFIED_UNIT_TEST_TARGET}
+        PROPERTY
+            RUNTIME_OUTPUT_DIRECTORY
+                ${CMAKE_BINARY_DIR}/testbin
+    )
+endif()
+
 include(ystdlib-cpp-helpers)
 
 add_subdirectory(src/ystdlib)
-
-add_executable(unitTest)
-target_sources(unitTest PRIVATE src/main.cpp)
-target_link_libraries(
-    unitTest
-    PRIVATE
-        ystdlib::testlib
-        Catch2::Catch2WithMain
-)
-target_compile_features(unitTest PRIVATE cxx_std_20)

@@ -8,13 +8,45 @@ vars:
 
 tasks:
   all:
-    desc: "Builds ystdlib-cpp."
+    desc: "Builds all of ystdlib-cpp."
     deps:
       - "init"
     cmds:
       - task: ":utils:cmake-build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
+
+  target-*:
+    desc: "Builds a CMake target."
+    vars:
+      TARGET: "{{index .MATCH 0}}"
+    deps:
+      - "init"
+    cmds:
+      - task: ":utils:cmake-build"
+        vars:
+          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          TARGETS:
+            - "{{.TARGET}}"
+
+  unit-test-*:
+    desc: "Builds the specified unit test target."
+    vars:
+      TARGET_SUFFIX: >-
+        {{index .MATCH 0}}
+      TARGET_NAME: >-
+        {{printf "unit-test-%s" .TARGET_SUFFIX}}
+    preconditions:
+      - sh: >-
+          {{has .TARGET_SUFFIX .G_TEST_TARGET_SUFFIXES}}
+        msg: |-
+          {{.TARGET_NAME}} is not a valid unit test target!
+          List of unit test targets:
+          {{- range .G_TEST_TARGET_SUFFIXES }}
+            unit-test-{{.}}
+          {{- end}}
+    cmds:
+      - task: "target-{{.TARGET_NAME}}"
 
   clean:
     desc: "Removes all built artifacts."

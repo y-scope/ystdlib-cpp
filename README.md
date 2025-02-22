@@ -28,9 +28,30 @@ git submodule update --init --recursive
 ```
 
 ## Building
-To build all targets in `ystdlib-cpp`:
+To build all targets:
 ```shell
 task build:all
+```
+
+To build an executable containing all unit tests:
+```shell
+task build:unit-test-all
+```
+
+To build an executable containing a single library's unit tests:
+```shell
+task build:unit-test-<lib_name>
+```
+
+## Testing
+To build and run all unit tests:
+```shell
+task test-all
+```
+
+To build and run unit tests for a specific library:
+```shell
+task test-<lib_name>
 ```
 
 ## Linting

@@ -61,6 +61,5 @@ jobs:
           command -v tar
           command -v task
 
-      # TODO: Change the task to run all unittests once any unittest is added. Until then we check
-      # that building the project succeeds.
-      - run: "task build:all"
+      - name: "Run unit tests"
+        run: "task test-all"
