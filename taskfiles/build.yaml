@@ -38,7 +38,7 @@ tasks:
         {{printf "unit-test-%s" .TARGET_SUFFIX}}
     preconditions:
       - sh: >-
-          {{(has .TARGET_SUFFIX .G_TEST_TARGET_SUFFIXES)}}
+          {{has .TARGET_SUFFIX .G_TEST_TARGET_SUFFIXES}}
         msg: |-
           {{.TARGET_NAME}} is not a valid unit test target!
           List of unit test targets:

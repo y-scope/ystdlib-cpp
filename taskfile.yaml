@@ -29,7 +29,7 @@ tasks:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
 
   test-*:
-    desc: "Runs unit tests for the specified library. See ystdlib-cpp README for special targets."
+    desc: "Runs unit tests for the specified test target."
     vars:
       TEST_TARGET: >-
         {{printf "unit-test-%s" (index .MATCH 0)}}

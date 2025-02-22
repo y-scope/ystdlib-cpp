@@ -44,15 +44,14 @@ task build:unit-test-<lib_name>
 ```
 
 ## Testing
-To build and run unit tests for a specific library:
-```shell
-task test-<lib_name>
-```
-
-#### Special Targets
 To build and run all unit tests:
 ```shell
 task test-all
+```
+
+To build and run unit tests for a specific library:
+```shell
+task test-<lib_name>
 ```
 
 ## Linting
