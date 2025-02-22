@@ -11,7 +11,8 @@ vars:
   G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
   G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
   G_TEST_BIN_DIR: "{{.G_BUILD_DIR}}/testbin"
-  G_YSTDLIBS:
+  G_TEST_TARGET_SUFFIXES:
+    - "all"
     - "testlib"
 
 tasks:
@@ -27,15 +28,8 @@ tasks:
     cmds:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
 
-  test-all:
-    desc: "Runs all unit tests."
-    deps:
-      - "build:unit-test-all"
-    cmds:
-      - "{{.G_TEST_BIN_DIR}}/unit-test-all"
-
   test-*:
-    desc: "Runs unit tests for the specified library."
+    desc: "Runs unit tests for the specified library. See ystdlib-cpp README for special targets."
     vars:
       TEST_TARGET: >-
         {{printf "unit-test-%s" (index .MATCH 0)}}
