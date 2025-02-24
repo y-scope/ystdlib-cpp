@@ -25,8 +25,8 @@ public:
             std::source_location const& location = std::source_location::current()
     )
             : std::source_location{location},
-              m_error_code(error_code) {
-        m_what = std::string{function_name()} + " operation failed.";
+              m_error_code{error_code} {
+        m_what = std::string{function_name()} + " failed.";
     }
 
     // Methods
