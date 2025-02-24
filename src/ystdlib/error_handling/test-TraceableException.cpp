@@ -66,12 +66,17 @@ auto capture_exception(Callable&& f) -> ystdlib::error_handling::TraceableExcept
 }
 }  // namespace
 
+#include <iostream>
+
 TEST_CASE("test_traceable_exception_success", "[error_handling][TraceableException]") {
     auto const success_exception{capture_exception(Worker::execute_with_success)};
     std::error_code const success_error_code{BinaryErrorCode{BinaryErrorCodeEnum::Success}};
     REQUIRE((success_error_code.category() == success_exception.error_code().category()));
     REQUIRE((success_error_code.value() == success_exception.error_code().value()));
     REQUIRE((cSuccessErrorMsg == success_exception.error_code().message()));
+    std::cout << "A:" << cExecuteWithSuccessFunctionName << std::endl;
+    std::cout << "B:" << success_exception.what() << std::endl;
+    std::cout << "C:" << success_exception.function_name() << std::endl;
     REQUIRE((cExecuteWithSuccessFunctionName == std::string_view{success_exception.what()}));
     REQUIRE((cExecuteWithSuccessFunctionName == success_exception.function_name()));
     REQUIRE((cExecuteWithSuccessLineNumber == success_exception.line()));
