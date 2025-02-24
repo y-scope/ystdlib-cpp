@@ -1,5 +1,6 @@
 #include <cassert>
 #include <string>
+#include <string_view>
 #include <system_error>
 
 #include <ystdlib/error_handling/TraceableException.hpp>
@@ -9,7 +10,7 @@
 #include "test-Defs.hpp"
 
 namespace {
-constexpr auto cCustomFailureDescription{"This operation has failed."};
+constexpr std::string_view cCustomFailureDescription{"This operation has failed."};
 
 class Worker {
 public:
@@ -22,7 +23,7 @@ public:
     static auto execute_with_failure() -> void {
         throw OperationFailed(
                 BinaryErrorCode{BinaryErrorCodeEnum::Failure},
-                cCustomFailureDescription
+                cCustomFailureDescription.data()
         );
     }
 
@@ -31,25 +32,24 @@ public:
     }
 };
 
-constexpr auto cExecuteWithSuccessFunctionName{
+constexpr std::string_view cExecuteWithSuccessFunctionName{
         "static void {anonymous}::Worker::execute_with_success()"
 };
-constexpr auto cExecuteWithFailureFunctionName{
+constexpr std::string_view cExecuteWithFailureFunctionName{
         "static void {anonymous}::Worker::execute_with_failure()"
 };
-constexpr auto cExecuteWithInvalidArgsFunctionName{
+constexpr std::string_view cExecuteWithInvalidArgsFunctionName{
         "static void {anonymous}::Worker::execute_with_invalid_args()"
 };
-constexpr auto cInvalidArgsErrorMsg{"Invalid argument"};
-constexpr auto cExecuteWithSuccessLineNumber{19};
-constexpr auto cExecuteWithFailureLineNumber{26};
-constexpr auto cExecuteWithInvalidArgsLineNumber{30};
+constexpr std::string_view cInvalidArgsErrorMsg{"Invalid argument"};
+constexpr auto cExecuteWithSuccessLineNumber{20};
+constexpr auto cExecuteWithFailureLineNumber{27};
+constexpr auto cExecuteWithInvalidArgsLineNumber{31};
 
 #ifdef SOURCE_PATH_SIZE
-// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-constexpr auto cRelativePathFileName{static_cast<char const*>(__FILE__) + SOURCE_PATH_SIZE};
+constexpr auto cRelativePathFileName{std::string_view{__FILE__}.substr(SOURCE_PATH_SIZE)};
 #else
-constexpr auto cRelativePathFileName{__FILE__};
+constexpr std::string_view cRelativePathFileName{__FILE__};
 #endif
 
 template <typename Callable>
