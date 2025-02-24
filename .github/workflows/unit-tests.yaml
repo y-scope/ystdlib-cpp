@@ -48,11 +48,11 @@ jobs:
         run: |-
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-              g++-10 \
-              gcc-10
-          sudo ln --symbolic --force /usr/bin/gcc-10 /usr/bin/cc
-          sudo ln --symbolic --force /usr/bin/g++-10 /usr/bin/c++
-          sudo ln --symbolic --force /usr/bin/cpp-10 /usr/bin/cpp
+              g++-11 \
+              gcc-11
+          sudo ln --symbolic --force /usr/bin/gcc-11 /usr/bin/cc
+          sudo ln --symbolic --force /usr/bin/g++-11 /usr/bin/c++
+          sudo ln --symbolic --force /usr/bin/cpp-11 /usr/bin/cpp
 
       - name: "Log tool versions"
         run: |-
