@@ -1,5 +1,4 @@
 #include <cassert>
-#include <string>
 #include <string_view>
 #include <system_error>
 
@@ -42,9 +41,9 @@ constexpr std::string_view cExecuteWithInvalidArgsFunctionName{
         "static void {anonymous}::Worker::execute_with_invalid_args()"
 };
 constexpr std::string_view cInvalidArgsErrorMsg{"Invalid argument"};
-constexpr auto cExecuteWithSuccessLineNumber{20};
-constexpr auto cExecuteWithFailureLineNumber{27};
-constexpr auto cExecuteWithInvalidArgsLineNumber{31};
+constexpr auto cExecuteWithSuccessLineNumber{19};
+constexpr auto cExecuteWithFailureLineNumber{26};
+constexpr auto cExecuteWithInvalidArgsLineNumber{30};
 
 #ifdef SOURCE_PATH_SIZE
 constexpr auto cRelativePathFileName{std::string_view{__FILE__}.substr(SOURCE_PATH_SIZE)};
@@ -73,7 +72,7 @@ TEST_CASE("test_traceable_exception_success", "[error_handling][TraceableExcepti
     REQUIRE((success_error_code.category() == success_exception.error_code().category()));
     REQUIRE((success_error_code.value() == success_exception.error_code().value()));
     REQUIRE((cSuccessErrorMsg == success_exception.error_code().message()));
-    REQUIRE((cExecuteWithSuccessFunctionName == std::string{success_exception.what()}));
+    REQUIRE((cExecuteWithSuccessFunctionName == std::string_view{success_exception.what()}));
     REQUIRE((cExecuteWithSuccessFunctionName == success_exception.function_name()));
     REQUIRE((cExecuteWithSuccessLineNumber == success_exception.line()));
     REQUIRE((cRelativePathFileName == success_exception.file_name()));
@@ -85,7 +84,7 @@ TEST_CASE("test_traceable_exception_failure", "[error_handling][TraceableExcepti
     REQUIRE((failure_error_code.category() == failure_exception.error_code().category()));
     REQUIRE((failure_error_code.value() == failure_exception.error_code().value()));
     REQUIRE((cFailureErrorMsg == failure_exception.error_code().message()));
-    REQUIRE((cCustomFailureDescription == std::string{failure_exception.what()}));
+    REQUIRE((cCustomFailureDescription == std::string_view{failure_exception.what()}));
     REQUIRE((cExecuteWithFailureFunctionName == failure_exception.function_name()));
     REQUIRE((cExecuteWithFailureLineNumber == failure_exception.line()));
     REQUIRE((cRelativePathFileName == failure_exception.file_name()));
@@ -97,7 +96,8 @@ TEST_CASE("test_traceable_exception_invalid_args", "[error_handling][TraceableEx
     REQUIRE((invalid_args_error_code.category() == invalid_args_exception.error_code().category()));
     REQUIRE((invalid_args_error_code.value() == invalid_args_exception.error_code().value()));
     REQUIRE((cInvalidArgsErrorMsg == invalid_args_exception.error_code().message()));
-    REQUIRE((cExecuteWithInvalidArgsFunctionName == std::string{invalid_args_exception.what()}));
+    REQUIRE((cExecuteWithInvalidArgsFunctionName == std::string_view{invalid_args_exception.what()})
+    );
     REQUIRE((cExecuteWithInvalidArgsFunctionName == invalid_args_exception.function_name()));
     REQUIRE((cExecuteWithInvalidArgsLineNumber == invalid_args_exception.line()));
     REQUIRE((cRelativePathFileName == invalid_args_exception.file_name()));
