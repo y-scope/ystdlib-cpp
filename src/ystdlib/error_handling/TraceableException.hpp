@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <source_location>
+#include <string>
 #include <system_error>
 
 namespace ystdlib::error_handling {
@@ -19,15 +20,21 @@ namespace ystdlib::error_handling {
  */
 class TraceableException : public std::exception, public std::source_location {
 public:
-    // Constructor
-    TraceableException(
+    // Constructors
+    explicit TraceableException(
             std::error_code error_code,
             std::source_location const& location = std::source_location::current()
     )
+            : TraceableException{error_code, location.function_name(), location} {}
+
+    explicit TraceableException(
+            std::error_code error_code,
+            char const* what,
+            std::source_location const& location = std::source_location::current()
+    )
             : std::source_location{location},
-              m_error_code{error_code} {
-        m_what = std::string{function_name()} + " failed.";
-    }
+              m_error_code{error_code},
+              m_what{what} {}
 
     // Methods
     [[nodiscard]] auto error_code() const -> std::error_code { return m_error_code; }
