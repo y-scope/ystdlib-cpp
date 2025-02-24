@@ -29,7 +29,7 @@ public:
 
     explicit TraceableException(
             std::error_code error_code,
-            char const* what,
+            std::string const& what,
             std::source_location const& location = std::source_location::current()
     )
             : std::source_location{location},
