@@ -46,6 +46,7 @@ jobs:
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
         run: |-
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
               g++-11 \
