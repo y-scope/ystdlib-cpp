@@ -47,12 +47,14 @@ jobs:
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16
-          echo 'export PATH="/opt/homebrew/opt/llvm@16/bin:$PATH"' >> /Users/runner/.bash_profile
-          echo 'export LDFLAGS="-L/opt/homebrew/opt/llvm@16/lib"' >> /Users/runner/.bash_profile
-          echo 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"' >> /Users/runner/.bash_profile
-          echo 'export CC=/opt/homebrew/opt/llvm@16/bin/clang' >> /Users/runner/.bash_profile
-          echo 'export CXX=/opt/homebrew/opt/llvm@16/bin/clang++' >> /Users/runner/.bash_profile
+          echo 'export PATH="/opt/homebrew/opt/llvm@16/bin:$PATH"' >> /Users/runner/.bashrc
+          echo 'export LDFLAGS="-L/opt/homebrew/opt/llvm@16/lib"' >> /Users/runner/.bashrc
+          echo 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"' >> /Users/runner/.bashrc
+          echo 'export CC=/opt/homebrew/opt/llvm@16/bin/clang' >> /Users/runner/.bashrc
+          echo 'export CXX=/opt/homebrew/opt/llvm@16/bin/clang++' >> /Users/runner/.bashrc
           echo $SHELL
+          ls -l /opt/homebrew/opt/llvm@16/bin/clang
+          ls -l /opt/homebrew/opt/llvm@16/bin/clang++
           clang --version
 
       - if: "matrix.os == 'ubuntu-20.04'"
