@@ -47,6 +47,9 @@ jobs:
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16
+          export PATH="/opt/homebrew/opt/llvm@16/bin:$PATH"
+          export LDFLAGS="-L/opt/homebrew/opt/llvm@16/lib"
+          export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"
           export CC=/opt/homebrew/opt/llvm@16/bin/clang
           export CXX=/opt/homebrew/opt/llvm@16/bin/clang++
 
