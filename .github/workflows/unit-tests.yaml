@@ -21,8 +21,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - "macos-latest"
           - "macos-14"
+          - "macos-15"
           - "ubuntu-20.04"
           - "ubuntu-22.04"
           - "ubuntu-24.04"
@@ -40,11 +40,11 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-latest'"
+      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
         name: "Install coreutils (for md5sum)"
         run: "brew install coreutils"
 
-      - if: "matrix.os == 'macos-latest'"
+      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16

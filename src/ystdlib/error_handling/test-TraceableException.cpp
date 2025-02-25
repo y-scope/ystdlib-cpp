@@ -22,10 +22,9 @@ public:
     }
 
     static auto execute_with_failure() -> void {
-        throw OperationFailed(
-                BinaryErrorCode{BinaryErrorCodeEnum::Failure},
-                cCustomFailureDescription.data()
-        );
+        // clang-format off
+        throw OperationFailed(BinaryErrorCode{BinaryErrorCodeEnum::Failure}, cCustomFailureDescription.data());
+        // clang-format on
     }
 
     static auto execute_with_invalid_args() -> void {
@@ -48,8 +47,8 @@ constexpr std::string_view cExecuteWithInvalidArgsFunctionName{
 };
 constexpr std::string_view cInvalidArgsErrorMsg{"Invalid argument"};
 constexpr auto cExecuteWithSuccessLineNumber{21};
-constexpr auto cExecuteWithFailureLineNumber{28};
-constexpr auto cExecuteWithInvalidArgsLineNumber{32};
+constexpr auto cExecuteWithFailureLineNumber{26};
+constexpr auto cExecuteWithInvalidArgsLineNumber{31};
 
 #ifdef SOURCE_PATH_SIZE
 constexpr auto cRelativePathFileName{std::string_view{__FILE__}.substr(SOURCE_PATH_SIZE)};
