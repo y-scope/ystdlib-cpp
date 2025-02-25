@@ -1,11 +1,11 @@
-#include "test-types.hpp"
+#include "types.hpp"
 
 #include <algorithm>
 #include <string>
 #include <string_view>
 #include <system_error>
 
-#include "test-constants.hpp"
+#include "constants.hpp"
 
 using ystdlib::error_handling::test::AlwaysSuccessErrorCategory;
 using ystdlib::error_handling::test::AlwaysSuccessErrorCodeEnum;

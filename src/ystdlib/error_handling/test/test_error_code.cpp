@@ -7,8 +7,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "test-constants.hpp"
-#include "test-types.hpp"
+#include "constants.hpp"
+#include "types.hpp"
 
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_error_code", "[error_handling][ErrorCode]") {
