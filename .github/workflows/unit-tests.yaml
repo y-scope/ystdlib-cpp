@@ -40,11 +40,11 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
+      - if: "matrix.os == 'macos-14'"
         name: "Install coreutils (for md5sum)"
         run: "brew install coreutils"
 
-      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
+      - if: "matrix.os == 'macos-14'"
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16
@@ -54,14 +54,32 @@ jobs:
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
         run: |-
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update
           sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-              g++-11 \
-              gcc-11
-          sudo ln --symbolic --force /usr/bin/gcc-11 /usr/bin/cc
-          sudo ln --symbolic --force /usr/bin/g++-11 /usr/bin/c++
-          sudo ln --symbolic --force /usr/bin/cpp-11 /usr/bin/cpp
+              bzip2 \
+              flex
+          cd ~
+          curl -L -o gcc-11.4.0.tar.gz \
+              https://github.com/gcc-mirror/gcc/archive/refs/tags/releases/gcc-11.4.0.tar.gz
+          tar -xzf gcc-11.4.0.tar.gz
+          cd gcc-releases-gcc-11.4.0
+          sudo ./contrib/download_prerequisites
+          mkdir build
+          cd build
+          ../configure -v \
+              --build=x86_64-linux-gnu \
+              --host=x86_64-linux-gnu \
+              --target=x86_64-linux-gnu \
+              --prefix=/usr/local/gcc-11.4.0 \
+              --enable-checking=release \
+              --enable-languages=c,c++,fortran \
+              --disable-multilib \
+              --program-suffix=-11.4
+          make -j$(nproc)
+          make install PREFIX=/usr/local/gcc-11.4.0/bin
+          sudo ln --symbolic --force /usr/local/gcc-11.4.0/bin/gcc-11.4 /usr/bin/cc
+          sudo ln --symbolic --force /usr/local/gcc-11.4.0/bin/g++-11.4 /usr/bin/c++
+          sudo ln --symbolic --force /usr/local/gcc-11.4.0/bin/cpp-11.4 /usr/bin/cpp
 
       - name: "Log tool versions"
         run: |-
