@@ -23,7 +23,6 @@ jobs:
         os:
           - "macos-14"
           - "macos-15"
-          - "ubuntu-20.04"
           - "ubuntu-22.04"
           - "ubuntu-24.04"
     runs-on: "${{matrix.os}}"
@@ -45,25 +44,17 @@ jobs:
         run: "brew install coreutils"
 
       - if: "matrix.os == 'macos-14'"
-        name: "Install clang-16 (for c++20)"
+        name: "Run unit tests"
+        env:
+          CC: "/opt/homebrew/opt/llvm@16/bin/clang"
+          CXX: "/opt/homebrew/opt/llvm@16/bin/clang++"
         run: |-
           brew install llvm@16
-          echo "export CC=/opt/homebrew/opt/llvm@16/bin/clang" >> /Users/runner/.bashrc
-          echo "export CXX=/opt/homebrew/opt/llvm@16/bin/clang++" >> /Users/runner/.bashrc
+          task clean
+          task test-all
 
-      - if: "matrix.os == 'ubuntu-20.04'"
-        name: "Install gcc-10 (for c++20)"
+      - if: "false == (matrix.os == 'macos-14')"
+        name: "Run unit tests"
         run: |-
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-              g++-10 \
-              gcc-10
-          sudo ln --symbolic --force /usr/bin/gcc-10 /usr/bin/cc
-          sudo ln --symbolic --force /usr/bin/g++-10 /usr/bin/c++
-          sudo ln --symbolic --force /usr/bin/cpp-10 /usr/bin/cpp
-
-      - name: "Run unit tests"
-        run: |-
-          source ~/.bashrc
           task clean
           task test-all
