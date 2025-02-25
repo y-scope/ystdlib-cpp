@@ -67,8 +67,8 @@ jobs:
         run: |-
           [ -n "$ZSH_VERSION" ] && source ~/.zshrc || { [ -n "$BASH_VERSION" ] && source ~/.bashrc; }
           clang --version
-          gcc --version
           g++ --version
+          gcc --version
           md5sum --version
           python --version
           tar --version
