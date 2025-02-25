@@ -39,7 +39,7 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-14'"
+      - if: "'macos-14' == matrix.os"
         name: "Install MacOS-14 deps: coreutils (for md5sum) and AppleClang16 (for c++20)"
         run: |-
           brew install coreutils
@@ -47,8 +47,8 @@ jobs:
 
       - name: "Run unit tests"
         env:
-          CC: "${{ matrix.os == 'macos-14' && '/opt/homebrew/opt/llvm@16/bin/clang' || '' }}"
-          CXX: "${{ matrix.os == 'macos-14' && '/opt/homebrew/opt/llvm@16/bin/clang++' || '' }}"
+          CC: "${{ 'macos-14' == matrix.os && '/opt/homebrew/opt/llvm@16/bin/clang' || '' }}"
+          CXX: "${{ 'macos-14' == matrix.os && '/opt/homebrew/opt/llvm@16/bin/clang++' || '' }}"
         run: |
           task clean
           task test-all
