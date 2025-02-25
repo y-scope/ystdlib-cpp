@@ -46,12 +46,12 @@ jobs:
           brew install llvm@16
 
       - if: "'macos-14' == matrix.os"
-      - name: "Run macos-14 unit tests"
+        name: "Run unit tests"
         env:
           CC: "/opt/homebrew/opt/llvm@16/bin/clang"
           CXX: "/opt/homebrew/opt/llvm@16/bin/clang++"
         run: "task test-all"
 
       - if: "false == ('macos-14' == matrix.os)"
-      - name: "Run unit tests"
+        name: "Run unit tests"
         run: "task test-all"
