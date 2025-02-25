@@ -39,10 +39,6 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
-        name: "Install coreutils (for md5sum)"
-        run: "brew install coreutils"
-
       - if: "matrix.os == 'macos-14'"
         name: "Run unit tests"
         env:
