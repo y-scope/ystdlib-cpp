@@ -7,8 +7,10 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include "test-Defs.hpp"
+#include "test-constants.hpp"
+#include "test-types.hpp"
 
+namespace ystdlib::error_handling::test {
 TEST_CASE("test_error_code", "[error_handling][ErrorCode]") {
     // Test error codes within the same error category
     BinaryErrorCode const success{BinaryErrorCodeEnum::Success};
@@ -61,3 +63,4 @@ TEST_CASE("test_error_code_failure_condition", "[error_handling][ErrorCode]") {
             }
     );
 }
+}  // namespace ystdlib::error_handling::test
