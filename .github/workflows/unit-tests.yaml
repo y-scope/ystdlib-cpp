@@ -21,7 +21,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - "macos-latest"
+          - "macos-14"
+          - "macos-15"
           - "ubuntu-20.04"
           - "ubuntu-22.04"
           - "ubuntu-24.04"
@@ -39,9 +40,16 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-latest'"
+      - if: "matrix.os == 'macos-14' || matrix.os == 'macos-15'"
         name: "Install coreutils (for md5sum)"
         run: "brew install coreutils"
+
+      - if: "matrix.os == 'macos-14'"
+        name: "Install clang-16 (for c++20)"
+        run: |-
+          brew install llvm@16
+          echo "export CC=/opt/homebrew/opt/llvm@16/bin/clang" >> /Users/runner/.bashrc
+          echo "export CXX=/opt/homebrew/opt/llvm@16/bin/clang++" >> /Users/runner/.bashrc
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
@@ -54,12 +62,8 @@ jobs:
           sudo ln --symbolic --force /usr/bin/g++-10 /usr/bin/c++
           sudo ln --symbolic --force /usr/bin/cpp-10 /usr/bin/cpp
 
-      - name: "Log tool versions"
-        run: |-
-          command -v md5sum
-          command -v python
-          command -v tar
-          command -v task
-
       - name: "Run unit tests"
-        run: "task test-all"
+        run: |-
+          source ~/.bashrc
+          task clean
+          task test-all
