@@ -47,8 +47,8 @@ jobs:
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16
-          sudo ln --symbolic --force /opt/homebrew/opt/llvm@16/bin/clang /usr/bin/clang
-          sudo ln --symbolic --force /opt/homebrew/opt/llvm@16/bin/clang++ /usr/bin/clang++
+          sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang /usr/bin/clang
+          sudo ln -sf /opt/homebrew/opt/llvm@16/bin/clang++ /usr/bin/clang++
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
