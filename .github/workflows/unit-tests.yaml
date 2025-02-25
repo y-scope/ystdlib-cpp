@@ -52,7 +52,11 @@ jobs:
           echo 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"' >> /Users/runner/.bashrc
           echo 'export CC=/opt/homebrew/opt/llvm@16/bin/clang' >> /Users/runner/.bashrc
           echo 'export CXX=/opt/homebrew/opt/llvm@16/bin/clang++' >> /Users/runner/.bashrc
+          ls -l /Users/runner/.bashrc
+          ls -l ~/.bashrc
+          source  ~/.bashrc
           echo $SHELL
+          ls -l /opt/homebrew/opt/llvm@16/bin/clang
           ls -l /opt/homebrew/opt/llvm@16/bin/clang
           ls -l /opt/homebrew/opt/llvm@16/bin/clang++
           clang --version
