@@ -83,4 +83,8 @@ jobs:
           command -v task
 
       - name: "Run unit tests"
-        run: "task test-all"
+        run: |-
+          clang --version
+          source  ~/.bashrc
+          clang --version
+          task test-all
