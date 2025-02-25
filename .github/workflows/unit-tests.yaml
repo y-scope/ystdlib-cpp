@@ -52,6 +52,8 @@ jobs:
           echo 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"' >> /Users/runner/.bash_profile
           echo 'export CC=/opt/homebrew/opt/llvm@16/bin/clang' >> /Users/runner/.bash_profile
           echo 'export CXX=/opt/homebrew/opt/llvm@16/bin/clang++' >> /Users/runner/.bash_profile
+          echo $SHELL
+          clang --version
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
@@ -67,6 +69,8 @@ jobs:
 
       - name: "Log tool versions"
         run: |-
+          command -v clang
+          command -v gcc
           command -v md5sum
           command -v python
           command -v tar
