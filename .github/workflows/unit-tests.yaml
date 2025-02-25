@@ -47,11 +47,11 @@ jobs:
         name: "Install clang-16 (for c++20)"
         run: |-
           brew install llvm@16
-          export PATH="/opt/homebrew/opt/llvm@16/bin:$PATH"
-          export LDFLAGS="-L/opt/homebrew/opt/llvm@16/lib"
-          export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"
-          export CC=/opt/homebrew/opt/llvm@16/bin/clang
-          export CXX=/opt/homebrew/opt/llvm@16/bin/clang++
+          echo 'export PATH="/opt/homebrew/opt/llvm@16/bin:$PATH"' >> /Users/runner/.bash_profile
+          echo 'export LDFLAGS="-L/opt/homebrew/opt/llvm@16/lib"' >> /Users/runner/.bash_profile
+          echo 'export CPPFLAGS="-I/opt/homebrew/opt/llvm@16/include"' >> /Users/runner/.bash_profile
+          echo 'export CC=/opt/homebrew/opt/llvm@16/bin/clang' >> /Users/runner/.bash_profile
+          echo 'export CXX=/opt/homebrew/opt/llvm@16/bin/clang++' >> /Users/runner/.bash_profile
 
       - if: "matrix.os == 'ubuntu-20.04'"
         name: "Install gcc-10 (for c++20)"
