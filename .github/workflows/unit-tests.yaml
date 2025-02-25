@@ -45,16 +45,13 @@ jobs:
           brew install coreutils
           brew install llvm@16
 
+      - if: "'macos-14' == matrix.os"
       - name: "Run unit tests"
-        env: >-
-          ${{
-          'macos-14' == matrix.os
-          && fromJson('{
-          "CC": "/opt/homebrew/opt/llvm@16/bin/clang",
-          "CXX": "/opt/homebrew/opt/llvm@16/bin/clang++"
-          }')
-          || {}
-          }}
-        run: |-
-          task clean
-          task test-all
+        env:
+          CC: "/opt/homebrew/opt/llvm@16/bin/clang"
+          CXX: "/opt/homebrew/opt/llvm@16/bin/clang++"
+        run: "task test-all"
+
+      - if: "false == ('macos-14' == matrix.os)"
+      - name: "Run unit tests"
+        run: "task test-all"
