@@ -13,7 +13,7 @@ vars:
   G_TEST_BIN_DIR: "{{.G_BUILD_DIR}}/testbin"
   G_TEST_TARGET_SUFFIXES:
     - "all"
-    - "testlib"
+    - "error_handling"
 
 tasks:
   clean:

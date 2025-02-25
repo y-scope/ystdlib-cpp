@@ -13,6 +13,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 
 option(BUILD_TESTING "If ON, unit tests will be built." ON)
 
+# Macro providing the length of the absolute source directory path so we can output file name
+# information with relative (rather than absolute) paths.
+string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
+add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
+
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
