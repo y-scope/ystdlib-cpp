@@ -5,7 +5,6 @@
 #include <source_location>
 #include <string>
 #include <system_error>
-#include <iostream>
 
 namespace ystdlib::error_handling {
 /**
@@ -26,14 +25,7 @@ public:
             std::error_code error_code,
             std::source_location const& location = std::source_location::current()
     )
-            : TraceableException{error_code, location.function_name(), location} {
-            std::cout << "HAHA: " << location.function_name() << std::endl;
-            std::cout << "HAHA: " << location.line() << std::endl;
-            std::cout << "HAHA: " << location.file_name() << std::endl;
-            std::cout << "HAHA: " << function_name() << std::endl;
-            std::cout << "HAHA: " << line() << std::endl;
-            std::cout << "HAHA: " << file_name() << std::endl;
-    }
+            : TraceableException{error_code, location.function_name(), location} {}
 
     explicit TraceableException(
             std::error_code error_code,

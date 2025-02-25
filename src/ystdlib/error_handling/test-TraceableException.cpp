@@ -10,7 +10,9 @@
 
 namespace {
 constexpr std::string_view cCustomFailureDescription{"This operation has failed."};
+}  // namespace
 
+namespace ystdlib::test {
 class Worker {
 public:
     YSTDLIB_ERROR_HANDLING_DEFINE_TRACEABLE_EXCEPTION(OperationFailed);
@@ -30,20 +32,24 @@ public:
         throw OperationFailed(std::make_error_code(std::errc::invalid_argument));
     }
 };
+}  // namespace ystdlib::test
 
+using ystdlib::test::Worker;
+
+namespace {
 constexpr std::string_view cExecuteWithSuccessFunctionName{
-        "static void {anonymous}::Worker::execute_with_success()"
+        "static void ystdlib::test::Worker::execute_with_success()"
 };
 constexpr std::string_view cExecuteWithFailureFunctionName{
-        "static void {anonymous}::Worker::execute_with_failure()"
+        "static void ystdlib::test::Worker::execute_with_failure()"
 };
 constexpr std::string_view cExecuteWithInvalidArgsFunctionName{
-        "static void {anonymous}::Worker::execute_with_invalid_args()"
+        "static void ystdlib::test::Worker::execute_with_invalid_args()"
 };
 constexpr std::string_view cInvalidArgsErrorMsg{"Invalid argument"};
-constexpr auto cExecuteWithSuccessLineNumber{19};
-constexpr auto cExecuteWithFailureLineNumber{26};
-constexpr auto cExecuteWithInvalidArgsLineNumber{30};
+constexpr auto cExecuteWithSuccessLineNumber{21};
+constexpr auto cExecuteWithFailureLineNumber{28};
+constexpr auto cExecuteWithInvalidArgsLineNumber{32};
 
 #ifdef SOURCE_PATH_SIZE
 constexpr auto cRelativePathFileName{std::string_view{__FILE__}.substr(SOURCE_PATH_SIZE)};
@@ -66,17 +72,12 @@ auto capture_exception(Callable&& f) -> ystdlib::error_handling::TraceableExcept
 }
 }  // namespace
 
-#include <iostream>
-
 TEST_CASE("test_traceable_exception_success", "[error_handling][TraceableException]") {
     auto const success_exception{capture_exception(Worker::execute_with_success)};
     std::error_code const success_error_code{BinaryErrorCode{BinaryErrorCodeEnum::Success}};
     REQUIRE((success_error_code.category() == success_exception.error_code().category()));
     REQUIRE((success_error_code.value() == success_exception.error_code().value()));
     REQUIRE((cSuccessErrorMsg == success_exception.error_code().message()));
-    std::cout << "A:" << cExecuteWithSuccessFunctionName << std::endl;
-    std::cout << "B:" << success_exception.what() << std::endl;
-    std::cout << "C:" << success_exception.function_name() << std::endl;
     REQUIRE((cExecuteWithSuccessFunctionName == std::string_view{success_exception.what()}));
     REQUIRE((cExecuteWithSuccessFunctionName == success_exception.function_name()));
     REQUIRE((cExecuteWithSuccessLineNumber == success_exception.line()));
