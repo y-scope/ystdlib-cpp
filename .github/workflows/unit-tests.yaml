@@ -21,8 +21,8 @@ jobs:
     strategy:
       matrix:
         os:
-          - "macos-latest"
-          - "ubuntu-20.04"
+          - "macos-14"
+          - "macos-15"
           - "ubuntu-22.04"
           - "ubuntu-24.04"
     runs-on: "${{matrix.os}}"
@@ -39,27 +39,20 @@ jobs:
         shell: "bash"
         run: "npm install -g @go-task/cli"
 
-      - if: "matrix.os == 'macos-latest'"
-        name: "Install coreutils (for md5sum)"
-        run: "brew install coreutils"
-
-      - if: "matrix.os == 'ubuntu-20.04'"
-        name: "Install gcc-10 (for c++20)"
+      - if: "'macos-14' == matrix.os"
+        name: "Install macOS 14 deps: coreutils (for md5sum) and Apple Clang 16 (for C++20)"
         run: |-
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-              g++-10 \
-              gcc-10
-          sudo ln --symbolic --force /usr/bin/gcc-10 /usr/bin/cc
-          sudo ln --symbolic --force /usr/bin/g++-10 /usr/bin/c++
-          sudo ln --symbolic --force /usr/bin/cpp-10 /usr/bin/cpp
-
-      - name: "Log tool versions"
-        run: |-
-          command -v md5sum
-          command -v python
-          command -v tar
-          command -v task
+          brew install coreutils
+          brew install llvm@16
 
       - name: "Run unit tests"
+        env: >-
+          ${{
+          'macos-14' == matrix.os
+          && fromJson('{
+          "CC": "/opt/homebrew/opt/llvm@16/bin/clang",
+          "CXX": "/opt/homebrew/opt/llvm@16/bin/clang++"
+          }')
+          || fromJson('{}')
+          }}
         run: "task test-all"
