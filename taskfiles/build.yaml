@@ -2,8 +2,6 @@ version: "3"
 
 vars:
   G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
-  G_CMAKE_CONF_ARGS:
-    - "-DCatch2_ROOT={{.G_DEPS_DIR}}/Catch2/Catch2-install"
   G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
 
 tasks:
@@ -64,6 +62,4 @@ tasks:
       - task: ":utils:cmake-generate"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
-          EXTRA_ARGS:
-            ref: ".G_CMAKE_CONF_ARGS"
           SOURCE_DIR: "{{.ROOT_DIR}}"

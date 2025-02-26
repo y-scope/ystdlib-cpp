@@ -27,6 +27,11 @@ Initialize and update submodules:
 git submodule update --init --recursive
 ```
 
+Install any necessary dependencies from source:
+```shell
+task deps:install-all
+```
+
 ## Building
 To build all targets:
 ```shell

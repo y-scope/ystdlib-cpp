@@ -1,21 +1,28 @@
 version: "3"
 
+vars:
+  G_CATCH2_LIB_NAME: "Catch2"
+  G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIBNAME}}"
+
 tasks:
   install-all:
     desc: "Install all dependencies required by ystdlib-cpp."
     deps:
       - "install-Catch2"
+    cmds:
+      - "rm -f '{{.G_DEPS_CMAKE_SETTINGS_FILE}}'"
+      - >-
+        echo "set(
+        {{.G_CATCH2_LIBNAME}}_ROOT \"{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install\"
+        )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
 
   install-Catch2:
     internal: true
-    vars:
-      NAME: "Catch2"
-      WORK_DIR: "{{.G_DEPS_DIR}}/{{.NAME}}"
     run: "once"
     cmds:
       - task: ":utils:cmake-install-remote-tar"
         vars:
-          NAME: "{{.NAME}}"
-          WORK_DIR: "{{.WORK_DIR}}"
+          NAME: "{{.G_CATCH2_LIB_NAME}}"
+          WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
           FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
