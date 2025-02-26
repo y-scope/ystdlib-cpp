@@ -84,6 +84,13 @@ public:
 template <ErrorCodeEnumType ErrorCodeEnum>
 class ErrorCode {
 public:
+    /**
+     * @return The reference to the singleton of the corresponded error category.
+     */
+    [[nodiscard]] constexpr static auto get_category() -> ErrorCategory<ErrorCodeEnum> const& {
+        return cCategory;
+    }
+
     // Constructor
     ErrorCode(ErrorCodeEnum error) : m_error{error} {}
 
@@ -96,13 +103,6 @@ public:
      * @return The error code as an error number.
      */
     [[nodiscard]] auto get_error_num() const -> int { return static_cast<int>(m_error); }
-
-    /**
-     * @return The reference to the singleton of the corresponded error category.
-     */
-    [[nodiscard]] constexpr static auto get_category() -> ErrorCategory<ErrorCodeEnum> const& {
-        return cCategory;
-    }
 
 private:
     static inline ErrorCategory<ErrorCodeEnum> const cCategory;
