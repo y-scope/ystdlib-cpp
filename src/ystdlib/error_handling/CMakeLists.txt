@@ -3,7 +3,7 @@ cpp_library(
     NAMESPACE ystdlib
     TESTS_SOURCES
         test/constants.hpp
-        test/types.hpp
+        test/test_ErrorCode.cpp
         test/types.cpp
-        test/test_error_code.cpp
+        test/types.hpp
 )
