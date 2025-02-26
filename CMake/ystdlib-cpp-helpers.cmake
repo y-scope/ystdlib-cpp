@@ -1,7 +1,7 @@
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
-# If `YSTDLIB_CPP_BUILD_TESTING` is ON, builds the unit tests specific to the current library, and
+# If `YSTDLIB_CPP_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
 # links this library against the unified unit test target for the entire `ystdlib-cpp` project.
 #
 # @param NAME
@@ -41,7 +41,7 @@ function(cpp_library)
     target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 
-    if(YSTDLIB_CPP_BUILD_TESTING)
+    if(YSTDLIB_CPP_ENABLE_TESTS)
         # Build library-specific unit test target
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
         add_executable(${_UNIT_TEST_TARGET})

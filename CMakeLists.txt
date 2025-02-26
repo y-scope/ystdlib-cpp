@@ -11,12 +11,24 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-option(YSTDLIB_CPP_BUILD_TESTING "If ON, unit tests will be built." ON)
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+    set(YSTDLIB_CPP_MASTER_PROJECT ON CACHE BOOL "ystdlib-cpp is the top-level CMake project.")
+endif()
+
+# Enable unit test building by default if `BUILD_TESING` is not already defined in the parent scope.
+if(NOT DEFINED BUILD_TESTING)
+    set(BUILD_TESTING ON)
+endif()
+
+set(YSTDLIB_CPP_ENABLE_TESTS OFF)
+if((YSTDLIB_CPP_MASTER_PROJECT OR YSTDLIB_CPP_BUILD_TESTING) AND BUILD_TESTING)
+    set(YSTDLIB_CPP_ENABLE_TESTS ON)
+endif()
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
-if(YSTDLIB_CPP_BUILD_TESTING)
+if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
         message(STATUS "Found Catch2 ${Catch2_VERSION}.")
