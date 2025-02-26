@@ -13,7 +13,7 @@ tasks:
       - "rm -f '{{.G_DEPS_CMAKE_SETTINGS_FILE}}'"
       - >-
         echo "set(
-        {{.G_CATCH2_LIBNAME}}_ROOT \"{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install\"
+        {{.G_CATCH2_LIB_NAME}}_ROOT \"{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install\"
         )" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
 
   install-Catch2:
