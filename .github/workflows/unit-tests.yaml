@@ -40,7 +40,7 @@ jobs:
         run: "npm install -g @go-task/cli"
 
       - if: "'macos-14' == matrix.os"
-        name: "Install MacOS 14 deps: coreutils (for md5sum) and Apple Clang 16 (for C++20)"
+        name: "Install macOS 14 deps: coreutils (for md5sum) and Apple Clang 16 (for C++20)"
         run: |-
           brew install coreutils
           brew install llvm@16
