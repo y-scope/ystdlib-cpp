@@ -11,12 +11,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-option(BUILD_TESTING "If ON, unit tests will be built." ON)
+option(YSTDLIB_CPP_BUILD_TESTING "If ON, unit tests will be built." ON)
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
-if(BUILD_TESTING)
+if(YSTDLIB_CPP_BUILD_TESTING)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
         message(STATUS "Found Catch2 ${Catch2_VERSION}.")
