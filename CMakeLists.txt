@@ -1,4 +1,21 @@
 cmake_minimum_required(VERSION 3.16.3)
+
+# Force minimum compiler versions to support full C++20 features
+set(CMAKE_CXX_COMPILER_MIN_VERSION "")
+if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(CMAKE_CXX_COMPILER_MIN_VERSION "16")
+elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(CMAKE_CXX_COMPILER_MIN_VERSION "16")
+elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(CMAKE_CXX_COMPILER_MIN_VERSION "11.4")
+endif()
+if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS ${CMAKE_CXX_COMPILER_MIN_VERSION})
+    message(
+        FATAL_ERROR
+        "${CMAKE_CXX_COMPILER_ID} version must be at least ${CMAKE_CXX_COMPILER_MIN_VERSION}!"
+    )
+endif()
+
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
