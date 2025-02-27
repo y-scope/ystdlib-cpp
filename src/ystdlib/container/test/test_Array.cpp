@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cstddef>
-#include <vector>
 #include <utility>
+#include <vector>
 
 #include <ystdlib/container/Array.hpp>
 
