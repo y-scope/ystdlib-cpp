@@ -3,6 +3,7 @@ version: "3"
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
+
 tasks:
   install-all:
     desc: "Install all dependencies required by ystdlib-cpp."
