@@ -12,6 +12,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 if(YSTDLIB_CPP_IS_TOP_LEVEL)
+    # Include dependency settings if the project isn't being included as a subproject.
+    # NOTE: We mark the file optional because if the user happens to have the dependencies
+    # installed, this file is not necessary.
+    include(build/deps/settings.cmake OPTIONAL)
+
     # If previously undefined, `BUILD_TESTING` will be set to ON.
     include(CTest)
 endif()
