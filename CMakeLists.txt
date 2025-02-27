@@ -16,6 +16,13 @@ option(BUILD_TESTING "If ON, unit tests will be built." ON)
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
+if(PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    # Include dependency settings if the project isn't being included as a subproject.
+    # NOTE: We mark the file optional because if the user happens to have the dependencies
+    # installed, this file is not necessary.
+    include(build/deps/settings.cmake OPTIONAL)
+endif()
+
 if(BUILD_TESTING)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
