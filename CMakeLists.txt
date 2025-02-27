@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16.3)
 
+project(YSTDLIB_CPP LANGUAGES CXX)
+
+set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
+
 # Force minimum compiler versions to support full C++20 features
 if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
     set(CMAKE_CXX_COMPILER_MIN_VERSION "16")
@@ -19,10 +23,6 @@ if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${CMAKE_CXX_COMPILER_MIN_VERSIO
         "${CMAKE_CXX_COMPILER_ID} version must be at least ${CMAKE_CXX_COMPILER_MIN_VERSION}!"
     )
 endif()
-
-project(YSTDLIB_CPP LANGUAGES CXX)
-
-set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
 # Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
