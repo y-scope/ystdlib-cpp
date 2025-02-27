@@ -27,7 +27,8 @@ Initialize and update submodules:
 git submodule update --init --recursive
 ```
 
-Install any necessary dependencies from source:
+If you want to open the project in an IDE, run the following command to install any necessary
+dependencies from source:
 ```shell
 task deps:install-all
 ```
