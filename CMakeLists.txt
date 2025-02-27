@@ -3,8 +3,6 @@ project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
-include(CMakeDependentOption)
-
 # Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
@@ -18,13 +16,9 @@ if(YSTDLIB_CPP_IS_TOP_LEVEL)
 endif()
 
 option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
-cmake_dependent_option(
-    YSTDLIB_CPP_ENABLE_TESTS
-    "Enable unit tests."
-    ON
-    "BUILD_TESTING;YSTDLIB_CPP_BUILD_TESTING"
-    OFF
-)
+if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
+    set(YSTDLIB_CPP_ENABLE_TESTS ON)
+endif()
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
