@@ -64,6 +64,10 @@ To build and run unit tests for a specific library:
 task test-<lib_name>
 ```
 
+As a top-level CMake project, `ystdlib-cpp` always builds unit tests. When included as a subproject,
+it respects the parent-scope `BUILD_TESTING` flag. In either case, you can turn off unit test
+building by setting option `YSTDLIB_CPP_BUILD_TESTING` to off.
+
 ## Linting
 Before submitting a pull request, ensure you’ve run the linting commands below and have fixed all
 violations and suppressed all warnings.
