@@ -8,8 +8,10 @@ elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
 elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
     set(CMAKE_CXX_COMPILER_MIN_VERSION "11.4")
 else()
-    # Unset the minimum required version variable so the comparison test always evaluates to true
-    set(CMAKE_CXX_COMPILER_MIN_VERSION "")
+    message(
+        FATAL_ERROR
+        "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}. Please use AppleClang, Clang, or GNU."
+    )
 endif()
 if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${CMAKE_CXX_COMPILER_MIN_VERSION}")
     message(
