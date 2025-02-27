@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 )
 
 if(YSTDLIB_CPP_IS_TOP_LEVEL)
+    # If previously undefined, `BUILD_TESTING` will be set to ON.
     include(CTest)
 endif()
 
