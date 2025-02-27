@@ -15,9 +15,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
 
 if(YSTDLIB_CPP_IS_TOP_LEVEL)
     include(CTest)
-    option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
 endif()
 
+option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
 cmake_dependent_option(
     YSTDLIB_CPP_ENABLE_TESTS
     "Enable unit tests."

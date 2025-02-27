@@ -3,9 +3,12 @@ ystdlib-cpp
 An open-source C++ library developed and used at YScope.
 
 # Usage
+
+## Via CMake's add_subdirectory()
 Clone `ystdlib-cpp` into your project. Then, in your project's `CMakeLists.txt`, add the following:
 ```cmake
-set(YSTDLIB_CPP_BUILD_TESTING OFF)
+# Uncomment the next line if you do not want to build ystdlib-cpp's unit tests.
+# option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." OFF)
 add_subdirectory(/path/to/ystdlib-cpp EXCLUDE_FROM_ALL)
 target_link_libraries(<target_name> <link_options>
     ystdlib::<lib_1> ystdlib::<lib_2> ... ystdlib::<lib_N>
