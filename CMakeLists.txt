@@ -3,6 +3,8 @@ project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
+include(CMakeDependentOption)
+
 # Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
@@ -11,19 +13,25 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    set(YSTDLIB_CPP_MASTER_PROJECT ON CACHE BOOL "ystdlib-cpp is the top-level CMake project.")
+if(YSTDLIB_CPP_IS_TOP_LEVEL)
+    include(CTest)
 endif()
 
-# Enable unit test building by default if `BUILD_TESING` is not already defined in the parent scope.
-if(NOT DEFINED BUILD_TESTING)
-    set(BUILD_TESTING ON)
-endif()
+cmake_dependent_option(
+    YSTDLIB_CPP_BUILD_TESTING
+    "Build the testing tree for ystdlib-cpp."
+    ON
+    "YSTDLIB_CPP_IS_TOP_LEVEL"
+    OFF
+)
 
-set(YSTDLIB_CPP_ENABLE_TESTS OFF)
-if((YSTDLIB_CPP_MASTER_PROJECT OR YSTDLIB_CPP_BUILD_TESTING) AND BUILD_TESTING)
-    set(YSTDLIB_CPP_ENABLE_TESTS ON)
-endif()
+cmake_dependent_option(
+    YSTDLIB_CPP_ENABLE_TESTS
+    "Enable unit tests."
+    ON
+    "BUILD_TESTING;YSTDLIB_CPP_BUILD_TESTING"
+    OFF
+)
 
 # Import CMake helper functions
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
@@ -35,6 +43,7 @@ if(YSTDLIB_CPP_ENABLE_TESTS)
     else()
         message(FATAL_ERROR "Could not find libraries for Catch2.")
     endif()
+    include(Catch)
 
     # Set up the unified unit test target
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
@@ -48,6 +57,7 @@ if(YSTDLIB_CPP_ENABLE_TESTS)
             RUNTIME_OUTPUT_DIRECTORY
                 ${CMAKE_BINARY_DIR}/testbin
     )
+    catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
 include(ystdlib-cpp-helpers)
