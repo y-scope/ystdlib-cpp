@@ -4,6 +4,7 @@
 #include <concepts>
 #include <cstddef>
 #include <cstring>
+#include <initializer_list>
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -12,7 +13,8 @@ namespace ystdlib::container {
 /**
  * Class for a runtime fix-sized array.
  * @tparam T The type of elements in the array. The type must be default initializable so that this
- * class doesn't need to implement a constructor which takes an initializer list.
+ * class doesn't need to implement special memory allocation procedure for std::unique_ptr<T[]>.
+ * Note that when using constructor that takes an initializer list, T must be copy constructable.
  */
 template <typename T>
 requires(std::is_fundamental_v<T> || std::default_initializable<T>)
@@ -27,6 +29,17 @@ public:
     explicit Array(size_t size) : m_data{std::make_unique<T[]>(size)}, m_size{size} {
         if constexpr (std::is_fundamental_v<T>) {
             memset(m_data.get(), 0, m_size * sizeof(T));
+        }
+    }
+
+    Array(std::initializer_list<T> list)
+            // NOLINTNEXTLINE(*-avoid-c-arrays)
+            : m_data{std::make_unique<T[]>(list.size())},
+              m_size{list.size()} {
+        size_t idx{0};
+        for (auto const& data : list) {
+            m_data[idx] = T(data);
+            ++idx;
         }
     }
 
@@ -97,6 +110,7 @@ private:
      */
     auto assert_is_in_range(size_t idx) const -> void {
         if (idx >= m_size) {
+            // TODO: Add ErrorCode class for `stdexcept` errors and switch to use TraceableException
             throw std::out_of_range("ystdlib::container::Array out-of-range access.");
         }
     }
