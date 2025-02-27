@@ -18,7 +18,9 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
 if(PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     # Include dependency settings if the project isn't being included as a subproject.
-    include(build/deps/settings.cmake)
+    # NOTE: We mark the file optional because if the user happens to have the dependencies
+    # installed, this file is not necessary.
+    include(build/deps/settings.cmake OPTIONAL)
 endif()
 
 if(BUILD_TESTING)
