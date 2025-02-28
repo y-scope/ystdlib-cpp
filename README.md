@@ -63,6 +63,13 @@ To build and run unit tests for a specific library:
 task test-<lib_name>
 ```
 
+The default behaviors for ystdlib-cpp unit test building are:
+* As a top-level project, unit tests are built.
+* When included as a subproject, the parent-scope `BUILD_TESTING` flag (true /false/undefined) is
+  strictly respected.
+If you do not wish to build unit tests under any circumstances, you can override the default
+behaviors by setting CMake option `YSTDLIB_CPP_BUILD_TESTING` to `OFF`.
+
 As a top-level CMake project, `ystdlib-cpp` always builds unit tests. When included as a subproject,
 it respects the parent-scope `BUILD_TESTING` flag. In either case, you can turn off unit test
 building by setting option `YSTDLIB_CPP_BUILD_TESTING` to off.
