@@ -1,7 +1,29 @@
 cmake_minimum_required(VERSION 3.22.1)
+
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
+
+# Require compiler versions that support the C++20 features necessary for compiling ystdlib-cpp
+if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(YSTDLIB_CPP_CMAKE_CXX_COMPILER_MIN_VERSION "16")
+elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(YSTDLIB_CPP_CMAKE_CXX_COMPILER_MIN_VERSION "16")
+elseif("GNU" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
+    set(YSTDLIB_CPP_CMAKE_CXX_COMPILER_MIN_VERSION "11")
+else()
+    message(
+        FATAL_ERROR
+        "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}. Please use AppleClang, Clang, or GNU."
+    )
+endif()
+if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${YSTDLIB_CPP_CMAKE_CXX_COMPILER_MIN_VERSION}")
+    message(
+        FATAL_ERROR
+        "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
+        least ${YSTDLIB_CPP_CMAKE_CXX_COMPILER_MIN_VERSION}."
+    )
+endif()
 
 # Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
