@@ -20,7 +20,8 @@ endif()
 if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${CMAKE_CXX_COMPILER_MIN_VERSION}")
     message(
         FATAL_ERROR
-        "${CMAKE_CXX_COMPILER_ID} version must be at least ${CMAKE_CXX_COMPILER_MIN_VERSION}!"
+        "${CMAKE_CXX_COMPILER_ID} version ${CMAKE_CXX_COMPILER_VERSION} is too low. Must be at \
+        least ${CMAKE_CXX_COMPILER_MIN_VERSION}."
     )
 endif()
 
