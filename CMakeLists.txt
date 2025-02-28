@@ -4,7 +4,7 @@ project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
-# Force minimum compiler versions to support full C++20 features
+# Require compiler versions that support the necessary C++20 features
 if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
     set(CMAKE_CXX_COMPILER_MIN_VERSION "16")
 elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
