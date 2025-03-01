@@ -1,3 +1,6 @@
 # Build-related directories and files
 .task
 build
+
+# CTest directories and files
+Testing
