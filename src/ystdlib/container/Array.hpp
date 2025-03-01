@@ -1,6 +1,7 @@
 #ifndef YSTDLIB_CONTAINER_ARRAY
 #define YSTDLIB_CONTAINER_ARRAY
 
+#include <algorithm>
 #include <concepts>
 #include <cstddef>
 #include <cstring>
@@ -28,7 +29,7 @@ public:
     // NOLINTNEXTLINE(*-avoid-c-arrays)
     explicit Array(size_t size) : m_data{std::make_unique<T[]>(size)}, m_size{size} {
         if constexpr (std::is_fundamental_v<T>) {
-            memset(m_data.get(), 0, m_size * sizeof(T));
+            std::fill_n(m_data.get(), m_size, T{});
         }
     }
 
@@ -36,11 +37,7 @@ public:
             // NOLINTNEXTLINE(*-avoid-c-arrays)
             : m_data{std::make_unique<T[]>(list.size())},
               m_size{list.size()} {
-        size_t idx{0};
-        for (auto const& data : list) {
-            m_data[idx] = T(data);
-            ++idx;
-        }
+        std::ranges::copy(list, m_data.get());
     }
 
     // Disable copy constructor and assignment operator
@@ -78,7 +75,7 @@ public:
     /**
      * @param idx
      * @return The element at the given index.
-     * @throw `OperationFailed` if the given index is out of bound.
+     * @throw `std::out_of_range` if the given index is out of bound.
      */
     [[nodiscard]] auto at(size_t idx) -> T& {
         assert_is_in_range(idx);
@@ -88,7 +85,7 @@ public:
     /**
      * @param idx
      * @return The element at the given index.
-     * @throw `OperationFailed` if the given index is out of bound.
+     * @throw `std::out_of_range` if the given index is out of bound.
      */
     [[nodiscard]] auto at(size_t idx) const -> T const& {
         assert_is_in_range(idx);
