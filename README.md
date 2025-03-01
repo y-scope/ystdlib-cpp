@@ -6,7 +6,7 @@ An open-source C++ library developed and used at YScope.
 ## Via CMake's add_subdirectory()
 Clone `ystdlib-cpp` into your project. Then, in your project's `CMakeLists.txt`, add the following:
 ```cmake
-# Uncomment the next line if you do not want to build ystdlib-cpp's unit tests.
+# Set `YSTDLIB_CPP_BUILD_TESTING` to an accepted `FALSE` class value to skip building unit tests.
 # option(YSTDLIB_CPP_BUILD_TESTING "" OFF)
 add_subdirectory(/path/to/ystdlib-cpp EXCLUDE_FROM_ALL)
 target_link_libraries(<target_name> <link_options>
@@ -63,9 +63,9 @@ To build and run unit tests for a specific library:
 task test-<lib_name>
 ```
 
-When generating testing target the CMake variable `BUILD_TESTING` is followed, unless overruled by
-setting `YSTDLIB_CPP_BUILD_TESTING` to false. By default, if built as a top-level project
-`BUILD_TESTING` will be set to true and unit tests will be built.
+When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled
+by setting `YSTDLIB_CPP_BUILD_TESTING` to false). By default, if built as a top-level project,
+`BUILD_TESTING` is set to true and unit tests are built.
 
 ## Linting
 Before submitting a pull request, ensure you’ve run the linting commands below and have fixed all
