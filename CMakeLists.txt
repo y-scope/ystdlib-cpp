@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.22.1)
 
 project(YSTDLIB_CPP LANGUAGES CXX)
 
@@ -33,25 +33,32 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-option(BUILD_TESTING "If ON, unit tests will be built." ON)
-
-# Import CMake helper functions
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
-
-if(PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+if(YSTDLIB_CPP_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
     # NOTE: We mark the file optional because if the user happens to have the dependencies
     # installed, this file is not necessary.
     include(build/deps/settings.cmake OPTIONAL)
+
+    # If previously undefined, `BUILD_TESTING` will be set to ON.
+    include(CTest)
 endif()
 
-if(BUILD_TESTING)
+option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
+if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
+    set(YSTDLIB_CPP_ENABLE_TESTS ON)
+endif()
+
+# Import CMake helper functions
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+
+if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
         message(STATUS "Found Catch2 ${Catch2_VERSION}.")
     else()
         message(FATAL_ERROR "Could not find libraries for Catch2.")
     endif()
+    include(Catch)
 
     # Set up the unified unit test target
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
@@ -65,6 +72,7 @@ if(BUILD_TESTING)
             RUNTIME_OUTPUT_DIRECTORY
                 ${CMAKE_BINARY_DIR}/testbin
     )
+    catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
 include(ystdlib-cpp-helpers)
