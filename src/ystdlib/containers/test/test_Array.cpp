@@ -1,6 +1,8 @@
 #include <algorithm>
+#include <concepts>
 #include <cstddef>
 #include <ranges>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -80,20 +82,42 @@ TEST_CASE("test_array_empty", "[containers][Array]") {
     REQUIRE((arr.begin() == arr.end()));
 }
 
-TEST_CASE("test_array_copy_and_move", "[containers][Array]") {
-    std::vector<int> vec;
-    for (int i{0}; i < cBufferSize; ++i) {
-        vec.push_back(i);
+TEST_CASE("test_array_reference", "[containers][Array]") {
+    Array<int> arr(cBufferSize);
+    for (int idx{0}; idx < cBufferSize; ++idx) {
+        arr.at(idx) = idx;
     }
+    auto const& arr_const_ref = arr;
+    for (int idx{0}; idx < cBufferSize; ++idx) {
+        REQUIRE(arr_const_ref.at(idx) == idx);
+    }
+}
 
+TEST_CASE("test_array_illegal_access", "[containers][Array]") {
+    Array<int> arr(cBufferSize);
+    REQUIRE_THROWS_AS(arr.at(-1), std::out_of_range);
+    REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
+}
+
+TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
+    std::vector<int> vec;
+    for (int idx{0}; idx < cBufferSize; ++idx) {
+        vec.push_back(idx);
+    }
     Array<int> arr(cBufferSize);
     std::ranges::copy(vec, arr.begin());
     REQUIRE(std::ranges::equal(vec, arr));
-    REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
+}
 
+TEST_CASE("test_array_movable", "[containers][Array]") {
+    Array<int> arr(cBufferSize);
+    Array<int> reference_array(cBufferSize);
+    for (int idx{0}; idx < cBufferSize; ++idx) {
+        arr.at(idx) = idx;
+        reference_array.at(idx) = idx;
+    }
     auto const arr_moved{std::move(arr)};
-    REQUIRE(std::ranges::equal(vec, arr_moved));
-    REQUIRE_THROWS_AS(arr_moved.at(cBufferSize), std::out_of_range);
+    REQUIRE(std::ranges::equal(reference_array, arr_moved));
 }
 
 TEMPLATE_TEST_CASE(
