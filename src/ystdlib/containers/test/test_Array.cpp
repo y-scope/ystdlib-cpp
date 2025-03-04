@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include <ystdlib/container/Array.hpp>
+#include <ystdlib/containers/Array.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
