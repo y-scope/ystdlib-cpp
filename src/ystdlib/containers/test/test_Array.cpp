@@ -97,7 +97,7 @@ TEST_CASE("test_array_copy_and_move", "[containers][Array]") {
 }
 
 TEMPLATE_TEST_CASE(
-        "test_array_default_initialization",
+        "test_array_fundamental_type_value_initialization",
         "[containers][Array]",
         bool,
         char,
