@@ -1,5 +1,5 @@
-#ifndef YSTDLIB_CONTAINER_ARRAY
-#define YSTDLIB_CONTAINER_ARRAY
+#ifndef YSTDLIB_CONTAINERS_ARRAY
+#define YSTDLIB_CONTAINERS_ARRAY
 
 #include <algorithm>
 #include <concepts>
@@ -10,7 +10,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-namespace ystdlib::container {
+namespace ystdlib::containers {
 /**
  * Class for a runtime fix-sized array.
  * @tparam T The type of elements in the array. The type must be default initializable so that this
@@ -108,7 +108,7 @@ private:
     auto assert_is_in_range(size_t idx) const -> void {
         if (idx >= m_size) {
             // TODO: Add ErrorCode class for `stdexcept` errors and switch to use TraceableException
-            throw std::out_of_range("ystdlib::container::Array out-of-range access.");
+            throw std::out_of_range("ystdlib::containers::Array out-of-range access.");
         }
     }
 
@@ -117,6 +117,6 @@ private:
     std::unique_ptr<T[]> m_data;
     size_t m_size;
 };
-}  // namespace ystdlib::container
+}  // namespace ystdlib::containers
 
-#endif  // YSTDLIB_CONTAINER_ARRAY
+#endif  // YSTDLIB_CONTAINERS_ARRAY

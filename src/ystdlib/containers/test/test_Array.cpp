@@ -9,52 +9,72 @@
 
 #include <ystdlib/containers/Array.hpp>
 
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 namespace {
 constexpr size_t cBufferSize{1024};
 
-class NoDefault {
+/**
+ * A class that requires an explicit argument for construction and disables the default constructor.
+ *
+ * Includes a data member `m_value` and an accessor function to verify successful initialization.
+ * TODO: Test `Array` list initialization with this class. Currently, `Array` requires the template
+ * type to be a fundamental type or a default-initializable class type.
+ */
+class ExplicitConstructor {
 public:
-    NoDefault(size_t n) : m_n{n} {}
+    ExplicitConstructor() = delete;
 
-    [[nodiscard]] auto get() const -> size_t { return m_n; }
+    ExplicitConstructor(size_t value) : m_value{value} {}
+
+    [[nodiscard]] auto get_value() const -> size_t { return m_value; }
 
 private:
-    size_t m_n;
+    size_t m_value;
 };
 
-class VarietyConstructors {
+/**
+ * A class that supports multiple initialization methods.
+ *
+ * This class is used to test `Array` list initialization with various constructor argument types.
+ * It includes a data member `m_value` and an accessor function to verify successful initialization.
+ */
+class PolymorphicConstructors {
 public:
-    static constexpr size_t cDefault = 3190;
+    static constexpr size_t cDefaultValue = 3190;
 
-    VarietyConstructors() = default;
+    PolymorphicConstructors() = default;
 
-    VarietyConstructors(size_t n) : m_n{n} {}
+    PolymorphicConstructors(size_t value) : m_value{value} {}
 
-    VarietyConstructors(std::string const& s) : m_n{s.size()} {}
+    PolymorphicConstructors(std::string const& s) : m_value{s.size()} {}
 
-    VarietyConstructors(NoDefault const& nd) : m_n{nd.get()} {}
+    PolymorphicConstructors(ExplicitConstructor const& obj) : m_value{obj.get_value()} {}
 
-    [[nodiscard]] auto get() const -> size_t { return m_n; }
+    [[nodiscard]] auto get_value() const -> size_t { return m_value; }
 
 private:
-    size_t m_n{cDefault};
+    size_t m_value{cDefaultValue};
 };
 
-void test_function_argument_list_initialization(
-        ystdlib::container::Array<VarietyConstructors> const& arr,
+/**
+ * Tests whether list initialization works correctly for `Array` when an initializer list is passed
+ * as a function argument.
+ */
+void test_list_initialization_in_function_call(
+        ystdlib::containers::Array<PolymorphicConstructors> const& arr,
         std::vector<size_t> const& data
 ) {
     REQUIRE(std::ranges::equal(
-            arr | std::views::transform([](auto const& obj) { return obj.get(); }),
+            arr | std::views::transform([](auto const& obj) { return obj.get_value(); }),
             data
     ));
 }
 }  // namespace
 
-namespace ystdlib::container::test {
-TEST_CASE("test_empty_array", "[container][Array]") {
+namespace ystdlib::containers::test {
+TEST_CASE("test_array_empty", "[containers][Array]") {
     Array<int> arr(0);
     REQUIRE(arr.empty());
     // NOLINTNEXTLINE(readability-container-size-empty)
@@ -62,74 +82,97 @@ TEST_CASE("test_empty_array", "[container][Array]") {
     REQUIRE((arr.begin() == arr.end()));
 }
 
-// NOLINTNEXTLINE(readability-function-cognitive-complexity)
-TEST_CASE("test_array_basic", "[container][Array]") {
+TEST_CASE("test_array_basic", "[containers][Array]") {
     std::vector<int> vec;
     for (int i{0}; i < cBufferSize; ++i) {
         vec.push_back(i);
     }
 
     Array<int> arr(cBufferSize);
-    auto const& arr_const_ref = arr;
     std::ranges::copy(vec, arr.begin());
-
     REQUIRE(std::ranges::equal(vec, arr));
-    REQUIRE(std::ranges::equal(vec, arr_const_ref));
-
     REQUIRE_THROWS(arr.at(cBufferSize));
-    REQUIRE_THROWS(arr_const_ref.at(cBufferSize));
 
     auto const arr_moved{std::move(arr)};
     REQUIRE(std::ranges::equal(vec, arr_moved));
     REQUIRE_THROWS(arr_moved.at(cBufferSize));
 }
 
-// NOLINTNEXTLINE(readability-function-cognitive-complexity)
-TEST_CASE("test_array_default_initialization", "[container][Array]") {
-    Array<int> int_arr(cBufferSize);
-    auto const& int_arr_const_ref = int_arr;
+TEMPLATE_TEST_CASE(
+        "test_array_default_initialization",
+        "[containers][Array]",
+        bool,
+        char,
+        signed char,
+        unsigned char,
+        wchar_t,
+        char16_t,
+        char32_t,
+        short,
+        unsigned short,
+        int,
+        unsigned int,
+        long,
+        unsigned long,
+        long long,
+        unsigned long long,
+        float,
+        double,
+        long double,
+        std::nullptr_t
+) {
+    Array<TestType> arr(cBufferSize);
+    auto const& arr_const_ref = arr;
 
-    REQUIRE(std::is_fundamental_v<int>);
-    std::ranges::for_each(int_arr, [](auto const& i) -> void { REQUIRE((0 == i)); });
-    std::ranges::for_each(int_arr_const_ref, [](auto const& i) -> void { REQUIRE((0 == i)); });
-
-    Array<std::nullptr_t> ptr_arr(cBufferSize);
-    auto const& ptr_arr_const_ref = ptr_arr;
-
-    REQUIRE(std::is_fundamental_v<std::nullptr_t>);
-    std::ranges::for_each(ptr_arr, [](auto const& p) -> void { REQUIRE((nullptr == p)); });
-    std::ranges::for_each(ptr_arr_const_ref, [](auto const& p) -> void {
-        REQUIRE((nullptr == p));
+    REQUIRE(std::is_fundamental_v<TestType>);
+    std::ranges::for_each(arr, [](auto const& p) -> void {
+        REQUIRE((static_cast<TestType>(0) == p));
+    });
+    std::ranges::for_each(arr_const_ref, [](auto const& p) -> void {
+        REQUIRE((static_cast<TestType>(0) == p));
     });
 }
 
-TEST_CASE("test_array_list_initialization_basic", "[container][Array]") {
-    std::vector<std::string> const
-            vec{"yscope", "clp", "ystdlib", "ystdlib::container::Array", "default_initializable"};
-    Array<std::string> const
-            arr0{"yscope", "clp", "ystdlib", "ystdlib::container::Array", "default_initializable"};
-    Array<std::string> const arr1
-            = {"yscope", "clp", "ystdlib", "ystdlib::container::Array", "default_initializable"};
-    REQUIRE(std::ranges::equal(vec, arr0));
-    REQUIRE(std::ranges::equal(vec, arr1));
-}
-
-TEST_CASE("test_array_list_initialization_variety_constructors", "[container][Array]") {
+TEST_CASE("test_array_list_initialization", "[containers][Array]") {
     constexpr size_t cTestNum0{344};
     constexpr size_t cTestNum1{454};
     constexpr std::string_view cTestStr{"yscope"};
 
-    Array<VarietyConstructors> const arr
-            = {VarietyConstructors{}, cTestNum0, std::string{cTestStr}, NoDefault{cTestNum1}};
+    // Test basic list initialization
+    std::vector<std::string> const
+            vec{"yscope", "clp", "ystdlib", "ystdlib::containers::Array", "default_initializable"};
+    Array<std::string> const
+            arr{"yscope", "clp", "ystdlib", "ystdlib::containers::Array", "default_initializable"};
+    REQUIRE(std::ranges::equal(vec, arr));
+
+    // Test polymorphic list initialization
+
+    // Expected values to verify correct initialization of `PolymorphicConstructors`.
+    // See the `PolymorphicConstructors` class for details on how constructor arguments are handled.
     std::vector<size_t> const data
-            = {VarietyConstructors::cDefault, cTestNum0, cTestStr.size(), cTestNum1};
-    REQUIRE(std::ranges::equal(
-            arr | std::views::transform([](auto const& obj) { return obj.get(); }),
-            data
-    ));
-    test_function_argument_list_initialization(
-            {VarietyConstructors{}, cTestNum0, std::string{cTestStr}, NoDefault{cTestNum1}},
-            data
-    );
+            = {PolymorphicConstructors::cDefaultValue, cTestNum0, cTestStr.size(), cTestNum1};
+
+    SECTION("Local variable") {
+        Array<PolymorphicConstructors> const list_init_arr
+                = {PolymorphicConstructors{},
+                   cTestNum0,
+                   std::string{cTestStr},
+                   ExplicitConstructor{cTestNum1}};
+        REQUIRE(std::ranges::equal(
+                list_init_arr
+                        | std::views::transform([](auto const& obj) { return obj.get_value(); }),
+                data
+        ));
+    }
+
+    SECTION("Function argument passing") {
+        test_list_initialization_in_function_call(
+                {PolymorphicConstructors{},
+                 cTestNum0,
+                 std::string{cTestStr},
+                 ExplicitConstructor{cTestNum1}},
+                data
+        );
+    }
 }
-}  // namespace ystdlib::container::test
+}  // namespace ystdlib::containers::test
