@@ -80,7 +80,7 @@ TEST_CASE("test_array_empty", "[containers][Array]") {
     REQUIRE((arr.begin() == arr.end()));
 }
 
-TEST_CASE("test_array_basic", "[containers][Array]") {
+TEST_CASE("test_array_copy_and_move", "[containers][Array]") {
     std::vector<int> vec;
     for (int i{0}; i < cBufferSize; ++i) {
         vec.push_back(i);
@@ -89,11 +89,11 @@ TEST_CASE("test_array_basic", "[containers][Array]") {
     Array<int> arr(cBufferSize);
     std::ranges::copy(vec, arr.begin());
     REQUIRE(std::ranges::equal(vec, arr));
-    REQUIRE_THROWS(arr.at(cBufferSize));
+    REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
 
     auto const arr_moved{std::move(arr)};
     REQUIRE(std::ranges::equal(vec, arr_moved));
-    REQUIRE_THROWS(arr_moved.at(cBufferSize));
+    REQUIRE_THROWS_AS(arr_moved.at(cBufferSize), std::out_of_range);
 }
 
 TEMPLATE_TEST_CASE(
