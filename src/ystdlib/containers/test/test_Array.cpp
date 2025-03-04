@@ -19,8 +19,6 @@ constexpr size_t cBufferSize{1024};
  * A class that requires an explicit argument for construction and disables the default constructor.
  *
  * Includes a data member `m_value` and an accessor function to verify successful initialization.
- * TODO: Test `Array` list initialization with this class. Currently, `Array` requires the template
- * type to be a fundamental type or a default-initializable class type.
  */
 class ExplicitConstructor {
 public:
@@ -174,5 +172,11 @@ TEST_CASE("test_array_list_initialization", "[containers][Array]") {
                 data
         );
     }
+
+    // Test polymorphic list initialization with a non default-constructible class
+    REQUIRE_FALSE(std::default_initializable<ExplicitConstructor>);
+
+    // TODO: Test `Array` list initialization with this class. Currently, `Array` requires the
+    // template type to be a fundamental type or a default-initializable class type.
 }
 }  // namespace ystdlib::containers::test
