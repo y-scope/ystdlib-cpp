@@ -88,15 +88,7 @@ TEST_CASE("test_array_reference", "[containers][Array]") {
         arr.at(idx) = idx;
     }
     auto const& arr_const_ref = arr;
-    for (int idx{0}; idx < cBufferSize; ++idx) {
-        REQUIRE(arr_const_ref.at(idx) == idx);
-    }
-}
-
-TEST_CASE("test_array_illegal_access", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
-    REQUIRE_THROWS_AS(arr.at(-1), std::out_of_range);
-    REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
+    REQUIRE(std::ranges::equal(arr, arr_const_ref));
 }
 
 TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
@@ -118,6 +110,12 @@ TEST_CASE("test_array_movable", "[containers][Array]") {
     }
     auto const arr_moved{std::move(arr)};
     REQUIRE(std::ranges::equal(reference_array, arr_moved));
+}
+
+TEST_CASE("test_array_illegal_access", "[containers][Array]") {
+    Array<int> arr(cBufferSize);
+    REQUIRE_THROWS_AS(arr.at(-1), std::out_of_range);
+    REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
 }
 
 TEMPLATE_TEST_CASE(
@@ -143,14 +141,9 @@ TEMPLATE_TEST_CASE(
         long double,
         std::nullptr_t
 ) {
-    Array<TestType> arr(cBufferSize);
-    auto const& arr_const_ref = arr;
-
     REQUIRE(std::is_fundamental_v<TestType>);
+    Array<TestType> arr(cBufferSize);
     std::ranges::for_each(arr, [](auto const& p) -> void {
-        REQUIRE((static_cast<TestType>(0) == p));
-    });
-    std::ranges::for_each(arr_const_ref, [](auto const& p) -> void {
         REQUIRE((static_cast<TestType>(0) == p));
     });
 }
@@ -168,6 +161,7 @@ TEST_CASE("test_array_list_initialization", "[containers][Array]") {
     REQUIRE(std::ranges::equal(vec, arr));
 
     // Test polymorphic list initialization
+    REQUIRE(std::is_copy_constructible_v<PolymorphicConstructors>);
 
     // Expected values to verify correct initialization of `PolymorphicConstructors`.
     // See the `PolymorphicConstructors` class for details on how constructor arguments are handled.
