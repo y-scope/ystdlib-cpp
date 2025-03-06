@@ -27,6 +27,7 @@ endfunction()
 # @param NAMESPACE
 # @param HEADERS
 # @param SOURCES
+# @param DEPENDS
 # @parms TESTS_SOURCES
 # @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
 # the library and for external projects that link against it via the add_subdirectory() function.
@@ -39,6 +40,7 @@ function(cpp_library)
     set(multiValueArgs
         HEADERS
         SOURCES
+        DEPENDS
         TESTS_SOURCES
         LIB_BUILD_INTERFACE
     )
@@ -56,7 +58,6 @@ function(cpp_library)
 
     check_if_header_only_library(arg_cpp_lib_SOURCES _IS_INTERFACE_LIB)
 
-    # Build interface library
     if(_IS_INTERFACE_LIB)
         add_library(${arg_cpp_lib_NAME} INTERFACE)
         target_include_directories(
@@ -66,7 +67,7 @@ function(cpp_library)
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
-        add_library(${arg_cpp_lib_NAME} STATIC)
+        add_library(${arg_cpp_lib_NAME} "") # Library type determined by BUILD_SHARED_LIBS
         target_sources(
             ${arg_cpp_lib_NAME}
             PRIVATE
@@ -81,6 +82,7 @@ function(cpp_library)
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
 
+    target_link_libraries(${arg_cpp_lib_NAME} PUBLIC ${arg_cpp_lib_DEPENDS})
     add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
