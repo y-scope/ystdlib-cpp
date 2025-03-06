@@ -11,9 +11,9 @@ function(check_if_header_only_library SOURCE_LIST IS_HEADER_ONLY)
     endforeach()
 
     if(_LOCAL_SOURCE_LIST STREQUAL "")
-        set(${IS_HEADER_ONLY} 1 PARENT_SCOPE)
+        set(${IS_HEADER_ONLY} TRUE PARENT_SCOPE)
     else()
-        set(${IS_HEADER_ONLY} 0 PARENT_SCOPE)
+        set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
     endif()
 endfunction()
 
