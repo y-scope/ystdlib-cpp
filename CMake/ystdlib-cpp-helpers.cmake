@@ -1,3 +1,22 @@
+# check_if_header_only_library()
+#
+# @param SOURCE_LIST The list of source files that a target library uses
+# @param IS_HEADER_ONLY Returns whether the target library only contains header files
+function(check_if_header_only_library SOURCE_LIST IS_HEADER_ONLY)
+    set(_LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
+    foreach(src_file IN LISTS _LOCAL_SOURCE_LIST)
+        if(${src_file} MATCHES ".*\\.(h|hpp|inc)")
+            list(REMOVE_ITEM _LOCAL_SOURCE_LIST "${src_file}")
+        endif()
+    endforeach()
+
+    if(_LOCAL_SOURCE_LIST STREQUAL "")
+        set(${IS_HEADER_ONLY} 1 PARENT_SCOPE)
+    else()
+        set(${IS_HEADER_ONLY} 0 PARENT_SCOPE)
+    endif()
+endfunction()
+
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
@@ -6,6 +25,8 @@
 #
 # @param NAME
 # @param NAMESPACE
+# @param HEADERS
+# @param SOURCES
 # @parms TESTS_SOURCES
 # @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
 # the library and for external projects that link against it via the add_subdirectory() function.
@@ -16,6 +37,8 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs
+        HEADERS
+        SOURCES
         TESTS_SOURCES
         LIB_BUILD_INTERFACE
     )
@@ -31,14 +54,33 @@ function(cpp_library)
         set(arg_cpp_lib_LIB_BUILD_INTERFACE "${PROJECT_SOURCE_DIR}/src")
     endif()
 
+    check_if_header_only_library(arg_cpp_lib_SOURCES _IS_INTERFACE_LIB)
+
     # Build interface library
-    add_library(${arg_cpp_lib_NAME} INTERFACE)
-    target_include_directories(
-        ${arg_cpp_lib_NAME}
-        INTERFACE
-            "$<BUILD_INTERFACE:${arg_cpp_lib_LIB_BUILD_INTERFACE}>"
-    )
-    target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
+    if(_IS_INTERFACE_LIB)
+        add_library(${arg_cpp_lib_NAME} INTERFACE)
+        target_include_directories(
+            ${arg_cpp_lib_NAME}
+            INTERFACE
+                "$<BUILD_INTERFACE:${arg_cpp_lib_LIB_BUILD_INTERFACE}>"
+        )
+        target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
+    else()
+        add_library(${arg_cpp_lib_NAME} STATIC)
+        target_sources(
+            ${arg_cpp_lib_NAME}
+            PRIVATE
+                ${arg_cpp_lib_HEADERS}
+                ${arg_cpp_lib_SOURCES}
+        )
+        target_include_directories(
+            ${arg_cpp_lib_NAME}
+            PUBLIC
+                "$<BUILD_INTERFACE:${arg_cpp_lib_LIB_BUILD_INTERFACE}>"
+        )
+        target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
+    endif()
+
     add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
