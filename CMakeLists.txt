@@ -43,6 +43,8 @@ if(YSTDLIB_CPP_IS_TOP_LEVEL)
     include(CTest)
 endif()
 
+option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
+
 option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
 if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
