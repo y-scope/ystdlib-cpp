@@ -28,7 +28,7 @@ endfunction()
 # @param HEADERS
 # @param SOURCES
 # @param DEPENDS
-# @param PRIVATE_DEPENDS
+# @param INTERNAL_DEPENDS
 # @parms TESTS_SOURCES
 # @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
 # the library and for external projects that link against it via the add_subdirectory() function.
@@ -42,7 +42,7 @@ function(cpp_library)
         HEADERS
         SOURCES
         DEPENDS
-        PRIVATE_DEPENDS
+        INTERNAL_DEPENDS
         TESTS_SOURCES
         LIB_BUILD_INTERFACE
     )
@@ -90,7 +90,7 @@ function(cpp_library)
         PUBLIC
             ${arg_cpp_lib_DEPENDS}
         PRIVATE
-            ${arg_cpp_lib_PRIVATE_DEPENDS}
+            ${arg_cpp_lib_INTERNAL_DEPENDS}
     )
     add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
 
