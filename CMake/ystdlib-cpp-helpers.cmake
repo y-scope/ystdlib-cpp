@@ -1,16 +1,17 @@
-# check_if_header_only_library()
-#
-# @param SOURCE_LIST The list of source files that a target library uses.
-# @param IS_HEADER_ONLY Returns whether the target library only contains header files.
-function(check_if_header_only_library SOURCE_LIST IS_HEADER_ONLY)
+# @param SOURCE_LIST The list of source files to check.
+# @param IS_HEADER_ONLY Returns whether the list only contains header files.
+# @param NON_HEADER_FILE Returns the name of the first, if any, non-header file.
+function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(_LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
-    set(${IS_HEADER_ONLY} FALSE)
     foreach(src_file IN LISTS _LOCAL_SOURCE_LIST)
         if(NOT ${src_file} MATCHES ".*\\.(h|hpp)")
-            return(PROPAGATE ${IS_HEADER_ONLY})
+            set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
+            set(${NON_HEADER_FILE} ${src_file} PARENT_SCOPE)
+            return()
         endif()
     endforeach()
     set(${IS_HEADER_ONLY} TRUE PARENT_SCOPE)
+    set(${NON_HEADER_FILE} "" PARENT_SCOPE)
 endfunction()
 
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
@@ -21,12 +22,14 @@ endfunction()
 #
 # @param NAME
 # @param NAMESPACE
-# @param SOURCES
-# @param DEPENDS
-# @param INTERNAL_DEPENDS
+# @param INTERFACE_HEADERS
+# @param IMPLEMENTATION_SOURCES
+# @param INTERFACE_LIBRARIES
+# @param LOCAL_DEPENDENCIES
 # @parms TESTS_SOURCES
-# @param [LIB_BUILD_INTERFACE="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building
-# the library and for external projects that link against it via the add_subdirectory() function.
+# @param [INTERFACE_BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
+# building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject
+# via the add_subdirectory() function.
 function(cpp_library)
     set(options "")
     set(oneValueArgs
@@ -34,46 +37,54 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs
-        SOURCES
-        DEPENDS
-        INTERNAL_DEPENDS
+        INTERFACE_HEADERS
+        IMPLEMENTATION_SOURCES
+        INTERFACE_LIBRARIES
+        LOCAL_DEPENDENCIES
         TESTS_SOURCES
-        LIB_BUILD_INTERFACE
+        INTERFACE_BUILD_INCLUDE_DIR
     )
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    set(_ALIAS_TARGET_NAME "${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}")
+
     # TODO: Turn this into a function for handling other optional params that have default values.
-    if("LIB_BUILD_INTERFACE" IN_LIST arg_cpp_lib_KEYWORDS_MISSING_VALUES)
-        message(
-            FATAL_ERROR
-            "Missing build interface list for ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}."
-        )
-    elseif(NOT DEFINED arg_cpp_lib_LIB_BUILD_INTERFACE)
-        set(arg_cpp_lib_LIB_BUILD_INTERFACE "${PROJECT_SOURCE_DIR}/src")
+    if("INTERFACE_BUILD_INCLUDE_DIR" IN_LIST arg_cpp_lib_KEYWORDS_MISSING_VALUES)
+        message(FATAL_ERROR "Missing build interface list for ${_ALIAS_TARGET_NAME}.")
+    elseif(NOT DEFINED arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR)
+        set(arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src")
     endif()
 
-    check_if_header_only_library(arg_cpp_lib_SOURCES _IS_INTERFACE_LIB)
+    check_if_header_only(arg_cpp_lib_INTERFACE_HEADERS _IS_VALID_INTERFACE _INVALID_HEADER_FILE)
+    if(NOT _IS_VALID_INTERFACE)
+        message(
+            FATAL_ERROR
+            "Invalid interface header file ${_INVALID_HEADER_FILE} for ${_ALIAS_TARGET_NAME}."
+        )
+    endif()
 
+    check_if_header_only(arg_cpp_lib_IMPLEMENTATION_SOURCES _IS_INTERFACE_LIB _)
     if(_IS_INTERFACE_LIB)
         add_library(${arg_cpp_lib_NAME} INTERFACE)
         target_include_directories(
             ${arg_cpp_lib_NAME}
             INTERFACE
-                "$<BUILD_INTERFACE:${arg_cpp_lib_LIB_BUILD_INTERFACE}>"
+                "$<BUILD_INTERFACE:${arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
-        # Empty string makes library type determined by `BUILD_SHARED_LIBS` option
-        add_library(${arg_cpp_lib_NAME} "")
+        # Library type defaults to static if `BUILD_SHARED_LIBS` is OFF and to shared if ON.
+        add_library(${arg_cpp_lib_NAME})
         target_sources(
             ${arg_cpp_lib_NAME}
             PRIVATE
-                ${arg_cpp_lib_SOURCES}
+                ${arg_cpp_lib_INTERFACE_HEADERS}
+                ${arg_cpp_lib_IMPLEMENTATION_SOURCES}
         )
         target_include_directories(
             ${arg_cpp_lib_NAME}
             PUBLIC
-                "$<BUILD_INTERFACE:${arg_cpp_lib_LIB_BUILD_INTERFACE}>"
+                "$<BUILD_INTERFACE:${arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
@@ -81,11 +92,11 @@ function(cpp_library)
     target_link_libraries(
         ${arg_cpp_lib_NAME}
         PUBLIC
-            ${arg_cpp_lib_DEPENDS}
+            ${arg_cpp_lib_INTERFACE_LIBRARIES}
         PRIVATE
-            ${arg_cpp_lib_INTERNAL_DEPENDS}
+            ${arg_cpp_lib_LOCAL_DEPENDENCIES}
     )
-    add_library(${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME} ALIAS ${arg_cpp_lib_NAME})
+    add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
         # Build library-specific unit test target
@@ -96,7 +107,7 @@ function(cpp_library)
             ${_UNIT_TEST_TARGET}
             PRIVATE
                 Catch2::Catch2WithMain
-                ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
+                ${_ALIAS_TARGET_NAME}
         )
         target_compile_features(${_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
         set_property(
@@ -109,10 +120,6 @@ function(cpp_library)
 
         # Link against unified unit test
         target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
-        target_link_libraries(
-            ${UNIFIED_UNIT_TEST_TARGET}
-            PRIVATE
-                ${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}
-        )
+        target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${_ALIAS_TARGET_NAME})
     endif()
 endfunction()

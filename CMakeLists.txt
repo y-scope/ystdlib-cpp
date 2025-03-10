@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-# Enables return() arguments e.g. return([PROPAGATE <var-name>...])
-cmake_policy(SET CMP0140 NEW)
-
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
+
+option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
+option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
 
 # Require compiler versions that support the C++20 features necessary for compiling ystdlib-cpp
 if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
@@ -46,9 +46,6 @@ if(YSTDLIB_CPP_IS_TOP_LEVEL)
     include(CTest)
 endif()
 
-option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
-
-option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
 if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
 endif()
