@@ -1,20 +1,16 @@
 # check_if_header_only_library()
 #
-# @param SOURCE_LIST The list of source files that a target library uses
-# @param IS_HEADER_ONLY Returns whether the target library only contains header files
+# @param SOURCE_LIST The list of source files that a target library uses.
+# @param IS_HEADER_ONLY Returns whether the target library only contains header files.
 function(check_if_header_only_library SOURCE_LIST IS_HEADER_ONLY)
     set(_LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
+    set(${IS_HEADER_ONLY} FALSE)
     foreach(src_file IN LISTS _LOCAL_SOURCE_LIST)
-        if(${src_file} MATCHES ".*\\.(h|hpp|inc)")
-            list(REMOVE_ITEM _LOCAL_SOURCE_LIST "${src_file}")
+        if(NOT ${src_file} MATCHES ".*\\.(h|hpp)")
+            return(PROPAGATE ${IS_HEADER_ONLY})
         endif()
     endforeach()
-
-    if(_LOCAL_SOURCE_LIST STREQUAL "")
-        set(${IS_HEADER_ONLY} TRUE PARENT_SCOPE)
-    else()
-        set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
-    endif()
+    set(${IS_HEADER_ONLY} TRUE PARENT_SCOPE)
 endfunction()
 
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias

@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1)
 
+# Enables return() arguments e.g. return([PROPAGATE <var-name>...])
+cmake_policy(SET CMP0140 NEW)
+
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
