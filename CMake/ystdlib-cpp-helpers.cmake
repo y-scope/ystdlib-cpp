@@ -21,7 +21,6 @@ endfunction()
 #
 # @param NAME
 # @param NAMESPACE
-# @param HEADERS
 # @param SOURCES
 # @param DEPENDS
 # @param INTERNAL_DEPENDS
@@ -35,7 +34,6 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs
-        HEADERS
         SOURCES
         DEPENDS
         INTERNAL_DEPENDS
@@ -70,7 +68,6 @@ function(cpp_library)
         target_sources(
             ${arg_cpp_lib_NAME}
             PRIVATE
-                ${arg_cpp_lib_HEADERS}
                 ${arg_cpp_lib_SOURCES}
         )
         target_include_directories(
