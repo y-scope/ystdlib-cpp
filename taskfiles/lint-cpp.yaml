@@ -26,11 +26,11 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: ":utils:clang-format"
+      - task: ":utils:cpp-lint:clang-format"
         vars:
-          FLAGS: "--dry-run"
-          SRC_PATHS:
-            ref: ".G_LINT_CPP_DIRS"
+          FLAGS:
+            - "--dry-run"
+          ROOT_PATHS: *cpp_format_src_files
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-format-fix:
@@ -40,11 +40,11 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: ":utils:clang-format"
+      - task: ":utils:cpp-lint:clang-format"
         vars:
-          FLAGS: "-i"
-          SRC_PATHS:
-            ref: ".G_LINT_CPP_DIRS"
+          FLAGS:
+            - "-i"
+          ROOT_PATHS: *cpp_format_src_files
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-static-check:
@@ -55,13 +55,13 @@ tasks:
     aliases:
       - "cpp-static-fix"
     desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
-    sources:
+    sources: &cpp_static_check_src_files
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"
+      - "{{.G_CPP_SRC_DIR}}/**"
+      - "{{.G_CPP_SRC_DIR}}/**"
+      - "{{.G_CPP_SRC_DIR}}/**"
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_CPP_SRC_DIR}}/**/*.cpp"
-      - "{{.G_CPP_SRC_DIR}}/**/*.h"
-      - "{{.G_CPP_SRC_DIR}}/**/*.hpp"
       - "{{.ROOT_DIR}}/.clang-tidy"
       - "{{.TASKFILE}}"
     deps:
@@ -69,13 +69,15 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: ":utils:clang-tidy"
+      - task: ":utils:cpp-lint:clang-tidy-find"
         vars:
-          FLAGS: >-
-            --config-file "{{.ROOT_DIR}}/.clang-tidy"
-            -p "{{.G_COMPILE_COMMANDS_DB}}"
-          SRC_PATHS:
-            ref: ".G_LINT_CPP_DIRS"
+          FLAGS:
+            - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
+            - "-p '{{.G_COMPILE_COMMANDS_DB}}'"
+          INCLUDE_PATTERNS:
+            - "{{.G_CPP_SRC_DIR}}/*"
+          OUTPUT_DIR: "{{.G_LINT_CLANG_TIDY_DIR}}"
+          ROOT_PATHS: *cpp_static_check_src_files
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-configs:

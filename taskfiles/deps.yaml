@@ -20,7 +20,7 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake-install-remote-tar"
+      - task: ":utils:cmake:install-remote-tar"
         vars:
           NAME: "{{.G_CATCH2_LIB_NAME}}"
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"

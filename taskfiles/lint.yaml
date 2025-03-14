@@ -15,6 +15,7 @@ includes:
     taskfile: "./lint-yaml.yaml"
 
 vars:
+  G_LINT_CLANG_TIDY_DIR: "{{.G_BUILD_DIR}}/lint-clang-tidy"
   G_LINT_CPP_DIRS:
     - "{{.G_CPP_SRC_DIR}}"
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
