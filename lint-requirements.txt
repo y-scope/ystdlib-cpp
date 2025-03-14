@@ -1,5 +1,6 @@
-clang-format>=19.1.6
-clang-tidy>=19.1.0
+clang-format>=20.1
+# Lock to v19.x until we can upgrade our code to fix new v20 issues.
+clang-tidy~=19.1
 colorama>=0.4.6
 gersemi>=0.16.2
 yamllint>=1.35.1
