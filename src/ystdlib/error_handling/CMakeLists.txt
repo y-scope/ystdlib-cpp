@@ -1,7 +1,7 @@
 cpp_library(
     NAME error_handling
     NAMESPACE ystdlib
-    INTERFACE_HEADERS
+    PUBLIC_HEADERS
         ErrorCode.hpp
     TESTS_SOURCES
         test/constants.hpp

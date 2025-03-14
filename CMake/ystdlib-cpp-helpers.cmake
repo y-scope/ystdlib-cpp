@@ -22,12 +22,12 @@ endfunction()
 #
 # @param NAME
 # @param NAMESPACE
-# @param INTERFACE_HEADERS
-# @param IMPLEMENTATION_SOURCES
-# @param INTERFACE_LIBRARIES
-# @param LOCAL_DEPENDENCIES
+# @param PUBLIC_HEADERS
+# @param PRIVATE_SOURCES
+# @param PUBLIC_LINK_LIBRARIES
+# @param PRIVATE_LINK_LIBRARIES
 # @parms TESTS_SOURCES
-# @param [INTERFACE_BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
+# @param [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
 # building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject
 # via the add_subdirectory() function.
 function(cpp_library)
@@ -37,25 +37,25 @@ function(cpp_library)
         NAMESPACE
     )
     set(multiValueArgs
-        INTERFACE_HEADERS
-        IMPLEMENTATION_SOURCES
-        INTERFACE_LIBRARIES
-        LOCAL_DEPENDENCIES
+        PUBLIC_HEADERS
+        PRIVATE_SOURCES
+        PUBLIC_LINK_LIBRARIES
+        PRIVATE_LINK_LIBRARIES
         TESTS_SOURCES
-        INTERFACE_BUILD_INCLUDE_DIR
+        BUILD_INCLUDE_DIR
     )
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     set(_ALIAS_TARGET_NAME "${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}")
 
     # TODO: Turn this into a function for handling other optional params that have default values.
-    if("INTERFACE_BUILD_INCLUDE_DIR" IN_LIST arg_cpp_lib_KEYWORDS_MISSING_VALUES)
+    if("BUILD_INCLUDE_DIR" IN_LIST arg_cpp_lib_KEYWORDS_MISSING_VALUES)
         message(FATAL_ERROR "Missing build interface list for ${_ALIAS_TARGET_NAME}.")
-    elseif(NOT DEFINED arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR)
-        set(arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src")
+    elseif(NOT DEFINED arg_cpp_lib_BUILD_INCLUDE_DIR)
+        set(arg_cpp_lib_BUILD_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src")
     endif()
 
-    check_if_header_only(arg_cpp_lib_INTERFACE_HEADERS _IS_VALID_INTERFACE _INVALID_HEADER_FILE)
+    check_if_header_only(arg_cpp_lib_PUBLIC_HEADERS _IS_VALID_INTERFACE _INVALID_HEADER_FILE)
     if(NOT _IS_VALID_INTERFACE)
         message(
             FATAL_ERROR
@@ -63,13 +63,13 @@ function(cpp_library)
         )
     endif()
 
-    check_if_header_only(arg_cpp_lib_IMPLEMENTATION_SOURCES _IS_INTERFACE_LIB _)
+    check_if_header_only(arg_cpp_lib_PRIVATE_SOURCES _IS_INTERFACE_LIB _)
     if(_IS_INTERFACE_LIB)
         add_library(${arg_cpp_lib_NAME} INTERFACE)
         target_include_directories(
             ${arg_cpp_lib_NAME}
             INTERFACE
-                "$<BUILD_INTERFACE:${arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR}>"
+                "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
@@ -79,13 +79,13 @@ function(cpp_library)
         target_sources(
             ${arg_cpp_lib_NAME}
             PRIVATE
-                ${arg_cpp_lib_INTERFACE_HEADERS}
-                ${arg_cpp_lib_IMPLEMENTATION_SOURCES}
+                ${arg_cpp_lib_PUBLIC_HEADERS}
+                ${arg_cpp_lib_PRIVATE_SOURCES}
         )
         target_include_directories(
             ${arg_cpp_lib_NAME}
             PUBLIC
-                "$<BUILD_INTERFACE:${arg_cpp_lib_INTERFACE_BUILD_INCLUDE_DIR}>"
+                "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
@@ -93,9 +93,9 @@ function(cpp_library)
     target_link_libraries(
         ${arg_cpp_lib_NAME}
         PUBLIC
-            ${arg_cpp_lib_INTERFACE_LIBRARIES}
+            ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
         PRIVATE
-            ${arg_cpp_lib_LOCAL_DEPENDENCIES}
+            ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
     )
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 

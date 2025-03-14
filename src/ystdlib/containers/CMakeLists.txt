@@ -1,7 +1,7 @@
 cpp_library(
-    NAME container
+    NAME containers
     NAMESPACE ystdlib
-    INTERFACE_HEADERS
+    PUBLIC_HEADERS
         Array.hpp
     TESTS_SOURCES
         test/test_Array.cpp
