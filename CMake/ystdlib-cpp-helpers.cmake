@@ -73,7 +73,8 @@ function(cpp_library)
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
-        # Library type defaults to static if `BUILD_SHARED_LIBS` is OFF and to shared if ON.
+        # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
+        # defaults to static.
         add_library(${arg_cpp_lib_NAME})
         target_sources(
             ${arg_cpp_lib_NAME}
