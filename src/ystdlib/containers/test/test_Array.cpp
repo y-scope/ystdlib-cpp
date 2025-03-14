@@ -83,8 +83,8 @@ TEST_CASE("test_array_empty", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_reference", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    Array<size_t> arr(cBufferSize);
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         arr.at(idx) = idx;
     }
     auto const& arr_const_ref = arr;
@@ -92,8 +92,8 @@ TEST_CASE("test_array_reference", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
-    std::vector<int> vec;
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    std::vector<size_t> vec;
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         vec.push_back(idx);
     }
     Array<int> arr(cBufferSize);
@@ -102,9 +102,9 @@ TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_movable", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
-    Array<int> reference_array(cBufferSize);
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    Array<size_t> arr(cBufferSize);
+    Array<size_t> reference_array(cBufferSize);
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         arr.at(idx) = idx;
         reference_array.at(idx) = idx;
     }
