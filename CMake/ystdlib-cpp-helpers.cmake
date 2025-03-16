@@ -27,9 +27,9 @@ endfunction()
 # @param PUBLIC_LINK_LIBRARIES
 # @param PRIVATE_LINK_LIBRARIES
 # @parms TESTS_SOURCES
-# @param [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
-# building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject
-# via the add_subdirectory() function.
+# @param [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building the
+# library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via the
+# add_subdirectory() function.
 function(cpp_library)
     set(options "")
     set(oneValueArgs
