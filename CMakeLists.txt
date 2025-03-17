@@ -50,8 +50,12 @@ if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
 endif()
 
-# Import CMake helper functions
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+find_package(outcome REQUIRED)
+if(outcome_FOUND)
+    message(STATUS "Found outcome.")
+else()
+    message(FATAL_ERROR "Could not find libraries for outcome.")
+endif()
 
 if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
@@ -76,6 +80,9 @@ if(YSTDLIB_CPP_ENABLE_TESTS)
     )
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
+
+# Import CMake helper functions
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 
 include(ystdlib-cpp-helpers)
 
