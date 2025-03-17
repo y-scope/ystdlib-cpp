@@ -75,7 +75,7 @@ tasks:
           GEN_ARGS:
             - "-C {{.G_DEPS_CMAKE_SETTINGS_FILE}}"
             - "-DCMAKE_BUILD_TYPE=Release"
-          JOBS: 2
+          JOBS: 8
       - task: "add-package-root-to-settings"
         vars:
           NAME: "{{.G_OUTCOME_LIB_NAME}}"
