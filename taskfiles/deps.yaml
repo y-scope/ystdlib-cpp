@@ -14,6 +14,7 @@ tasks:
     cmds:
       - task: "install-all-init"
       - task: "install-all-run"
+      - task: "install-all-finish"
 
   install-all-init:
     internal: true
@@ -28,22 +29,26 @@ tasks:
       - "install-outcome"
       - "install-quickcpplib"
 
-  add-package-root-to-settings:
+  install-all-finish:
     internal: true
-    vars:
-      PACKAGE_ROOT_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.NAME}}-root.cmake"
+    cmds:
+      - >-
+        echo -e "
+        include({{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_CATCH2_LIB_NAME}}.cmake)\n
+        include({{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_OUTCOME_LIB_NAME}}.cmake)\n
+        include({{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}.cmake)\n
+        " >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+
+  add-package-root-to-cmake-settings:
+    internal: true
     requires:
       vars:
         - "NAME"
         - "INSTALL_PREFIX"
     cmds:
-      # POSIX-compliant OS ensures that writes with sizes less than `PIPE_BUF` must be atomic.
-      # See also: https://man7.org/linux/man-pages/man7/pipe.7.html
       - >-
-        echo "set({{.NAME}}_ROOT \"{{.INSTALL_PREFIX}}\" CACHE PATH \"Path to {{.NAME}}\")" >>
-        "{{.PACKAGE_ROOT_SETTINGS_FILE}}"
-      - >-
-        echo "include({{.PACKAGE_ROOT_SETTINGS_FILE}})" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+        echo "set({{.NAME}}_ROOT \"{{.INSTALL_PREFIX}}\" CACHE PATH \"Path to {{.NAME}}
+        settings\")" >> "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.NAME}}.cmake"
 
   install-Catch2:
     internal: true
@@ -55,7 +60,7 @@ tasks:
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
           FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
-      - task: "add-package-root-to-settings"
+      - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_CATCH2_LIB_NAME}}"
           INSTALL_PREFIX: "{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install"
@@ -73,10 +78,10 @@ tasks:
           FILE_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
           URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
           GEN_ARGS:
-            - "-C {{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}-root.cmake"
+            - "-C {{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}.cmake"
             - "-DCMAKE_BUILD_TYPE=Release"
           JOBS: 8
-      - task: "add-package-root-to-settings"
+      - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_OUTCOME_LIB_NAME}}"
           INSTALL_PREFIX: "{{.G_OUTCOME_WORK_DIR}}/{{.G_OUTCOME_LIB_NAME}}-install"
@@ -93,7 +98,7 @@ tasks:
           URL: "https://github.com/ned14/quickcpplib/archive/master.tar.gz"
           GEN_ARGS:
             - "-DCMAKE_BUILD_TYPE=Release"
-      - task: "add-package-root-to-settings"
+      - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
           INSTALL_PREFIX: "{{.G_QUICKCPPLIB_WORK_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}-install"
