@@ -18,12 +18,8 @@ tasks:
   install-all-init:
     internal: true
     cmds:
-      - "mkdir -p {{.G_DEPS_DIR}}"
+      - "mkdir -p {{.G_DEPS_CMAKE_SETTINGS_DIR}}"
       - "rm -f '{{.G_DEPS_CMAKE_SETTINGS_FILE}}'"
-      # Enable CMP0074 to ensure Cmake versions prior to 3.12 does not ignore <PackageName>_ROOT.
-      - >-
-        echo "set(CMAKE_POLICY_DEFAULT_CMP0074 NEW CACHE STRING \"Enable <PackageName>_ROOT
-        flags\")" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
 
   install-all-run:
     internal: true
@@ -34,6 +30,8 @@ tasks:
 
   add-package-root-to-settings:
     internal: true
+    vars:
+      PACKAGE_ROOT_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.NAME}}-root.cmake"
     requires:
       vars:
         - "NAME"
@@ -43,7 +41,9 @@ tasks:
       # See also: https://man7.org/linux/man-pages/man7/pipe.7.html
       - >-
         echo "set({{.NAME}}_ROOT \"{{.INSTALL_PREFIX}}\" CACHE PATH \"Path to {{.NAME}}\")" >>
-        "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+        "{{.PACKAGE_ROOT_SETTINGS_FILE}}"
+      - >-
+        echo "include({{.PACKAGE_ROOT_SETTINGS_FILE}})" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
 
   install-Catch2:
     internal: true
@@ -73,7 +73,7 @@ tasks:
           FILE_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
           URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
           GEN_ARGS:
-            - "-C {{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+            - "-C {{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}-root.cmake"
             - "-DCMAKE_BUILD_TYPE=Release"
           JOBS: 8
       - task: "add-package-root-to-settings"
