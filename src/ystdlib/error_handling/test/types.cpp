@@ -7,9 +7,7 @@
 
 #include "constants.hpp"
 
-using ystdlib::error_handling::test::AlwaysSuccessErrorCategory;
 using ystdlib::error_handling::test::AlwaysSuccessErrorCodeEnum;
-using ystdlib::error_handling::test::BinaryErrorCategory;
 using ystdlib::error_handling::test::BinaryErrorCodeEnum;
 using ystdlib::error_handling::test::cAlwaysSuccessErrorCategoryName;
 using ystdlib::error_handling::test::cBinaryTestErrorCategoryName;
@@ -17,6 +15,9 @@ using ystdlib::error_handling::test::cFailureConditions;
 using ystdlib::error_handling::test::cFailureErrorMsg;
 using ystdlib::error_handling::test::cSuccessErrorMsg;
 using ystdlib::error_handling::test::cUnrecognizedErrorCode;
+using AlwaysSuccessErrorCategory
+        = ystdlib::error_handling::ErrorCategory<AlwaysSuccessErrorCodeEnum>;
+using BinaryErrorCategory = ystdlib::error_handling::ErrorCategory<BinaryErrorCodeEnum>;
 
 template <>
 auto AlwaysSuccessErrorCategory::name() const noexcept -> char const* {
