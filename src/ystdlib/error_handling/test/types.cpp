@@ -5,6 +5,8 @@
 #include <string_view>
 #include <system_error>
 
+#include <ystdlib/error_handling/ErrorCode.hpp>
+
 #include "constants.hpp"
 
 using ystdlib::error_handling::test::AlwaysSuccessErrorCodeEnum;
