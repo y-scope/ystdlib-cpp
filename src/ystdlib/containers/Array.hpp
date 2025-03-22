@@ -1,5 +1,5 @@
-#ifndef YSTDLIB_CONTAINERS_ARRAY
-#define YSTDLIB_CONTAINERS_ARRAY
+#ifndef YSTDLIB_CONTAINERS_ARRAY_HPP
+#define YSTDLIB_CONTAINERS_ARRAY_HPP
 
 #include <algorithm>
 #include <concepts>
@@ -119,4 +119,4 @@ private:
 };
 }  // namespace ystdlib::containers
 
-#endif  // YSTDLIB_CONTAINERS_ARRAY
+#endif  // YSTDLIB_CONTAINERS_ARRAY_HPP
