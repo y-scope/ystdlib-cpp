@@ -1,6 +1,8 @@
 # yamllint disable-line rule:line-length
 # yaml-language-server: $schema=https://raw.githubusercontent.com/BlankSpruce/gersemi/master/gersemi/configuration.schema.json
 
-definitions: ["CMake/ystdlib-cpp-helpers.cmake"]
+definitions:
+  - "CMake/ystdlib-cpp-helpers.cmake"
+  - "build/deps/Catch2/Catch2-src/extras/Catch.cmake"
 line_length: 100
 list_expansion: "favour-expansion"
