@@ -12,11 +12,9 @@ using ystdlib::error_handling::TraceableException;
 
 namespace {
 constexpr auto cCustomFailureDescription{"This operation failed due to invalid args."};
-constexpr auto cCurrentFileName{
-        "src/ystdlib/error_handling/test/test_TraceableException.cpp"
-};
+constexpr auto cCurrentFileName{"src/ystdlib/error_handling/test/test_TraceableException.cpp"};
 constexpr auto cCurrentExceptionLocation{
-        "src/ystdlib/error_handling/test/test_TraceableException.cpp(30:76), function `static void "
+        "src/ystdlib/error_handling/test/test_TraceableException.cpp(28:76), function `static void "
         "ystdlib::error_handling::test::Worker::execute_with_success()`"
 };
 }  // namespace
