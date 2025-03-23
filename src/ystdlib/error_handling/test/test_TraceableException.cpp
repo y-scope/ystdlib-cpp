@@ -13,9 +13,11 @@ using ystdlib::error_handling::TraceableException;
 namespace {
 constexpr auto cCustomFailureDescription{"This operation failed due to invalid args."};
 constexpr auto cCurrentFileName{"src/ystdlib/error_handling/test/test_TraceableException.cpp"};
-constexpr auto cCurrentExceptionLocation{
-        "src/ystdlib/error_handling/test/test_TraceableException.cpp(28:76), function `static void "
-        "ystdlib::error_handling::test::Worker::execute_with_success()`"
+constexpr auto cSuccessFuncName{
+        "static void ystdlib::error_handling::test::Worker::execute_with_success()"
+};
+constexpr auto cFailureFuncName{
+        "static void ystdlib::error_handling::test::Worker::execute_with_failure()"
 };
 }  // namespace
 
@@ -29,9 +31,10 @@ public:
     }
 
     static auto execute_with_failure() -> void {
-        // clang-format off
-        throw OperationFailed(BinaryErrorCode{BinaryErrorCodeEnum::Failure}, cCustomFailureDescription);
-        // clang-format on
+        throw OperationFailed(
+                BinaryErrorCode{BinaryErrorCodeEnum::Failure},
+                cCustomFailureDescription
+        );
     }
 };
 }  // namespace ystdlib::error_handling::test
@@ -51,13 +54,15 @@ auto capture_exception(Callable&& f) -> TraceableException<E> {
 }
 }  // namespace
 
-#include <iostream>
-
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_traceable_exception", "[error_handling][TraceableException]") {
-    auto const ex{capture_exception<BinaryErrorCode>(Worker::execute_with_success)};
-    REQUIRE((0 == std::strcmp(ex.where().file_name(), cCurrentFileName)));
-    std::cout << ex.where().str().c_str() << std::endl;
-    REQUIRE((0 == std::strcmp(ex.where().str().c_str(), cCurrentExceptionLocation)));
+    auto const ex_success{capture_exception<BinaryErrorCode>(Worker::execute_with_success)};
+    REQUIRE((0 == std::strcmp(ex_success.where().file_name(), cCurrentFileName)));
+    REQUIRE((0 == std::strcmp(ex_success.where().function_name(), cSuccessFuncName)));
+
+    auto const ex_failure{capture_exception<BinaryErrorCode>(Worker::execute_with_failure)};
+    REQUIRE((0 == std::strcmp(ex_failure.what(), cCustomFailureDescription)));
+    REQUIRE((0 == std::strcmp(ex_failure.where().file_name(), cCurrentFileName)));
+    REQUIRE((0 == std::strcmp(ex_failure.where().function_name(), cFailureFuncName)));
 }
 }  // namespace ystdlib::error_handling::test

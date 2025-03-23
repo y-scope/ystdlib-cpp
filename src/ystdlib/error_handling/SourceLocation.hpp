@@ -38,5 +38,4 @@ private:
     std::string m_formatted_location;
 };
 }  // namespace ystdlib::error_handling
-
 #endif  // YSTDLIB_ERROR_HANDLING_SOURCELOCATION_HPP
