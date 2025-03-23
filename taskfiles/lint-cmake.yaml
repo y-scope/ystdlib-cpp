@@ -42,6 +42,7 @@ tasks:
         - "FLAGS"
     dir: "{{.ROOT_DIR}}"
     deps:
+      - ":deps:install-all"  # Allow Gersemi to parse 3rdparty CMake modules for linting
       - "venv"
     cmds:
       - |-
