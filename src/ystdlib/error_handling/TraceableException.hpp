@@ -39,8 +39,9 @@ public:
             std::source_location const& where = std::source_location::current()
     )
             : m_error_code{std::move(error_code)},
-              m_where{where},
-              m_what{m_where.str()} {}
+              m_where{where} {
+        m_what = m_where.str();
+    }
 
     explicit TraceableException(
             ErrorCodeType error_code,

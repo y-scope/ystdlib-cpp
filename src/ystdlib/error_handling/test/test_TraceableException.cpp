@@ -1,5 +1,5 @@
 #include <cassert>
-#include <string_view>
+#include <cstring>
 
 #include <ystdlib/error_handling/TraceableException.hpp>
 
@@ -12,10 +12,10 @@ using ystdlib::error_handling::TraceableException;
 
 namespace {
 constexpr auto cCustomFailureDescription{"This operation failed due to invalid args."};
-constexpr std::string_view cCurrentFileName{
+constexpr auto cCurrentFileName{
         "src/ystdlib/error_handling/test/test_TraceableException.cpp"
 };
-constexpr std::string_view cCurrentExceptionLocation{
+constexpr auto cCurrentExceptionLocation{
         "src/ystdlib/error_handling/test/test_TraceableException.cpp(30:76), function `static void "
         "ystdlib::error_handling::test::Worker::execute_with_success()`"
 };
@@ -56,7 +56,7 @@ auto capture_exception(Callable&& f) -> TraceableException<E> {
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_traceable_exception", "[error_handling][TraceableException]") {
     auto const ex{capture_exception<BinaryErrorCode>(Worker::execute_with_success)};
-    REQUIRE((0 == std::strcmp(ex.where().file_name(), cCurrentFileName.data())));
-    REQUIRE((0 == std::strcmp(ex.where().str().c_str(), cCurrentExceptionLocation.data())));
+    REQUIRE((0 == std::strcmp(ex.where().file_name(), cCurrentFileName)));
+    REQUIRE((0 == std::strcmp(ex.where().str().c_str(), cCurrentExceptionLocation)));
 }
 }  // namespace ystdlib::error_handling::test
