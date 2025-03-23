@@ -51,10 +51,13 @@ auto capture_exception(Callable&& f) -> TraceableException<E> {
 }
 }  // namespace
 
+#include <iostream>
+
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_traceable_exception", "[error_handling][TraceableException]") {
     auto const ex{capture_exception<BinaryErrorCode>(Worker::execute_with_success)};
     REQUIRE((0 == std::strcmp(ex.where().file_name(), cCurrentFileName)));
+    std::cout << ex.where().str().c_str() << std::endl;
     REQUIRE((0 == std::strcmp(ex.where().str().c_str(), cCurrentExceptionLocation)));
 }
 }  // namespace ystdlib::error_handling::test
