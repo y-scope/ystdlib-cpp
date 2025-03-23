@@ -4,9 +4,9 @@
 #include <concepts>
 #include <exception>
 #include <source_location>
-#include <stacktrace>
 #include <string>
 #include <system_error>
+#include <utility>
 
 #include "SourceLocation.hpp"
 
@@ -31,14 +31,16 @@ concept ErrorCodeType
  * @see std::source_location::line()
  */
 template <typename ErrorCodeType>
-class TraceableException : public std::exception, public std::source_location {
+class TraceableException : public std::exception {
 public:
     // Constructors
     explicit TraceableException(
             ErrorCodeType error_code,
             std::source_location const& where = std::source_location::current()
     )
-            : TraceableException{std::move(error_code), where.function_name(), where} {}
+            : m_error_code{std::move(error_code)},
+              m_where{where},
+              m_what{m_where.str()} {}
 
     explicit TraceableException(
             ErrorCodeType error_code,
@@ -61,9 +63,9 @@ public:
 
 private:
     // Variables
-    ErrorCodeType const m_error_code;
+    ErrorCodeType m_error_code;
     std::string m_what;
-    SourceLocation const m_where;
+    SourceLocation m_where;
 };
 
 }  // namespace ystdlib::error_handling

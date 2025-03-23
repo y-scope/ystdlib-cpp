@@ -1,5 +1,5 @@
 #include <cassert>
-#include <iostream>
+#include <string_view>
 
 #include <ystdlib/error_handling/TraceableException.hpp>
 
@@ -11,7 +11,14 @@ using ystdlib::error_handling::ErrorCodeType;
 using ystdlib::error_handling::TraceableException;
 
 namespace {
-constexpr auto cCustomFailureDescription{"This operation has failed."};
+constexpr auto cCustomFailureDescription{"This operation failed due to invalid args."};
+constexpr std::string_view cCurrentFileName{
+        "src/ystdlib/error_handling/test/test_TraceableException.cpp"
+};
+constexpr std::string_view cCurrentExceptionLocation{
+        "src/ystdlib/error_handling/test/test_TraceableException.cpp(30:76), function `static void "
+        "ystdlib::error_handling::test::Worker::execute_with_success()`"
+};
 }  // namespace
 
 namespace ystdlib::error_handling::test {
@@ -28,10 +35,6 @@ public:
         throw OperationFailed(BinaryErrorCode{BinaryErrorCodeEnum::Failure}, cCustomFailureDescription);
         // clang-format on
     }
-
-    // static auto execute_with_invalid_args() -> void {
-    //     throw OperationFailed(std::make_error_code(std::errc::invalid_argument));
-    // }
 };
 }  // namespace ystdlib::error_handling::test
 
@@ -52,9 +55,8 @@ auto capture_exception(Callable&& f) -> TraceableException<E> {
 
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_traceable_exception", "[error_handling][TraceableException]") {
-    REQUIRE(1 == 1);
     auto const ex{capture_exception<BinaryErrorCode>(Worker::execute_with_success)};
-    std::cout << ex.where().file_name() << std::endl;
-    std::cout << ex.where() << std::endl;
+    REQUIRE((0 == std::strcmp(ex.where().file_name(), cCurrentFileName.data())));
+    REQUIRE((0 == std::strcmp(ex.where().str().c_str(), cCurrentExceptionLocation.data())));
 }
 }  // namespace ystdlib::error_handling::test
