@@ -16,10 +16,7 @@ enum class BinaryErrorCodeEnum : uint8_t {
 };
 
 using AlwaysSuccessErrorCode = ystdlib::error_handling::ErrorCode<AlwaysSuccessErrorCodeEnum>;
-using AlwaysSuccessErrorCategory
-        = ystdlib::error_handling::ErrorCategory<AlwaysSuccessErrorCodeEnum>;
 using BinaryErrorCode = ystdlib::error_handling::ErrorCode<BinaryErrorCodeEnum>;
-using BinaryErrorCategory = ystdlib::error_handling::ErrorCategory<BinaryErrorCodeEnum>;
 }  // namespace ystdlib::error_handling::test
 
 YSTDLIB_ERROR_HANDLING_MARK_AS_ERROR_CODE_ENUM(
