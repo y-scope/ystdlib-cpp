@@ -16,17 +16,15 @@ endfunction()
 
 # Defines a CMake interface target to expose the include path resolution directory of a third-party
 # library.
-
-# The created target can be linked against `ystdlib-cpp` libraries to ensure
-# consistent header resolution across dependent projects.
 #
-# This is useful for third-party libraries that do not properly configure target-based include paths
-# using `target_include_directories($<INSTALL_INTERFACE>)`.
+# The created target can be linked against `ystdlib-cpp` libraries to ensure proper header
+# resolution. This is useful for third-party libraries that do not  properly configure target-based
+# include paths using `target_include_directories($<INSTALL_INTERFACE>)`.
 #
 # Call this function after using the `find_package()` call so that `<LIB_NAME>_ROOT` is defined.
 #
-# @param LIB_NAME     The base name of the library (expects <LIB_NAME>_ROOT to be defined).
-# @param [DEP_LIST]   Optional list of interface dependencies (e.g., nested include targets).
+# @param {string} LIB_NAME     The name of the library (expects <LIB_NAME>_ROOT to be defined).
+# @param {string[]} [DEP_LIST] Optional list of interface dependencies.
 function(add_lib_include_interface_target)
     set(options "")
     set(oneValueArgs LIB_NAME)
@@ -57,16 +55,16 @@ endfunction()
 # If `YSTDLIB_CPP_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
 # links this library against the unified unit test target for the entire `ystdlib-cpp` project.
 #
-# @param NAME
-# @param NAMESPACE
-# @param PUBLIC_HEADERS
-# @param PRIVATE_SOURCES
-# @param PUBLIC_LINK_LIBRARIES
-# @param PRIVATE_LINK_LIBRARIES
-# @parms TESTS_SOURCES
-# @param [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for building the
-# library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via the
-# add_subdirectory() function.
+# @param {string} NAME
+# @param {string} NAMESPACE
+# @param {string[]} PUBLIC_HEADERS
+# @parms {string[]} TESTS_SOURCES
+# @param {string[]} [PRIVATE_SOURCES]
+# @param {string[]} [PUBLIC_LINK_LIBRARIES]
+# @param {string[]} [PRIVATE_LINK_LIBRARIES]
+# @param {string[]} [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
+# building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via
+# the add_subdirectory() function.
 function(cpp_library)
     set(options "")
     set(oneValueArgs
