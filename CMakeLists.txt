@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+include(ystdlib-cpp-helpers)
+
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
@@ -53,6 +56,8 @@ endif()
 find_package(outcome REQUIRED)
 if(outcome_FOUND)
     message(STATUS "Found outcome.")
+    add_lib_include_interface_target(LIB_NAME quickcpplib)
+    add_lib_include_interface_target(LIB_NAME outcome DEP_LIST quickcpplib::quickcpplib_include)
 else()
     message(FATAL_ERROR "Could not find libraries for outcome.")
 endif()
@@ -80,10 +85,5 @@ if(YSTDLIB_CPP_ENABLE_TESTS)
     )
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
-
-# Import CMake helper functions
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
-
-include(ystdlib-cpp-helpers)
 
 add_subdirectory(src/ystdlib)
