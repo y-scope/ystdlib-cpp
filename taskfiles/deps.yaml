@@ -86,7 +86,6 @@ tasks:
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
             - "-DCMAKE_POLICY_DEFAULT_CMP0074=NEW"
-            - "-DCMAKE_POLICY_DEFAULT_CMP0148=OLD"
       - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_OUTCOME_LIB_NAME}}"
@@ -105,7 +104,6 @@ tasks:
           GEN_ARGS:
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
-            - "-DCMAKE_POLICY_DEFAULT_CMP0148=OLD"
       - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
