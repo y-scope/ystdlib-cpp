@@ -34,11 +34,11 @@ endfunction()
 # @param {string} NAME
 # @param {string} NAMESPACE
 # @param {string[]} PUBLIC_HEADERS
-# @parms {string[]} TESTS_SOURCES
+# @param {string[]} TESTS_SOURCES
 # @param {string[]} [PRIVATE_SOURCES]
 # @param {string[]} [PUBLIC_LINK_LIBRARIES]
 # @param {string[]} [PRIVATE_LINK_LIBRARIES]
-# @parms {string[]} [TESTS_LINK_LIBRARIES]
+# @param {string[]} [TESTS_LINK_LIBRARIES]
 # @param {string[]} [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
 # building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via
 # the add_subdirectory() function.
