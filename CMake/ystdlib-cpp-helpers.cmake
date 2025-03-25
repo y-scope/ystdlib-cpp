@@ -1,16 +1,16 @@
 # @param {string[]} REQUIRED_ARGS The list of arguments to check.
 # @param {string[]} ARG_KEYWORDS_MISSING_VALUES The list of arguments with missing values.
-# @param {string} LIB_NAME The library target on which to perform the check.
-function(require_argument_values REQUIRED_ARGS ARG_KEYWORDS_MISSING_VALUES LIB_NAME)
+# @param {string} TARGET_NAME The target on which to perform the check.
+function(require_argument_values REQUIRED_ARGS ARG_KEYWORDS_MISSING_VALUES TARGET_NAME)
     foreach(arg IN LISTS REQUIRED_ARGS)
         if("${arg}" IN_LIST ARG_KEYWORDS_MISSING_VALUES)
-            message(FATAL_ERROR "Missing values for argument '${arg}' in target '${LIB_NAME}'.")
+            message(FATAL_ERROR "Missing values for argument '${arg}' in target '${TARGET_NAME}'.")
         endif()
     endforeach()
 endfunction()
 
 # @param {string[]} SOURCE_LIST The list of source files to check.
-# @param {bool} IS_HEADER_ONLY Returns whether the list only contains header files.
+# @param {bool} IS_HEADER_ONLY Returns TRUE if list only contains header files, FALSE otherwise.
 # @param {string} NON_HEADER_FILE Returns the name of the first, if any, non-header file.
 function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(_LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
