@@ -65,7 +65,14 @@ function(cpp_library)
 
     check_if_header_only(arg_cpp_lib_PRIVATE_SOURCES _IS_INTERFACE_LIB _)
     if(_IS_INTERFACE_LIB)
+        if(arg_cpp_lib_PRIVATE_LINK_LIBRARIES)
+            message(
+                FATAL_ERROR
+                "`PRIVATE_LINK_LIBRARIES` disabled for header-only library ${_ALIAS_TARGET_NAME}."
+            )
+        endif()
         add_library(${arg_cpp_lib_NAME} INTERFACE)
+        target_link_libraries(${arg_cpp_lib_NAME} INTERFACE ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES})
         target_include_directories(
             ${arg_cpp_lib_NAME}
             INTERFACE
@@ -82,6 +89,13 @@ function(cpp_library)
                 ${arg_cpp_lib_PUBLIC_HEADERS}
                 ${arg_cpp_lib_PRIVATE_SOURCES}
         )
+        target_link_libraries(
+            ${arg_cpp_lib_NAME}
+            PUBLIC
+                ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
+            PRIVATE
+                ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
+        )
         target_include_directories(
             ${arg_cpp_lib_NAME}
             PUBLIC
@@ -90,13 +104,6 @@ function(cpp_library)
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
 
-    target_link_libraries(
-        ${arg_cpp_lib_NAME}
-        PUBLIC
-            ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
-        PRIVATE
-            ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
-    )
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
