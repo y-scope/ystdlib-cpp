@@ -100,8 +100,8 @@ tasks:
         vars:
           NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
           WORK_DIR: "{{.G_QUICKCPPLIB_WORK_DIR}}"
-          FILE_SHA256: "cd1f4cd5e9580957bd9e9fabf5b9133ffe3594071a1eed6fe685d9143b961294"
-          URL: "https://github.com/ned14/quickcpplib/archive/master.tar.gz"
+          FILE_SHA256: "5d4c9b2d6fa177d3fb14f3fe3086867e43b44f4a7a944eb10ee4616b2b0f3c05"
+          URL: "https://github.com/ned14/quickcpplib/archive/f3e452e.tar.gz"
           GEN_ARGS:
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
