@@ -120,7 +120,6 @@ function(cpp_library)
         PRIVATE
             ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
     )
-
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
     if(YSTDLIB_CPP_ENABLE_TESTS)
