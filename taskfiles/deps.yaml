@@ -35,7 +35,7 @@ tasks:
       - >-
         for file in {{.G_DEPS_CMAKE_SETTINGS_DIR}}/*.cmake; do
           if [ "$file" != "{{.G_DEPS_CMAKE_SETTINGS_FILE}}" ]; then
-            echo "include($file)" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}";
+            echo "include(\"$file\")" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}";
           fi
         done
 
