@@ -64,7 +64,6 @@ function(cpp_library)
         TESTS_SOURCES
         BUILD_INCLUDE_DIR
     )
-
     cmake_parse_arguments(arg_cpp_lib "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     set(_ALIAS_TARGET_NAME "${arg_cpp_lib_NAMESPACE}::${arg_cpp_lib_NAME}")
@@ -95,7 +94,6 @@ function(cpp_library)
             INTERFACE
                 "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
-        target_link_libraries(${arg_cpp_lib_NAME} INTERFACE ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES})
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
@@ -115,13 +113,13 @@ function(cpp_library)
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
 
-	target_link_libraries(
-		${arg_cpp_lib_NAME}
-		PUBLIC
-			${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
-		PRIVATE
-			${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
-	)
+    target_link_libraries(
+        ${arg_cpp_lib_NAME}
+        PUBLIC
+            ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES}
+        PRIVATE
+            ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
+    )
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
