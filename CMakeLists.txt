@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22.1)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
+include(ystdlib-cpp-helpers)
+
 project(YSTDLIB_CPP LANGUAGES CXX)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
@@ -40,7 +43,7 @@ if(YSTDLIB_CPP_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
     # NOTE: We mark the file optional because if the user happens to have the dependencies
     # installed, this file is not necessary.
-    include(build/deps/settings.cmake OPTIONAL)
+    include("build/deps/cmake-settings/settings.cmake" OPTIONAL)
 
     # If previously undefined, `BUILD_TESTING` will be set to ON.
     include(CTest)
@@ -50,8 +53,12 @@ if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
 endif()
 
-# Import CMake helper functions
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
+find_package(outcome REQUIRED)
+if(outcome_FOUND)
+    message(STATUS "Found outcome.")
+else()
+    message(FATAL_ERROR "Could not find libraries for outcome.")
+endif()
 
 if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
@@ -76,7 +83,5 @@ if(YSTDLIB_CPP_ENABLE_TESTS)
     )
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
-
-include(ystdlib-cpp-helpers)
 
 add_subdirectory(src/ystdlib)
