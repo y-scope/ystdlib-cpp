@@ -20,6 +20,7 @@ vars:
     - "all"
     - "containers"
     - "error_handling"
+    - "io_interface"
 
 tasks:
   clean:
