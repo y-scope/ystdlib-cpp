@@ -125,4 +125,5 @@ size_t ReaderInterface::get_pos() {
     return pos;
 }
 }  // namespace ystdlib::io_interface
+
 // NOLINTEND

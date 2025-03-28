@@ -1,5 +1,6 @@
 #ifndef YSTDLIB_IO_INTERFACE_ERRORCODE_HPP
 #define YSTDLIB_IO_INTERFACE_ERRORCODE_HPP
+
 // NOLINTBEGIN
 
 namespace ystdlib::io_interface {
