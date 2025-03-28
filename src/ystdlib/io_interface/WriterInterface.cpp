@@ -1,3 +1,4 @@
+// NOLINTBEGIN
 #include "WriterInterface.hpp"
 
 namespace ystdlib::io_interface {
@@ -33,3 +34,4 @@ size_t WriterInterface::get_pos() const {
     return pos;
 }
 }  // namespace ystdlib::io_interface
+// NOLINTEND

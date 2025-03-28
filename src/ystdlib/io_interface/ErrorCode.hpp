@@ -1,5 +1,6 @@
 #ifndef YSTDLIB_IO_INTERFACE_ERRORCODE_HPP
 #define YSTDLIB_IO_INTERFACE_ERRORCODE_HPP
+// NOLINTBEGIN
 
 namespace ystdlib::io_interface {
 typedef enum {
@@ -27,4 +28,5 @@ typedef enum {
 } ErrorCode;
 }  // namespace ystdlib::io_interface
 
+// NOLINTEND
 #endif  // YSTDLIB_IO_INTERFACE_ERRORCODE_HPP

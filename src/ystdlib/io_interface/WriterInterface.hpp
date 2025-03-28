@@ -1,5 +1,6 @@
 #ifndef YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 #define YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
+// NOLINTBEGIN
 
 #include <cstddef>
 #include <string>
@@ -73,4 +74,5 @@ void WriterInterface::write_numeric_value(ValueType val) {
 }
 }  // namespace ystdlib::io_interface
 
+// NOLINTEND
 #endif  // YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP

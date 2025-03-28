@@ -1,3 +1,4 @@
+// NOLINTBEGIN
 #include "ReaderInterface.hpp"
 
 using std::string;
@@ -124,3 +125,4 @@ size_t ReaderInterface::get_pos() {
     return pos;
 }
 }  // namespace ystdlib::io_interface
+// NOLINTEND

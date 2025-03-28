@@ -1,5 +1,6 @@
 #ifndef YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
 #define YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
+// NOLINTBEGIN
 
 #include <cstddef>
 #include <string>
@@ -144,4 +145,5 @@ bool ReaderInterface::read_numeric_value(ValueType& value, bool eof_possible) {
 }
 }  // namespace ystdlib::io_interface
 
+// NOLINTEND
 #endif  // YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
