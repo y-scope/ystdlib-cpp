@@ -27,7 +27,7 @@ public:
     // Destructor
     virtual ~ReaderInterface() = default;
 
-    // Methods implementing ReaderInterface
+    // Methods
     /*
      * Reads up to the given number of bytes from the underlying medium into the given buffer.
      * @param buf
@@ -67,7 +67,6 @@ public:
      */
     [[nodiscard]] virtual auto read_string(size_t str_length, std::string& str) -> ErrorCode;
 
-    // Methods implementing general stream interface
     /**
      * Seeks from the beginning to the given position.
      * @param pos
@@ -83,7 +82,7 @@ public:
     [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
 
     /**
-     * @param pos Returns the current position of the stream pointer.
+     * @param pos Returns the current position of the read pointer.
      */
     [[nodiscard]] virtual auto get_pos(size_t& pos) -> ErrorCode = 0;
 };
