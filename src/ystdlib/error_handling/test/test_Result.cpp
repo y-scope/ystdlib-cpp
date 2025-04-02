@@ -41,7 +41,7 @@ TEST_CASE("test_result_void", "[error_handling][Result]") {
 
 TEST_CASE("test_result_void_in_main", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<void> {
-        YSTDLIB_ASSERT_NO_ERROR(cVoidFunc(is_error));
+        YSTDLIB_TRYV(cVoidFunc(is_error));
         return success();
     };
     auto const main_no_error{main_func(false)};
@@ -65,7 +65,7 @@ TEST_CASE("test_result_int", "[error_handling][Result]") {
 
 TEST_CASE("test_result_int_in_main", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<void> {
-        YSTDLIB_ASSERT_NO_ERROR(cIntFunc(is_error));
+        YSTDLIB_TRYV(cIntFunc(is_error));
         return success();
     };
     auto const main_no_error{main_func(false)};
@@ -78,7 +78,7 @@ TEST_CASE("test_result_int_in_main", "[error_handling][Result]") {
 }
 
 TEST_CASE("test_result_int_propagate", "[error_handling][Result]") {
-    auto main_func = [&](bool is_error) -> Result<int> { return YSTDLIB_TRY(cIntFunc(is_error)); };
+    auto main_func = [&](bool is_error) -> Result<int> { return YSTDLIB_TRYX(cIntFunc(is_error)); };
     auto const main_no_error{main_func(false)};
     REQUIRE_FALSE(main_no_error.has_error());
     REQUIRE((cTestInt == main_no_error.value()));
