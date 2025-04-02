@@ -1,6 +1,9 @@
 #ifndef YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
 #define YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
-// NOLINTBEGIN
+
+// TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
+// NOLINTNEXTLINE(misc-include-cleaner)
+#include <sys/types.h>
 
 #include <cstddef>
 #include <string>
@@ -10,140 +13,84 @@
 namespace ystdlib::io_interface {
 class ReaderInterface {
 public:
-    // Types
-    class OperationFailed : public std::exception {
-    public:
-        OperationFailed(ErrorCode error_code) {}
-    };
+    // Constructor
+    ReaderInterface() = default;
+
+    // Delete copy constructor and assignment operator
+    ReaderInterface(ReaderInterface const&) = delete;
+    auto operator=(ReaderInterface const&) -> ReaderInterface& = delete;
+
+    // Default move constructor and assignment operator
+    ReaderInterface(ReaderInterface&&) noexcept = default;
+    auto operator=(ReaderInterface&&) noexcept -> ReaderInterface& = default;
 
     // Destructor
     virtual ~ReaderInterface() = default;
 
     // Methods
-    virtual ErrorCode try_read(char* buf, size_t num_bytes_to_read, size_t& num_bytes_read) = 0;
-    virtual ErrorCode try_seek_from_begin(size_t pos) = 0;
-    virtual ErrorCode try_get_pos(size_t& pos) = 0;
-
-    /**
-     * Tries to read up to the next delimiter and stores it in the given string.
-     * NOTE: Implementations should override this if they can achieve better performance.
-     * @param delim The delimiter to stop at
-     * @param keep_delimiter Whether to include the delimiter in the output string or not
-     * @param append Whether to append to the given string or replace its contents
-     * @param str The string read
-     * @return ErrorCode_Success on success
-     * @return Same as ReaderInterface::try_read otherwise
-     */
-    virtual ErrorCode
-    try_read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str);
-
-    /**
-     * Reads up to a given number of bytes
+    /*
+     * Reads up to the given number of bytes from the underlying medium into the given buffer.
      * @param buf
-     * @param num_bytes_to_read The number of bytes to try and read
-     * @param num_bytes_read The actual number of bytes read
-     * @return false on EOF
-     * @return true otherwise
+     * @param num_bytes_to_read
+     * @param num_bytes_read Returns the actual number of bytes read.
      */
-    bool read(char* buf, size_t num_bytes_to_read, size_t& num_bytes_read);
+    [[nodiscard]] virtual auto read(char* buf, size_t num_bytes_to_read, size_t& num_bytes_read)
+            -> ErrorCode
+            = 0;
 
     /**
-     * Reads up to the next delimiter and stores it in the given string
-     * @param delim The delimiter to stop at
-     * @param keep_delimiter Whether to include the delimiter in the output string or not
-     * @param append Whether to append to the given string or replace its contents
-     * @param str The string read
-     * @return false on EOF
-     * @return true on success
+     * Reads up to the next delimiter from the underlying medium into the given string.
+     * @param delim The delimiter to stop at.
+     * @param keep_delimiter Whether to include the delimiter in the output string or not.
+     * @param append Whether to append to the given string or replace its contents.
+     * @param str Returns the string read.
      */
-    bool read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str);
+    [[nodiscard]] virtual auto
+    read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str) -> ErrorCode;
 
     /**
-     * Tries to read a number of bytes
+     * Reads the given number of bytes from the underlying medium into the given buffer.
      * @param buf
-     * @param num_bytes Number of bytes to read
-     * @return Same as the underlying medium's try_read method
-     * @return ErrorCode_Truncated if 0 < # bytes read < num_bytes
+     * @param num_bytes Number of bytes to read.
      */
-    ErrorCode try_read_exact_length(char* buf, size_t num_bytes);
-    /**
-     * Reads a number of bytes
-     * @param buf
-     * @param num_bytes Number of bytes to read
-     * @param eof_possible If EOF should be possible (without reading any bytes)
-     * @return false if EOF is possible and EOF was hit
-     * @return true on success
-     */
-    bool read_exact_length(char* buf, size_t num_bytes, bool eof_possible);
+    [[nodiscard]] virtual auto read_exact_length(char* buf, size_t num_bytes) -> ErrorCode;
 
     /**
-     * Tries to read a numeric value from a file
-     * @param value The read value
-     * @return Same as FileReader::try_read_exact_length's return values
+     * @param value Returns the read numeric value.
      */
     template <typename ValueType>
-    ErrorCode try_read_numeric_value(ValueType& value);
-    /**
-     * Reads a numeric value
-     * @param value The read value
-     * @param eof_possible If EOF should be possible (without reading any bytes)
-     * @return false if EOF is possible and EOF was hit
-     * @return true on success
-     */
-    template <typename ValueType>
-    bool read_numeric_value(ValueType& value, bool eof_possible);
+    [[nodiscard]] auto read_numeric_value(ValueType& value) -> ErrorCode;
 
     /**
-     * Tries to read a string
      * @param str_length
-     * @param str The string read
-     * @return Same as ReaderInterface::try_read_exact_length
+     * @param str Returns the string read.
      */
-    ErrorCode try_read_string(size_t str_length, std::string& str);
-    /**
-     * Reads a string
-     * @param str_length
-     * @param str The string read
-     * @param eof_possible If EOF should be possible (without reading any bytes)
-     * @return false if EOF is possible and EOF was hit
-     * @return true on success
-     */
-    bool read_string(size_t str_length, std::string& str, bool eof_possible);
+    [[nodiscard]] virtual auto read_string(size_t str_length, std::string& str) -> ErrorCode;
 
     /**
-     * Seeks from the beginning to the given position
+     * Seeks from the beginning to the given position.
      * @param pos
      */
-    void seek_from_begin(size_t pos);
+    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> ErrorCode = 0;
 
     /**
-     * Gets the current position of the read head
-     * @return Position of the read head
+     * Seeks from the current position to the next position by the given offset amount.
+     * @param offset
      */
-    size_t get_pos();
+    // TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
+    // NOLINTNEXTLINE(misc-include-cleaner)
+    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
+
+    /**
+     * @param pos Returns the current position of the read pointer.
+     */
+    [[nodiscard]] virtual auto get_pos(size_t& pos) -> ErrorCode = 0;
 };
 
 template <typename ValueType>
-ErrorCode ReaderInterface::try_read_numeric_value(ValueType& value) {
-    ErrorCode error_code = try_read_exact_length(reinterpret_cast<char*>(&value), sizeof(value));
-    if (ErrorCode_Success != error_code) {
-        return error_code;
-    }
-    return ErrorCode_Success;
-}
-
-template <typename ValueType>
-bool ReaderInterface::read_numeric_value(ValueType& value, bool eof_possible) {
-    ErrorCode error_code = try_read_numeric_value(value);
-    if (ErrorCode_EndOfFile == error_code && eof_possible) {
-        return false;
-    }
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-    return true;
+auto ReaderInterface::read_numeric_value(ValueType& value) -> ErrorCode {
+    return read_exact_length(static_cast<char*>(&value), sizeof(ValueType));
 }
 }  // namespace ystdlib::io_interface
 
-// NOLINTEND
 #endif  // YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP

@@ -1,26 +1,25 @@
-// NOLINTBEGIN
 #include "ReaderInterface.hpp"
 
-using std::string;
+#include <cstddef>
+#include <string>
+
+#include "ErrorCode.hpp"
 
 namespace ystdlib::io_interface {
-ErrorCode ReaderInterface::try_read_to_delimiter(
-        char delim,
-        bool keep_delimiter,
-        bool append,
-        std::string& str
-) {
+auto
+ReaderInterface::read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str)
+        -> ErrorCode {
     if (false == append) {
         str.clear();
     }
 
-    size_t original_str_length = str.length();
+    auto const original_str_length{str.length()};
 
     // Read character by character into str, until we find a delimiter
-    char c;
-    size_t num_bytes_read;
+    char c{0};
+    size_t num_bytes_read{0};
     while (true) {
-        auto error_code = try_read(&c, 1, num_bytes_read);
+        auto const error_code{read(&c, 1, num_bytes_read)};
         if (ErrorCode_Success != error_code) {
             if (ErrorCode_EndOfFile == error_code && str.length() > original_str_length) {
                 return ErrorCode_Success;
@@ -43,32 +42,9 @@ ErrorCode ReaderInterface::try_read_to_delimiter(
     return ErrorCode_Success;
 }
 
-bool ReaderInterface::read(char* buf, size_t num_bytes_to_read, size_t& num_bytes_read) {
-    ErrorCode error_code = try_read(buf, num_bytes_to_read, num_bytes_read);
-    if (ErrorCode_EndOfFile == error_code) {
-        return false;
-    }
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-    return true;
-}
-
-bool ReaderInterface::read_to_delimiter(char delim, bool keep_delimiter, bool append, string& str) {
-    ErrorCode error_code = try_read_to_delimiter(delim, keep_delimiter, append, str);
-    if (ErrorCode_EndOfFile == error_code) {
-        return false;
-    }
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-
-    return true;
-}
-
-ErrorCode ReaderInterface::try_read_exact_length(char* buf, size_t num_bytes) {
-    size_t num_bytes_read;
-    auto error_code = try_read(buf, num_bytes, num_bytes_read);
+auto ReaderInterface::read_exact_length(char* buf, size_t num_bytes) -> ErrorCode {
+    size_t num_bytes_read{0};
+    auto const error_code{read(buf, num_bytes, num_bytes_read)};
     if (ErrorCode_Success != error_code) {
         return error_code;
     }
@@ -79,51 +55,10 @@ ErrorCode ReaderInterface::try_read_exact_length(char* buf, size_t num_bytes) {
     return ErrorCode_Success;
 }
 
-bool ReaderInterface::read_exact_length(char* buf, size_t num_bytes, bool eof_possible) {
-    ErrorCode error_code = try_read_exact_length(buf, num_bytes);
-    if (eof_possible && ErrorCode_EndOfFile == error_code) {
-        return false;
-    }
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-    return true;
-}
-
-ErrorCode ReaderInterface::try_read_string(size_t const str_length, string& str) {
+auto ReaderInterface::read_string(size_t const str_length, std::string& str) -> ErrorCode {
     // Resize string to fit str_length
     str.resize(str_length);
 
-    return try_read_exact_length(&str[0], str_length);
-}
-
-bool ReaderInterface::read_string(size_t const str_length, string& str, bool eof_possible) {
-    ErrorCode error_code = try_read_string(str_length, str);
-    if (eof_possible && ErrorCode_EndOfFile == error_code) {
-        return false;
-    }
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-    return true;
-}
-
-void ReaderInterface::seek_from_begin(size_t pos) {
-    ErrorCode error_code = try_seek_from_begin(pos);
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-}
-
-size_t ReaderInterface::get_pos() {
-    size_t pos;
-    ErrorCode error_code = try_get_pos(pos);
-    if (ErrorCode_Success != error_code) {
-        throw OperationFailed(error_code);
-    }
-
-    return pos;
+    return read_exact_length(str.data(), str_length);
 }
 }  // namespace ystdlib::io_interface
-
-// NOLINTEND
