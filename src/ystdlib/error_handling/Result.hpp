@@ -54,11 +54,12 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  *
  * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
  */
-// NOLINTNEXTLINE(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
+// NOLINTBEGIN(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
 #define YSTDLIB_ERROR_HANDLING_TRYV(expr) \
     do { \
         OUTCOME_TRYV(expr); \
     } while (false)
+// NOLINTEND(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
 }  // namespace ystdlib::error_handling
 
 #endif  // YSTDLIB_ERROR_HANDLING_RESULT_HPP
