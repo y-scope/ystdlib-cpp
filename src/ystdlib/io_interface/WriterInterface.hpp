@@ -14,12 +14,6 @@
 namespace ystdlib::io_interface {
 class WriterInterface {
 public:
-    // Types
-    class OperationFailed : public std::exception {
-    public:
-        OperationFailed(ErrorCode error_code) {}
-    };
-
     // Constructor
     WriterInterface() = default;
 
