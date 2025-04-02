@@ -2,6 +2,10 @@
 #define YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 // NOLINTBEGIN
 
+// TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
+// NOLINTNEXTLINE(misc-include-cleaner)
+#include <sys/types.h>
+
 #include <cstddef>
 #include <string>
 
@@ -27,9 +31,6 @@ public:
      */
     virtual void write(char const* data, size_t data_length) = 0;
     virtual void flush() = 0;
-    virtual ErrorCode try_seek_from_begin(size_t pos) = 0;
-    virtual ErrorCode try_seek_from_current(off_t offset) = 0;
-    virtual ErrorCode try_get_pos(size_t& pos) const = 0;
 
     /**
      * Writes a numeric value
@@ -50,22 +51,23 @@ public:
     void write_string(std::string const& str);
 
     /**
-     * Seeks from the beginning to the given position
+     * Seeks from the beginning to the given position.
      * @param pos
      */
-    void seek_from_begin(size_t pos);
+    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> ErrorCode = 0;
 
     /**
-     * Offsets from the current position by the given amount
+     * Seeks from the current position to the next position by the given offset amount.
      * @param offset
      */
-    void seek_from_current(off_t offset);
+    // TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
+    // NOLINTNEXTLINE(misc-include-cleaner)
+    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
 
     /**
-     * Gets the current position of the write head
-     * @return Position of the write head
+     * @param pos Returns the current position of the read pointer.
      */
-    size_t get_pos() const;
+    [[nodiscard]] virtual auto get_pos(size_t& pos) -> ErrorCode = 0;
 };
 
 template <typename ValueType>
