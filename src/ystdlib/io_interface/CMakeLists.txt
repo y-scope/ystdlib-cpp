@@ -7,7 +7,6 @@ cpp_library(
         WriterInterface.hpp
     PRIVATE_SOURCES
         ReaderInterface.cpp
-        WriterInterface.cpp
     TESTS_SOURCES
         test/test_ReaderInterface.cpp
         test/test_WriterInterface.cpp
