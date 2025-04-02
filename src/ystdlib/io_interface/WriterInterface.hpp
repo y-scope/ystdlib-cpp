@@ -1,6 +1,5 @@
 #ifndef YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 #define YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
-// NOLINTBEGIN
 
 // TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
 // NOLINTNEXTLINE(misc-include-cleaner)
@@ -30,28 +29,32 @@ public:
 
     // Methods
     /**
-     * Writes the given data to the underlying medium
+     * Writes the given data to the underlying medium.
      * @param data
      * @param data_length
      */
-    virtual void write(char const* data, size_t data_length) = 0;
-    virtual void flush() = 0;
+    [[nodiscard]] virtual auto write(char const* data, size_t data_length) -> ErrorCode = 0;
 
     /**
-     * Writes a numeric value
-     * @param val Value to write
+     * Forces any buffered output data to be available at the underlying medium.
+     */
+    [[nodiscard]] virtual auto flush() -> ErrorCode = 0;
+
+    /**
+     * Writes a numeric value to the underlying medium.
+     * @param val
      */
     template <typename ValueType>
-    void write_numeric_value(ValueType value);
+    [[nodiscard]] auto write_numeric_value(ValueType value) -> ErrorCode;
 
     /**
-     * Writes the given character to the underlying medium.
+     * Writes a character to the underlying medium.
      * @param c
      */
     [[nodiscard]] virtual auto write_char(char c) -> ErrorCode { return write(&c, 1); }
 
     /**
-     * Writes the given string to the underlying medium.
+     * Writes a string to the underlying medium.
      * @param str
      */
     [[nodiscard]] virtual auto write_string(std::string const& str) -> ErrorCode {
@@ -79,10 +82,9 @@ public:
 };
 
 template <typename ValueType>
-void WriterInterface::write_numeric_value(ValueType val) {
-    write(reinterpret_cast<char*>(&val), sizeof(val));
+auto WriterInterface::write_numeric_value(ValueType val) -> ErrorCode {
+    return write(static_cast<char const*>(&val), sizeof(ValueType));
 }
 }  // namespace ystdlib::io_interface
 
-// NOLINTEND
 #endif  // YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
