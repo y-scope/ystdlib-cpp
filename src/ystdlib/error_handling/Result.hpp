@@ -44,7 +44,7 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
  */
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define YSTDLIB_TRYX(expr) (OUTCOME_TRYX(expr))
+#define YSTDLIB_ERROR_HANDLING_TRYX(expr) (OUTCOME_TRYX(expr))
 
 /**
  * Error propagation macro for expressions that return void on success.
@@ -55,7 +55,7 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
  */
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
-#define YSTDLIB_TRYV(expr) \
+#define YSTDLIB_ERROR_HANDLING_TRYV(expr) \
     do { \
         OUTCOME_TRYV(expr); \
     } while (false)
