@@ -51,15 +51,18 @@ public:
     void write_numeric_value(ValueType value);
 
     /**
-     * Writes a character to the underlying medium
+     * Writes the given character to the underlying medium.
      * @param c
      */
-    void write_char(char c);
+    [[nodiscard]] virtual auto write_char(char c) -> ErrorCode { return write(&c, 1); }
+
     /**
-     * Writes a string to the underlying medium
+     * Writes the given string to the underlying medium.
      * @param str
      */
-    void write_string(std::string const& str);
+    [[nodiscard]] virtual auto write_string(std::string const& str) -> ErrorCode {
+        return write(str.c_str(), str.length());
+    }
 
     /**
      * Seeks from the beginning to the given position.
