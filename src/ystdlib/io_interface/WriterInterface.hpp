@@ -20,6 +20,17 @@ public:
         OperationFailed(ErrorCode error_code) {}
     };
 
+    // Constructor
+    WriterInterface() = default;
+
+    // Delete copy constructor and assignment operator
+    WriterInterface(WriterInterface const&) = delete;
+    auto operator=(WriterInterface const&) -> WriterInterface& = delete;
+
+    // Default move constructor and assignment operator
+    WriterInterface(WriterInterface&&) noexcept = default;
+    auto operator=(WriterInterface&&) noexcept -> WriterInterface& = default;
+
     // Destructor
     virtual ~WriterInterface() = default;
 
