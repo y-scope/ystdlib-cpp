@@ -9,27 +9,52 @@
 #include <outcome/try.hpp>
 
 namespace ystdlib::error_handling {
+/**
+ * A convenience alias for Outcome's std_result.
+ *
+ * This alias standardizes error handling across the codebase by defaulting the error type to
+ * `std::error_code`, which interoperates with the ystdlib::error_handling::ErrorCode framework,
+ * making it easier to compose errors and propagate them across different modules and libraries.
+ *
+ * @tparam ReturnType The type returned upon success.
+ * @tparam ErrorType The type returned upon failure.
+ */
 template <typename ReturnType, typename ErrorType = std::error_code>
 using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
 
 /**
  * Default return value for ystdlib::error_handling::Result<void> when function succeeds.
+ *
+ * Example:
+ *   auto my_func() -> Result<void> {
+ *     // ...
+ *     return success();
+ *   }
  */
 [[nodiscard]] inline auto success() -> OUTCOME_V2_NAMESPACE::success_type<void> {
     return OUTCOME_V2_NAMESPACE::success();
 }
 
 /**
- * This macro works the same way as Rust's `?` operator for error propagation.
+ * Propagates errors like Rust's `?` operator.
+ *
+ * Evaluates `expr`, and if it contains an error, returns the error from the calling function.
+ * Otherwise, extracts and returns the value.
+ *
+ * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
  */
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define YSTDLIB_TRYX(expr) (OUTCOME_TRYX(expr))
 
 /**
- * This macro works the same way as Rust's `?` operator for error propagation, without returning
- * any value.
+ * Error propagation macro for expressions that return void on success.
+ *
+ * Evaluates `expr`, and if it contains an error, returns the error from the calling function.
+ * Intended for use with expressions that return `Result<void>`.
+ *
+ * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
  */
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
 #define YSTDLIB_TRYV(expr) \
     do { \
         OUTCOME_TRYV(expr); \
