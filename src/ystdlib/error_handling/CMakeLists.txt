@@ -4,7 +4,8 @@ cpp_library(
     PUBLIC_HEADERS
         ErrorCode.hpp
         TraceableException.hpp
-        SourceLocation.hpp
+        types.hpp
+        utils.hpp
     TESTS_SOURCES
         test/constants.hpp
         test/test_ErrorCode.cpp

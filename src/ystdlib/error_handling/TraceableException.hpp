@@ -1,24 +1,17 @@
 #ifndef YSTDLIB_ERROR_HANDLING_TRACEABLEEXCEPTION_HPP
 #define YSTDLIB_ERROR_HANDLING_TRACEABLEEXCEPTION_HPP
 
-#include <concepts>
 #include <exception>
 #include <source_location>
+#include <sstream>
 #include <string>
 #include <system_error>
 #include <utility>
 
-#include "SourceLocation.hpp"
+#include "types.hpp"
+#include "utils.hpp"
 
 namespace ystdlib::error_handling {
-/**
- * Concept that defines a template parameter of an integer-based error code enumeration.
- * @tparam Type
- */
-template <typename Type>
-concept ErrorCodeType
-        = std::same_as<Type, std::error_code> || std::convertible_to<Type, std::error_code>;
-
 /**
  * An exception class that is thrown with an `std::error_code`.
  *
@@ -30,21 +23,23 @@ concept ErrorCodeType
  * @see std::source_location::function_name()
  * @see std::source_location::line()
  */
-template <typename ErrorCodeType>
+template <ErrorCodeType ErrorType = std::error_code>
 class TraceableException : public std::exception {
 public:
     // Constructors
     explicit TraceableException(
-            ErrorCodeType error_code,
+            ErrorType error_code,
             std::source_location const& where = std::source_location::current()
     )
             : m_error_code{std::move(error_code)},
               m_where{where} {
-        m_what = m_where.str();
+        std::ostringstream oss;
+        oss << where;
+        m_what = oss.str();
     }
 
     explicit TraceableException(
-            ErrorCodeType error_code,
+            ErrorType error_code,
             std::string what,
             std::source_location const& where = std::source_location::current()
     )
@@ -56,26 +51,30 @@ public:
     [[nodiscard]] auto what() const noexcept -> char const* override { return m_what.c_str(); }
 
     // Methods
-    [[nodiscard]] auto error_code() const -> ErrorCodeType { return m_error_code; }
+    [[nodiscard]] auto error_code() const -> ErrorType { return m_error_code; }
 
     [[nodiscard]] auto what() -> std::string& { return m_what; }
 
-    [[nodiscard]] auto where() const noexcept -> SourceLocation const& { return m_where; }
+    [[nodiscard]] auto where() const noexcept -> std::source_location const& { return m_where; }
 
 private:
     // Variables
-    ErrorCodeType m_error_code;
+    ErrorType m_error_code;
     std::string m_what;
-    SourceLocation m_where;
+    std::source_location m_where;
 };
-
 }  // namespace ystdlib::error_handling
 
 /**
  * The macro to define a `TraceableException` class with the given class name T.
  */
 // NOLINTBEGIN(bugprone-macro-parentheses, cppcoreguidelines-macro-usage)
-#define YSTDLIB_ERROR_HANDLING_DEFINE_TRACEABLE_EXCEPTION(T, E) \
+#define YSTDLIB_ERROR_HANDLING_DEFINE_TRACEABLE_EXCEPTION(T) \
+    class T : public ystdlib::error_handling::TraceableException<> { \
+        using ystdlib::error_handling::TraceableException<>::TraceableException; \
+    }
+
+#define YSTDLIB_ERROR_HANDLING_DEFINE_TRACEABLE_EXCEPTION_WITH_ERROR_TYPE(T, E) \
     class T : public ystdlib::error_handling::TraceableException<E> { \
         using ystdlib::error_handling::TraceableException<E>::TraceableException; \
     }
