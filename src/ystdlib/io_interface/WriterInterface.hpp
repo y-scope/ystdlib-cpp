@@ -1,12 +1,10 @@
 #ifndef YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 #define YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 
-// TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
-// NOLINTNEXTLINE(misc-include-cleaner)
-#include <sys/types.h>
-
 #include <cstddef>
 #include <string>
+
+#include <ystdlib/wrapped_facade_headers/sys/types.h>
 
 #include "ErrorCode.hpp"
 
@@ -71,8 +69,6 @@ public:
      * Seeks from the current position to the next position by the given offset amount.
      * @param offset
      */
-    // TODO: https://github.com/y-scope/ystdlib-cpp/issues/50
-    // NOLINTNEXTLINE(misc-include-cleaner)
     [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
 
     /**
