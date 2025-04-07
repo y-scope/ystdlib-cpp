@@ -45,7 +45,7 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  */
 #ifdef OUTCOME_TRYX
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define YSTDLIB_ERROR_HANDLING_TRYX(expr) (OUTCOME_TRYX(expr))
+#define YSTDLIB_ERROR_HANDLING_TRYX(expr) OUTCOME_TRYX(expr)
 #endif
 
 /**
@@ -59,12 +59,8 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  *   early return from the enclosing function with the contained error.
  * - Otherwise, execution continues normally.
  */
-// NOLINTBEGIN(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
-#define YSTDLIB_ERROR_HANDLING_TRYV(expr) \
-    do { \
-        OUTCOME_TRYV(expr); \
-    } while (false)
-// NOLINTEND(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define YSTDLIB_ERROR_HANDLING_TRYV(expr) OUTCOME_TRYV(expr)
 }  // namespace ystdlib::error_handling
 
 #endif  // YSTDLIB_ERROR_HANDLING_RESULT_HPP
