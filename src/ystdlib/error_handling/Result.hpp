@@ -10,49 +10,54 @@
 
 namespace ystdlib::error_handling {
 /**
- * A convenience alias for Outcome's std_result.
+ * A Rust-style `Result<T, E>` type for standardized, exception-free error handling.
  *
  * This alias standardizes error handling across the codebase by defaulting the error type to
- * `std::error_code`, which interoperates with the ystdlib::error_handling::ErrorCode framework,
- * making it easier to compose errors and propagate them across different modules and libraries.
+ * `std::error_code`, which interoperates with the `ystdlib::error_handling::ErrorCode`, making it
+ * easier to compose errors and propagate them across different modules and libraries.
  *
- * @tparam ReturnType The type returned upon success.
- * @tparam ErrorType The type returned upon failure.
+ * @tparam ReturnType The type returned on success.
+ * @tparam ErrorType The type used to represent errors.
  */
 template <typename ReturnType, typename ErrorType = std::error_code>
 using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
 
 /**
- * Default return value for ystdlib::error_handling::Result<void> when function succeeds.
- *
- * Example:
- *   auto my_func() -> Result<void> {
- *     // ...
- *     return success();
- *   }
+ * @return A value indicating successful completion of a function that returns a void result (i.e.,
+ * `Result<void, E>`).
  */
 [[nodiscard]] inline auto success() -> OUTCOME_V2_NAMESPACE::success_type<void> {
     return OUTCOME_V2_NAMESPACE::success();
 }
 
 /**
- * Propagates errors like Rust's `?` operator.
+ * A function-style macro that emulates Rust’s try (`?`) operator for error propagation.
  *
- * Evaluates `expr`, and if it contains an error, returns the error from the calling function.
- * Otherwise, extracts and returns the value.
+ * @param expr An expression that evaluates to a `Result` object.
  *
- * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
+ * Behavior:
+ * - If `expr` represents an error (i.e., `expr.has_error()` returns true), the macro performs an
+ *   early return from the enclosing function with the contained error.
+ * - Otherwise, it unwraps and yields the successful value as an rvalue reference (`expr.value()`).
+ *
+ * NOTE: This macro is only supported on GCC and Clang due to reliance on compiler-specific
+ * extensions.
  */
+#ifdef OUTCOME_TRYX
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define YSTDLIB_ERROR_HANDLING_TRYX(expr) (OUTCOME_TRYX(expr))
+#endif
 
 /**
- * Error propagation macro for expressions that return void on success.
+ * A function-style macro for propagating errors from expressions that evaluate to a void result
+ * (`Result<void, E>`).
  *
- * Evaluates `expr`, and if it contains an error, returns the error from the calling function.
- * Intended for use with expressions that return `Result<void>`.
+ * @param expr An expression that evaluates to a `Result<void, E>` object.
  *
- * Only supported on AppleClang, Clang, and GCC due to reliance on Outcome's TRY macros.
+ * Behavior:
+ * - If `expr` represents an error (i.e., `expr.has_error()` returns true), the macro performs an
+ *   early return from the enclosing function with the contained error.
+ * - Otherwise, execution continues normally.
  */
 // NOLINTBEGIN(cppcoreguidelines-avoid-do-while, cppcoreguidelines-macro-usage)
 #define YSTDLIB_ERROR_HANDLING_TRYV(expr) \
