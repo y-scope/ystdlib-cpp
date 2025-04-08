@@ -3,9 +3,9 @@
 
 // clang-format off
 // IWYU pragma: begin_exports
+#if defined(__linux__)
 #include <bits/types/time_t.h>
-
-#if defined(__APPLE__)
+#elif defined(__APPLE__)
 #include <sys/_types/_time_t.h>
 #endif
 // IWYU pragma: end_exports
