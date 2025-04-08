@@ -59,13 +59,13 @@ TEST_CASE("test_result_void_in_main", "[error_handling][Result]") {
 
     auto const main_has_error{main_func(true)};
     REQUIRE(main_has_error.has_error());
-    REQUIRE((BinaryErrorCode{BinaryErrorCodeEnum::Failure} == main_has_error.error()));
+    REQUIRE(BinaryErrorCode{BinaryErrorCodeEnum::Failure} == main_has_error.error());
 }
 
 TEST_CASE("test_result_int", "[error_handling][Result]") {
     auto const result_no_error{cIntFunc(false)};
     REQUIRE_FALSE(result_no_error.has_error());
-    REQUIRE((cTestInt == result_no_error.value()));
+    REQUIRE(cTestInt == result_no_error.value());
 
     auto const result_has_error{cIntFunc(true)};
     REQUIRE(result_has_error.has_error());
@@ -83,7 +83,7 @@ TEST_CASE("test_result_int_in_main", "[error_handling][Result]") {
 
     auto const main_has_error{main_func(true)};
     REQUIRE(main_has_error.has_error());
-    REQUIRE((std::errc::bad_message == main_has_error.error()));
+    REQUIRE(std::errc::bad_message == main_has_error.error());
 }
 
 TEST_CASE("test_result_int_propagate", "[error_handling][Result]") {
@@ -92,17 +92,17 @@ TEST_CASE("test_result_int_propagate", "[error_handling][Result]") {
     };
     auto const main_no_error{main_func(false)};
     REQUIRE_FALSE(main_no_error.has_error());
-    REQUIRE((cTestInt == main_no_error.value()));
+    REQUIRE(cTestInt == main_no_error.value());
 
     auto const main_has_error{main_func(true)};
     REQUIRE(main_has_error.has_error());
-    REQUIRE((std::errc::bad_message == main_has_error.error()));
+    REQUIRE(std::errc::bad_message == main_has_error.error());
 }
 
 TEST_CASE("test_result_unique_ptr", "[error_handling][Result]") {
     auto const result_no_error{cUniquePtrFunc(false)};
     REQUIRE_FALSE(result_no_error.has_error());
-    REQUIRE((cTestInt == *(result_no_error.value())));
+    REQUIRE(cTestInt == *(result_no_error.value()));
 
     auto const result_has_error{cUniquePtrFunc(true)};
     REQUIRE(result_has_error.has_error());
@@ -130,7 +130,7 @@ TEST_CASE("test_result_unique_ptr_propagate", "[error_handling][Result]") {
     };
     auto const main_no_error{main_func(false)};
     REQUIRE_FALSE(main_no_error.has_error());
-    REQUIRE((cTestInt == *(main_no_error.value())));
+    REQUIRE(cTestInt == *(main_no_error.value()));
 
     auto const main_has_error{main_func(true)};
     REQUIRE(main_has_error.has_error());
