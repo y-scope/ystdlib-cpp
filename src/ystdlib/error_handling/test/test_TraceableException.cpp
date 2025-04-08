@@ -2,13 +2,11 @@
 #include <cstring>
 
 #include <ystdlib/error_handling/TraceableException.hpp>
-#include <ystdlib/error_handling/types.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
 #include "types.hpp"
 
-using ystdlib::error_handling::ErrorCodeType;
 using ystdlib::error_handling::TraceableException;
 
 namespace {
@@ -41,14 +39,14 @@ public:
 }  // namespace ystdlib::error_handling::test
 
 namespace {
-template <ErrorCodeType ErrorType = std::error_code, typename Callable>
-[[nodiscard]] auto capture_exception(Callable&& f) -> TraceableException<ErrorType>;
+template <typename Callable>
+[[nodiscard]] auto capture_exception(Callable&& f) -> TraceableException;
 
-template <ErrorCodeType ErrorType, typename Callable>
-auto capture_exception(Callable&& f) -> TraceableException<ErrorType> {
+template <typename Callable>
+auto capture_exception(Callable&& f) -> TraceableException {
     try {
         std::forward<Callable>(f)();
-    } catch (TraceableException<ErrorType>& e) {
+    } catch (TraceableException& e) {
         return e;
     }
     assert(false && "The function is expected to throw.");
@@ -57,11 +55,11 @@ auto capture_exception(Callable&& f) -> TraceableException<ErrorType> {
 
 namespace ystdlib::error_handling::test {
 TEST_CASE("test_traceable_exception", "[error_handling][TraceableException]") {
-    auto const ex_success{capture_exception<>(Worker::execute_with_success)};
+    auto const ex_success{capture_exception(Worker::execute_with_success)};
     REQUIRE(std::string{ex_success.where().file_name()}.ends_with(cCurrentFileName));
     REQUIRE((0 == std::strcmp(ex_success.where().function_name(), cSuccessFuncName)));
 
-    auto const ex_failure{capture_exception<>(Worker::execute_with_failure)};
+    auto const ex_failure{capture_exception(Worker::execute_with_failure)};
     REQUIRE((0 == std::strcmp(ex_failure.what(), cCustomFailureDescription)));
     REQUIRE(std::string{ex_failure.where().file_name()}.ends_with(cCurrentFileName));
     REQUIRE((0 == std::strcmp(ex_failure.where().function_name(), cFailureFuncName)));
