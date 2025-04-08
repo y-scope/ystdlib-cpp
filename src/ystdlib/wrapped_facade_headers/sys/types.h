@@ -21,7 +21,7 @@
 #include <sys/_types/_caddr_t.h>
 #include <sys/_types/_key_t.h>
 
-# For off64_t
+// For off64_t
 #include <sys/dtrace.h>
 #endif
 // IWYU pragma: end_exports
