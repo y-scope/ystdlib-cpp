@@ -5,4 +5,5 @@ cpp_library(
         sys/types.h
     TESTS_SOURCES
         test/test_off_t.cpp
+        test/test_ssize_t.cpp
 )
