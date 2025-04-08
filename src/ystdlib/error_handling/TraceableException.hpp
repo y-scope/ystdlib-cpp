@@ -63,10 +63,12 @@ private:
 };
 }  // namespace ystdlib::error_handling
 
-/**
- * The macro to define a `TraceableException` class with the given class name T.
- */
 // NOLINTBEGIN(bugprone-macro-parentheses, cppcoreguidelines-macro-usage)
+/**
+ * Defines a derived `TraceableException` class with the given class name.
+ *
+ * @param T The class' name.
+ */
 #define YSTDLIB_ERROR_HANDLING_DEFINE_TRACEABLE_EXCEPTION(T) \
     class T : public ystdlib::error_handling::TraceableException { \
         using ystdlib::error_handling::TraceableException::TraceableException; \
