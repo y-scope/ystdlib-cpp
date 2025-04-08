@@ -35,8 +35,13 @@ TEST_CASE("test_sys_types_u_quad_t", "[wrapped_facade_headers][sys_types][u_quad
 
 TEST_CASE("test_sys_types_fsid_t", "[wrapped_facade_headers][sys_types][fsid_t]") {
     fsid_t const i{{0, 0}};
+#if defined(__linux__)
     REQUIRE(0 == i.__val[0]);
     REQUIRE(0 == i.__val[1]);
+#elif defined(__APPLE__)
+    REQUIRE(0 == i.val[0]);
+    REQUIRE(0 == i.val[1]);
+#endif
 }
 
 #if defined(__linux__)
