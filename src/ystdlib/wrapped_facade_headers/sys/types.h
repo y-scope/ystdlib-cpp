@@ -3,9 +3,9 @@
 
 // clang-format off
 // IWYU pragma: begin_exports
-#if defined(__linux__)
 #include <sys/types.h>
-#elif defined(__APPLE__)
+
+#if defined(__APPLE__)
 #include <sys/_types/_u_char.h>
 #include <sys/_types/_u_short.h>
 #include <sys/_types/_u_int.h>
@@ -29,9 +29,10 @@
 #include <sys/_types/_u_int16_t.h>
 #include <sys/_types/_u_int32_t.h>
 #include <sys/_types/_u_int64_t.h>
-
-// For off64_t
-#include <sys/dtrace.h>
+#include <sys/_types/_blksize_t.h>
+#include <sys/_types/_blkcnt_t.h>
+#include <sys/_types/_fsblkcnt_t.h>
+#include <sys/_types/_fsfilcnt_t.h>
 #endif
 // IWYU pragma: end_exports
 // clang-format on

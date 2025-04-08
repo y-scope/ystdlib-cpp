@@ -44,13 +44,6 @@ TEST_CASE("test_sys_types_fsid_t", "[wrapped_facade_headers][sys_types][fsid_t]"
 #endif
 }
 
-#if defined(__linux__)
-TEST_CASE("test_sys_types_loff_t", "[wrapped_facade_headers][sys_types][loff_t]") {
-    loff_t const i{0};
-    REQUIRE(0 == i);
-}
-#endif
-
 TEST_CASE("test_sys_types_ino_t", "[wrapped_facade_headers][sys_types][ino_t]") {
     ino_t const i{0};
     REQUIRE(0 == i);
@@ -88,11 +81,6 @@ TEST_CASE("test_sys_types_uid_t", "[wrapped_facade_headers][sys_types][uid_t]") 
 
 TEST_CASE("test_sys_types_off_t", "[wrapped_facade_headers][sys_types][off_t]") {
     off_t const i{0};
-    REQUIRE(0 == i);
-}
-
-TEST_CASE("test_sys_types_off64_t", "[wrapped_facade_headers][sys_types][off64_t]") {
-    off64_t const i{0};
     REQUIRE(0 == i);
 }
 
@@ -154,6 +142,26 @@ TEST_CASE("test_sys_types_u_int32_t", "[wrapped_facade_headers][sys_types][u_int
 
 TEST_CASE("test_sys_types_u_int64_t", "[wrapped_facade_headers][sys_types][u_int64_t]") {
     u_int64_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_blksize_t", "[wrapped_facade_headers][sys_types][blksize_t]") {
+    blksize_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_blkcnt_t", "[wrapped_facade_headers][sys_types][blkcnt_t]") {
+    blkcnt_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_fsblkcnt_t", "[wrapped_facade_headers][sys_types][fsblkcnt_t]") {
+    fsblkcnt_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_fsfilcnt_t", "[wrapped_facade_headers][sys_types][fsfilcnt_t]") {
+    fsfilcnt_t const i{0};
     REQUIRE(0 == i);
 }
 }  // namespace ystdlib::wrapped_facade_headers::test
