@@ -25,6 +25,10 @@
 #include <sys/_types/_key_t.h>
 #include <sys/_types/_useconds_t.h>
 #include <sys/_types/_suseconds_t.h>
+#include <sys/_types/_u_int8_t.h>
+#include <sys/_types/_u_int16_t.h>
+#include <sys/_types/_u_int32_t.h>
+#include <sys/_types/_u_int64_t.h>
 
 // For off64_t
 #include <sys/dtrace.h>

@@ -136,4 +136,24 @@ TEST_CASE("test_sys_types_suseconds_t", "[wrapped_facade_headers][sys_types][sus
     suseconds_t const i{0};
     REQUIRE(0 == i);
 }
+
+TEST_CASE("test_sys_types_u_int8_t", "[wrapped_facade_headers][sys_types][u_int8_t]") {
+    u_int8_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_u_int16_t", "[wrapped_facade_headers][sys_types][u_int16_t]") {
+    u_int16_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_u_int32_t", "[wrapped_facade_headers][sys_types][u_int32_t]") {
+    u_int32_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_u_int64_t", "[wrapped_facade_headers][sys_types][u_int64_t]") {
+    u_int64_t const i{0};
+    REQUIRE(0 == i);
+}
 }  // namespace ystdlib::wrapped_facade_headers::test
