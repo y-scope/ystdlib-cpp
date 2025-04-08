@@ -117,6 +117,7 @@ TEST_CASE("test_sys_types_daddr_t", "[wrapped_facade_headers][sys_types][daddr_t
 }
 
 TEST_CASE("test_sys_types_caddr_t", "[wrapped_facade_headers][sys_types][caddr_t]") {
+    // NOLINTNEXTLINE(misc-misplaced-const)
     caddr_t const p{nullptr};
     REQUIRE(nullptr == p);
 }
