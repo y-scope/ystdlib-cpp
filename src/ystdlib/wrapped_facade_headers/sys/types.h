@@ -19,7 +19,6 @@
 #include <sys/_types/_pid_t.h>
 #include <sys/_types/_id_t.h>
 #include <sys/_types/_ssize_t.h>
-#include <sys/_types/_daddr_t.h>
 #include <sys/_types/_caddr_t.h>
 #include <sys/_types/_key_t.h>
 #endif
