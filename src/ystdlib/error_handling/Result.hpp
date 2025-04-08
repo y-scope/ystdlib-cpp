@@ -44,8 +44,8 @@ using Result = OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  * extensions.
  */
 #ifdef OUTCOME_TRYX
-// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define YSTDLIB_ERROR_HANDLING_TRYX(expr) OUTCOME_TRYX(expr)
+    // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+    #define YSTDLIB_ERROR_HANDLING_TRYX(expr) OUTCOME_TRYX(expr)
 #endif
 
 /**
