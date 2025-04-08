@@ -4,10 +4,14 @@ cpp_library(
     PUBLIC_HEADERS
         ErrorCode.hpp
         TraceableException.hpp
+        Result.hpp
         utils.hpp
+    PUBLIC_LINK_LIBRARIES
+        outcome::hl
     TESTS_SOURCES
         test/constants.hpp
         test/test_ErrorCode.cpp
+        test/test_Result.cpp
         test/test_TraceableException.cpp
         test/types.cpp
         test/types.hpp
