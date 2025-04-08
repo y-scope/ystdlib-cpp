@@ -1,5 +1,3 @@
-#include <bits/time.h>
-
 #include <ystdlib/wrapped_facade_headers/bits/types/clockid_t.h>
 
 #include <catch2/catch_test_macros.hpp>

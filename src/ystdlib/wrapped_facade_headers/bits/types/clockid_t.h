@@ -4,6 +4,7 @@
 // clang-format off
 // IWYU pragma: begin_exports
 #if defined(__linux__)
+#include <bits/time.h>
 #include <bits/types/clockid_t.h>
 #elif defined(__APPLE__)
 #include <_time.h>
