@@ -23,6 +23,8 @@
 #include <sys/_types/_ssize_t.h>
 #include <sys/_types/_caddr_t.h>
 #include <sys/_types/_key_t.h>
+#include <sys/_types/_useconds_t.h>
+#include <sys/_types/_suseconds_t.h>
 
 // For off64_t
 #include <sys/dtrace.h>

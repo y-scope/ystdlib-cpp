@@ -126,4 +126,14 @@ TEST_CASE("test_sys_types_key_t", "[wrapped_facade_headers][sys_types][key_t]") 
     key_t const i{0};
     REQUIRE(0 == i);
 }
+
+TEST_CASE("test_sys_types_useconds_t", "[wrapped_facade_headers][sys_types][useconds_t]") {
+    useconds_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_suseconds_t", "[wrapped_facade_headers][sys_types][suseconds_t]") {
+    suseconds_t const i{0};
+    REQUIRE(0 == i);
+}
 }  // namespace ystdlib::wrapped_facade_headers::test
