@@ -7,7 +7,13 @@
 #include <bits/time.h>
 #include <bits/types/clockid_t.h>
 #elif defined(__APPLE__)
+
+#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 150000
 #include <_time.h>
+#else
+#include <time.h>
+#endif
+
 #endif
 // IWYU pragma: end_exports
 // clang-format on
