@@ -6,8 +6,6 @@
 #include <sys/_types/_u_char.h>
 #include <sys/_types/_u_short.h>
 #include <sys/_types/_u_int.h>
-#include <sys/_types/_quad_t.h>
-#include <sys/_types/_u_quad_t.h>
 #include <sys/_types/_fsid_t.h>
 #endif
 // IWYU pragma: end_exports
