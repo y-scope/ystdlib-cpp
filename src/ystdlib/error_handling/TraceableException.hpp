@@ -38,11 +38,11 @@ public:
 
     explicit TraceableException(
             std::error_code error_code,
-            std::string what,
+            std::string message,
             std::source_location const& where = std::source_location::current()
     )
             : m_error_code{error_code},
-              m_what{std::move(what)},
+              m_what{std::move(message)},
               m_where{where} {}
 
     // Methods implementing std::exception
