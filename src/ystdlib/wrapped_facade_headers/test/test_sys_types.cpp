@@ -50,4 +50,79 @@ TEST_CASE("test_sys_types_loff_t", "[wrapped_facade_headers][sys_types][loff_t]"
     REQUIRE(0 == i);
 }
 #endif
+
+TEST_CASE("test_sys_types_ino_t", "[wrapped_facade_headers][sys_types][ino_t]") {
+    ino_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_ino64_t", "[wrapped_facade_headers][sys_types][ino64_t]") {
+    ino64_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_dev_t", "[wrapped_facade_headers][sys_types][dev_t]") {
+    dev_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_gid_t", "[wrapped_facade_headers][sys_types][gid_t]") {
+    gid_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_mode_t", "[wrapped_facade_headers][sys_types][mode_t]") {
+    mode_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_nlink_t", "[wrapped_facade_headers][sys_types][nlink_t]") {
+    nlink_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_uid_t", "[wrapped_facade_headers][sys_types][uid_t]") {
+    uid_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_off_t", "[wrapped_facade_headers][sys_types][off_t]") {
+    off_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_off64_t", "[wrapped_facade_headers][sys_types][off64_t]") {
+    off64_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_pid_t", "[wrapped_facade_headers][sys_types][pid_t]") {
+    pid_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_id_t", "[wrapped_facade_headers][sys_types][id_t]") {
+    id_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_ssize_t", "[wrapped_facade_headers][sys_types][ssize_t]") {
+    ssize_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_daddr_t", "[wrapped_facade_headers][sys_types][daddr_t]") {
+    daddr_t const i{0};
+    REQUIRE(0 == i);
+}
+
+TEST_CASE("test_sys_types_caddr_t", "[wrapped_facade_headers][sys_types][caddr_t]") {
+    caddr_t const p{nullptr};
+    REQUIRE(nullptr == p);
+}
+
+TEST_CASE("test_sys_types_key_t", "[wrapped_facade_headers][sys_types][key_t]") {
+    key_t const i{0};
+    REQUIRE(0 == i);
+}
 }  // namespace ystdlib::wrapped_facade_headers::test
