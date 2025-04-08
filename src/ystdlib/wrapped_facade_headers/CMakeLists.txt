@@ -2,6 +2,9 @@ cpp_library(
     NAME wrapped_facade_headers
     NAMESPACE ystdlib
     PUBLIC_HEADERS
+        bits/types/clock_t.h
+        bits/types/clockid_t.h
+        bits/types/time_t.h
         sys/types.h
     TESTS_SOURCES
         test/test_bits_types_clock_t.cpp
