@@ -2,15 +2,18 @@
 #define YSTDLIB_IO_INTERFACE_READERINTERFACE_HPP
 
 #include <cstddef>
+#include <span>
 #include <string>
 
+#include <ystdlib/error_handling/Result.hpp>
 #include <ystdlib/wrapped_facade_headers/sys/types.h>
-
-#include "ErrorCode.hpp"
 
 namespace ystdlib::io_interface {
 class ReaderInterface {
 public:
+    template <typename ReturnType>
+    using Result = ystdlib::error_handling::Result<ReturnType>;
+
     // Constructor
     ReaderInterface() = default;
 
@@ -26,66 +29,72 @@ public:
     virtual ~ReaderInterface() = default;
 
     // Methods
-    /*
-     * Reads up to the given number of bytes from the underlying medium into the given buffer.
+    /**
+     * Performs a read that attempts to fill the given buffer.
      * @param buf
-     * @param num_bytes_to_read
-     * @param num_bytes_read Returns the actual number of bytes read.
+     * @return The number of bytes read.
      */
-    [[nodiscard]] virtual auto read(char* buf, size_t num_bytes_to_read, size_t& num_bytes_read)
-            -> ErrorCode
-            = 0;
+    [[nodiscard]] virtual auto read(std::span<char> buf) -> Result<size_t> = 0;
 
     /**
-     * Reads up to the next delimiter from the underlying medium into the given string.
+     * Performs a read of up to the requested byte count.
+     * @param num_bytes
+     * @return The data read as a string.
+     */
+    [[nodiscard]] virtual auto read(size_t num_bytes) -> Result<std::string>;
+
+    /**
+     * Performs a read that completely fills the given buffer.
+     * @param buf
+     */
+    [[nodiscard]] virtual auto read_exact_length(std::span<char> buf) -> Result<void>;
+
+    /**
+     * Performs a read that must return exactly the requested byte count.
+     * @param num_bytes
+     * @return The data read as a string.
+     */
+    [[nodiscard]] virtual auto read_exact_length(size_t num_bytes) -> Result<std::string>;
+
+    /**
+     * Performs a reads of up to the next delimiter.
+     * @param buf
      * @param delim The delimiter to stop at.
-     * @param keep_delimiter Whether to include the delimiter in the output string or not.
-     * @param append Whether to append to the given string or replace its contents.
-     * @param str Returns the string read.
+     * @param keep_delimiter Whether to include the delimiter in the output.
+     * @return The data read as a string.
      */
-    [[nodiscard]] virtual auto
-    read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str) -> ErrorCode;
+    [[nodiscard]] virtual auto read_to_delimiter(char delim, bool keep_delimiter)
+            -> Result<std::string>;
 
     /**
-     * Reads the given number of bytes from the underlying medium into the given buffer.
-     * @param buf
-     * @param num_bytes Number of bytes to read.
-     */
-    [[nodiscard]] virtual auto read_exact_length(char* buf, size_t num_bytes) -> ErrorCode;
-
-    /**
-     * @param value Returns the read numeric value.
+     * @return The numeric value read.
      */
     template <typename ValueType>
-    [[nodiscard]] auto read_numeric_value(ValueType& value) -> ErrorCode;
-
-    /**
-     * @param str_length
-     * @param str Returns the string read.
-     */
-    [[nodiscard]] virtual auto read_string(size_t str_length, std::string& str) -> ErrorCode;
+    [[nodiscard]] auto read_numeric_value() -> Result<ValueType>;
 
     /**
      * Seeks from the beginning to the given position.
      * @param pos
      */
-    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> Result<void> = 0;
 
     /**
      * Seeks from the current position to the next position by the given offset amount.
      * @param offset
      */
-    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> Result<void> = 0;
 
     /**
-     * @param pos Returns the current position of the read pointer.
+     * @return The current position of the read pointer.
      */
-    [[nodiscard]] virtual auto get_pos(size_t& pos) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto get_pos() -> Result<size_t> = 0;
 };
 
 template <typename ValueType>
-auto ReaderInterface::read_numeric_value(ValueType& value) -> ErrorCode {
-    return read_exact_length(static_cast<char*>(&value), sizeof(ValueType));
+auto ReaderInterface::read_numeric_value() -> Result<ValueType> {
+    ValueType value{};
+    YSTDLIB_ERROR_HANDLING_TRYV(read_exact_length({static_cast<char*>(&value), sizeof(ValueType)}));
+    return value;
 }
 }  // namespace ystdlib::io_interface
 

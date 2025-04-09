@@ -2,15 +2,18 @@
 #define YSTDLIB_IO_INTERFACE_WRITERINTERFACE_HPP
 
 #include <cstddef>
+#include <span>
 #include <string>
 
+#include <ystdlib/error_handling/Result.hpp>
 #include <ystdlib/wrapped_facade_headers/sys/types.h>
-
-#include "ErrorCode.hpp"
 
 namespace ystdlib::io_interface {
 class WriterInterface {
 public:
+    template <typename ReturnType>
+    using Result = ystdlib::error_handling::Result<ReturnType>;
+
     // Constructor
     WriterInterface() = default;
 
@@ -27,59 +30,52 @@ public:
 
     // Methods
     /**
-     * Writes the given data to the underlying medium.
+     * Performs a writes of the given data.
      * @param data
-     * @param data_length
      */
-    [[nodiscard]] virtual auto write(char const* data, size_t data_length) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto write(std::span<char const> data) -> Result<void> = 0;
 
     /**
-     * Forces any buffered output data to be available at the underlying medium.
+     * Forces any buffered written data to be available at the output.
      */
-    [[nodiscard]] virtual auto flush() -> ErrorCode = 0;
+    [[nodiscard]] virtual auto flush() -> Result<void> = 0;
 
     /**
-     * Writes a numeric value to the underlying medium.
-     * @param val
+     * Performs a writes of the given numeric value.
+     * @param value
      */
     template <typename ValueType>
-    [[nodiscard]] auto write_numeric_value(ValueType value) -> ErrorCode;
+    [[nodiscard]] auto write_numeric_value(ValueType value) -> Result<void>;
 
     /**
-     * Writes a character to the underlying medium.
-     * @param c
-     */
-    [[nodiscard]] virtual auto write_char(char c) -> ErrorCode { return write(&c, 1); }
-
-    /**
-     * Writes a string to the underlying medium.
+     * Performs a writes of the given string.
      * @param str
      */
-    [[nodiscard]] virtual auto write_string(std::string const& str) -> ErrorCode {
-        return write(str.c_str(), str.length());
+    [[nodiscard]] virtual auto write_string(std::string const& str) -> Result<void> {
+        return write({str.c_str(), str.length()});
     }
 
     /**
      * Seeks from the beginning to the given position.
      * @param pos
      */
-    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto seek_from_begin(size_t pos) -> Result<void> = 0;
 
     /**
      * Seeks from the current position to the next position by the given offset amount.
      * @param offset
      */
-    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto seek_from_current(off_t offset) -> Result<void> = 0;
 
     /**
-     * @param pos Returns the current position of the read pointer.
+     * @return The current position of the write pointer.
      */
-    [[nodiscard]] virtual auto get_pos(size_t& pos) -> ErrorCode = 0;
+    [[nodiscard]] virtual auto get_pos() -> Result<size_t> = 0;
 };
 
 template <typename ValueType>
-auto WriterInterface::write_numeric_value(ValueType val) -> ErrorCode {
-    return write(static_cast<char const*>(&val), sizeof(ValueType));
+auto WriterInterface::write_numeric_value(ValueType val) -> Result<void> {
+    return write({static_cast<char const*>(&val), sizeof(ValueType)});
 }
 }  // namespace ystdlib::io_interface
 
