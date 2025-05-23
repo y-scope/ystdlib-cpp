@@ -17,9 +17,7 @@ tasks:
     desc: "Runs the C++ linters that identify formatting issues."
     sources: &cpp_format_src_files
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_CPP_SRC_DIR}}/**/*.cpp"
-      - "{{.G_CPP_SRC_DIR}}/**/*.h"
-      - "{{.G_CPP_SRC_DIR}}/**/*.hpp"
+      - "{{.G_CPP_SRC_DIR}}"
       - "{{.ROOT_DIR}}/.clang-format"
       - "{{.TASKFILE}}"
     deps:
@@ -59,9 +57,7 @@ tasks:
       - "{{.G_CMAKE_CACHE}}"
       - "{{.G_COMPILE_COMMANDS_DB}}"
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_CPP_SRC_DIR}}/**/*.cpp"
-      - "{{.G_CPP_SRC_DIR}}/**/*.h"
-      - "{{.G_CPP_SRC_DIR}}/**/*.hpp"
+      - "{{.G_CPP_SRC_DIR}}"
       - "{{.ROOT_DIR}}/.clang-tidy"
       - "{{.TASKFILE}}"
     deps:
