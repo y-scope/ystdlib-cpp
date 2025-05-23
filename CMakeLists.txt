@@ -39,11 +39,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-find_package(Boost REQUIRED)
-if(Boost_FOUND)
-    message(STATUS "Found Boost ${Boost_VERSION}.")
-endif()
-
 if(YSTDLIB_CPP_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
     # NOTE: We mark the file optional because if the user happens to have the dependencies
@@ -56,6 +51,11 @@ endif()
 
 if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
+endif()
+
+find_package(Boost REQUIRED)
+if(Boost_FOUND)
+    message(STATUS "Found Boost ${Boost_VERSION}.")
 endif()
 
 if(YSTDLIB_CPP_ENABLE_TESTS)
