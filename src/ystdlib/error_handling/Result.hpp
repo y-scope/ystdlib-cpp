@@ -42,7 +42,8 @@ using Result = BOOST_OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
  * - Otherwise, execution continues normally.
  */
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
-#define YSTDLIB_ERROR_HANDLING_TRY(expr) BOOST_OUTCOME_TRY(expr)
+#define YSTDLIB_ERROR_HANDLING_TRYV(expr) BOOST_OUTCOME_TRYV(expr)
+#define YSTDLIB_ERROR_HANDLING_TRY(val, expr) BOOST_OUTCOME_TRY(auto&& val, expr)
 }  // namespace ystdlib::error_handling
 
 #endif  // YSTDLIB_ERROR_HANDLING_RESULT_HPP
