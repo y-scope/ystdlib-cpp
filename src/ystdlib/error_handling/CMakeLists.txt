@@ -7,7 +7,7 @@ cpp_library(
         Result.hpp
         utils.hpp
     PUBLIC_LINK_LIBRARIES
-        Boost::headers
+        outcome::hl
     TESTS_SOURCES
         test/constants.hpp
         test/test_ErrorCode.cpp

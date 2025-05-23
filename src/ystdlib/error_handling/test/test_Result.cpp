@@ -88,8 +88,7 @@ TEST_CASE("test_result_int_in_main", "[error_handling][Result]") {
 
 TEST_CASE("test_result_int_propagate", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<int> {
-        YSTDLIB_ERROR_HANDLING_TRY(value, cIntFunc(is_error));
-        return value;
+        return YSTDLIB_ERROR_HANDLING_TRYX(cIntFunc(is_error));
     };
     auto const main_no_error{main_func(false)};
     REQUIRE_FALSE(main_no_error.has_error());
@@ -107,8 +106,8 @@ TEST_CASE("test_result_unique_ptr", "[error_handling][Result]") {
 
     auto const result_has_error{cUniquePtrFunc(true)};
     REQUIRE(result_has_error.has_error());
-    REQUIRE(AlwaysSuccessErrorCode{AlwaysSuccessErrorCodeEnum::Success}
-            == result_has_error.error());
+    REQUIRE(AlwaysSuccessErrorCode{AlwaysSuccessErrorCodeEnum::Success} == result_has_error.error()
+    );
 }
 
 TEST_CASE("test_result_unique_ptr_in_main", "[error_handling][Result]") {
@@ -127,8 +126,7 @@ TEST_CASE("test_result_unique_ptr_in_main", "[error_handling][Result]") {
 
 TEST_CASE("test_result_unique_ptr_propagate", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<std::unique_ptr<int>> {
-        YSTDLIB_ERROR_HANDLING_TRY(value, cUniquePtrFunc(is_error));
-        return value;
+        return YSTDLIB_ERROR_HANDLING_TRYX(cUniquePtrFunc(is_error));
     };
     auto const main_no_error{main_func(false)};
     REQUIRE_FALSE(main_no_error.has_error());

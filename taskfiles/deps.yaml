@@ -3,6 +3,8 @@ version: "3"
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
+  G_OUTCOME_LIB_NAME: "outcome"
+  G_OUTCOME_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_OUTCOME_LIB_NAME}}"
   G_QUICKCPPLIB_LIB_NAME: "quickcpplib"
   G_QUICKCPPLIB_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}"
 
@@ -24,8 +26,8 @@ tasks:
   install-all-run:
     internal: true
     deps:
-      - "install-boost"
       - "install-Catch2"
+      - "install-outcome"
 
   install-all-finish:
     internal: true
@@ -73,13 +75,13 @@ tasks:
     deps:
       - "install-quickcpplib"
     cmds:
-      - task: ":utils:cmake-install-remote-tar"
+      - task: ":utils:cmake:install-remote-tar"
         vars:
-          NAME: "{{.G_OUTCOME_LIB_NAME}}"
+          CMAKE_PACKAGE_NAME: "{{.G_OUTCOME_LIB_NAME}}"
           WORK_DIR: "{{.G_OUTCOME_WORK_DIR}}"
-          FILE_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
-          URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
-          GEN_ARGS:
+          TAR_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
+          TAR_URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
+          CMAKE_GEN_ARGS:
             - "-C {{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}.cmake"
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
@@ -93,13 +95,13 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake-install-remote-tar"
+      - task: ":utils:cmake:install-remote-tar"
         vars:
-          NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
+          CMAKE_PACKAGE_NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
           WORK_DIR: "{{.G_QUICKCPPLIB_WORK_DIR}}"
-          FILE_SHA256: "5d4c9b2d6fa177d3fb14f3fe3086867e43b44f4a7a944eb10ee4616b2b0f3c05"
-          URL: "https://github.com/ned14/quickcpplib/archive/f3e452e.tar.gz"
-          GEN_ARGS:
+          TAR_SHA256: "5d4c9b2d6fa177d3fb14f3fe3086867e43b44f4a7a944eb10ee4616b2b0f3c05"
+          TAR_URL: "https://github.com/ned14/quickcpplib/archive/f3e452e.tar.gz"
+          CMAKE_GEN_ARGS:
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
       - task: "add-package-root-to-cmake-settings"
