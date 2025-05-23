@@ -56,6 +56,8 @@ endif()
 find_package(Boost REQUIRED)
 if(Boost_FOUND)
     message(STATUS "Found Boost ${Boost_VERSION}.")
+else()
+    message(STATUS "Could not find libraries for Boost.")
 endif()
 
 if(YSTDLIB_CPP_ENABLE_TESTS)
