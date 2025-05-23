@@ -3,8 +3,6 @@ version: "3"
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
-  G_OUTCOME_LIB_NAME: "outcome"
-  G_OUTCOME_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_OUTCOME_LIB_NAME}}"
   G_QUICKCPPLIB_LIB_NAME: "quickcpplib"
   G_QUICKCPPLIB_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}"
 
@@ -26,8 +24,8 @@ tasks:
   install-all-run:
     internal: true
     deps:
+      - "install-boost"
       - "install-Catch2"
-      - "install-outcome"
 
   install-all-finish:
     internal: true
@@ -58,12 +56,12 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake-install-remote-tar"
+      - task: ":utils:cmake:install-remote-tar"
         vars:
-          NAME: "{{.G_CATCH2_LIB_NAME}}"
+          CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
-          FILE_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
-          URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
+          TAR_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
+          TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
       - task: "add-package-root-to-cmake-settings"
         vars:
           NAME: "{{.G_CATCH2_LIB_NAME}}"

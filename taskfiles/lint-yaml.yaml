@@ -24,5 +24,5 @@ tasks:
           \( -iname "*.yaml" -o -iname "*.yml" \) \
           -print0 | \
             xargs -0 yamllint \
-              --config-file "tools/yscope-dev-utils/lint-configs/.yamllint.yml" \
+              --config-file "tools/yscope-dev-utils/exports/lint-configs/.yamllint.yml" \
               --strict

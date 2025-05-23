@@ -53,13 +53,6 @@ if(BUILD_TESTING AND YSTDLIB_CPP_BUILD_TESTING)
     set(YSTDLIB_CPP_ENABLE_TESTS ON)
 endif()
 
-find_package(outcome REQUIRED)
-if(outcome_FOUND)
-    message(STATUS "Found outcome.")
-else()
-    message(FATAL_ERROR "Could not find libraries for outcome.")
-endif()
-
 if(YSTDLIB_CPP_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
