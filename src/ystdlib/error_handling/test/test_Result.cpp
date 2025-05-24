@@ -106,8 +106,8 @@ TEST_CASE("test_result_unique_ptr", "[error_handling][Result]") {
 
     auto const result_has_error{cUniquePtrFunc(true)};
     REQUIRE(result_has_error.has_error());
-    REQUIRE(AlwaysSuccessErrorCode{AlwaysSuccessErrorCodeEnum::Success} == result_has_error.error()
-    );
+    REQUIRE(AlwaysSuccessErrorCode{AlwaysSuccessErrorCodeEnum::Success}
+            == result_has_error.error());
 }
 
 TEST_CASE("test_result_unique_ptr_in_main", "[error_handling][Result]") {
