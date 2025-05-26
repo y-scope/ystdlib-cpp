@@ -103,17 +103,10 @@ list(FILTER SOURCE_FILES EXCLUDE REGEX ".*test_*\..*")
 add_library(ystdlib ${SOURCE_FILES})
 add_library(ystdlib::ystdlib ALIAS ystdlib)
 
-# target_link_libraries(ystdlib
-#     PUBLIC
-#     outcome
-# )
-
 target_include_directories(ystdlib
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
 target_compile_features(ystdlib
@@ -121,13 +114,6 @@ target_compile_features(ystdlib
 )
 
 set_target_properties(ystdlib PROPERTIES LINKER_LANGUAGE CXX)
-
-if(YSTDLIB_CPP_ENABLE_TESTS)
-    target_link_libraries(ystdlib
-        PUBLIC
-        Catch2
-    )
-endif()
 
 install(
     TARGETS

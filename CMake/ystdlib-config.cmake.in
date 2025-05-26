@@ -10,10 +10,6 @@ if(@outcome_FOUND@)
     find_dependency(outcome)
 endif()
 
-if(@quickcpplib_FOUND@)
-    find_dependency(quickcpplib)
-endif()
-
 set_and_check(ystdlib_INCLUDE_DIR "@PACKAGE_YSTDLIB_INSTALL_INCLUDE_DIR@")
 
 check_required_components(ystdlib)
