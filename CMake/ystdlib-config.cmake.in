@@ -1,0 +1,25 @@
+include(CMakeFindDependencyMacro)
+
+@PACKAGE_INIT@
+
+if(@Catch2_FOUND@)
+    find_dependency(Catch2)
+endif()
+
+if(@outcome_FOUND@)
+    find_dependency(outcome)
+endif()
+
+if(@quickcpplib_FOUND@)
+    find_dependency(quickcpplib)
+endif()
+
+set_and_check(ystdlib_INCLUDE_DIR "@PACKAGE_YSTDLIB_INSTALL_INCLUDE_DIR@")
+
+check_required_components(ystdlib)
+
+# Avoid repeatedly including the targets
+if(NOT TARGET ystdlib::ystdlib)
+    include(${CMAKE_CURRENT_LIST_DIR}/ystdlib-targets.cmake)
+endif()
+
