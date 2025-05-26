@@ -13,6 +13,9 @@ tasks:
       - "{{.TASKFILE}}"
       - exclude: "{{.ROOT_DIR}}/**/build/*"
       - exclude: "{{.ROOT_DIR}}/**/tools/*"
+      # The following are for Clion's default generated build dirs
+      - exclude: "{{.ROOT_DIR}}/cmake-build-debug/*"
+      - exclude: "{{.ROOT_DIR}}/cmake-build-release/*"
     dir: "{{.ROOT_DIR}}"
     deps:
       - "venv"
@@ -20,9 +23,14 @@ tasks:
       - |-
         . "{{.G_LINT_VENV_DIR}}/bin/activate"
         find . \
-          \( -path '**/build' -o -path '**/tools' \) -prune -o \
+          \( \
+            -path '**/build' \
+            -o -path '**/tools' \
+            -o -path '**/cmake-build-debug' \
+            -o -path '**/cmake-build-release' \
+          \) -prune -o \
           \( -iname "*.yaml" -o -iname "*.yml" \) \
           -print0 | \
-            xargs -0 yamllint \
-              --config-file "tools/yscope-dev-utils/exports/lint-configs/.yamllint.yml" \
-              --strict
+        xargs -0 yamllint \
+          --config-file "tools/yscope-dev-utils/exports/lint-configs/.yamllint.yml" \
+          --strict
