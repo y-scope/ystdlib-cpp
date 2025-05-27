@@ -11,46 +11,19 @@ tasks:
     desc: "Install all dependencies required by ystdlib-cpp."
     run: "once"
     cmds:
-      - task: "install-all-init"
-      - task: "install-all-run"
-      - task: "install-all-finish"
+      - "rm -rf '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
+      - "mkdir -p '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
+      - task: ":utils:cmake:install-deps-and-generate-settings"
+        vars:
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
+          CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+          DEP_TASK: "deps:install-all-parallel"
 
-  install-all-init:
-    internal: true
-    cmds:
-      - "rm -rf {{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-      - "mkdir -p {{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-
-  install-all-run:
+  install-all-parallel:
     internal: true
     deps:
       - "install-boost"
       - "install-Catch2"
-
-  install-all-finish:
-    internal: true
-    cmds:
-      - >-
-        for file in {{.G_DEPS_CMAKE_SETTINGS_DIR}}/*.cmake; do
-          if [ "$file" != "{{.G_DEPS_CMAKE_SETTINGS_FILE}}" ]; then
-            echo "include(\"$file\")" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}";
-          fi
-        done
-
-  add-package-root-to-cmake-settings:
-    internal: true
-    requires:
-      vars:
-        - "NAME"
-        - "INSTALL_PREFIX"
-    cmds:
-      - >-
-        echo "set(
-          {{.NAME}}_ROOT
-          \"{{.INSTALL_PREFIX}}\"
-          CACHE PATH
-          \"Path to {{.NAME}} settings\"
-        )" >> "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.NAME}}.cmake"
 
   install-Catch2:
     internal: true
@@ -59,13 +32,10 @@ tasks:
       - task: ":utils:cmake:install-remote-tar"
         vars:
           CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
-          WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
-      - task: "add-package-root-to-cmake-settings"
-        vars:
-          NAME: "{{.G_CATCH2_LIB_NAME}}"
-          INSTALL_PREFIX: "{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install"
+          WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
 
   install-boost:
     internal: true
