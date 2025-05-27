@@ -88,7 +88,7 @@ TEST_CASE("test_result_int_in_main", "[error_handling][Result]") {
 
 TEST_CASE("test_result_int_propagate", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<int> {
-        YSTDLIB_ERROR_HANDLING_TRY(value, cIntFunc(is_error));
+        BOOST_OUTCOME_TRY(auto &&value, cIntFunc(is_error));
         return value;
     };
     auto const main_no_error{main_func(false)};
@@ -127,7 +127,7 @@ TEST_CASE("test_result_unique_ptr_in_main", "[error_handling][Result]") {
 
 TEST_CASE("test_result_unique_ptr_propagate", "[error_handling][Result]") {
     auto main_func = [&](bool is_error) -> Result<std::unique_ptr<int>> {
-        YSTDLIB_ERROR_HANDLING_TRY(value, cUniquePtrFunc(is_error));
+        BOOST_OUTCOME_TRY(auto &&value, cUniquePtrFunc(is_error));
         return value;
     };
     auto const main_no_error{main_func(false)};
