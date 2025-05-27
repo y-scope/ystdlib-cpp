@@ -13,46 +13,19 @@ tasks:
     desc: "Install all dependencies required by ystdlib-cpp."
     run: "once"
     cmds:
-      - task: "install-all-init"
-      - task: "install-all-run"
-      - task: "install-all-finish"
+      - "rm -rf '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
+      - "mkdir -p '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
+      - task: ":utils:cmake:install-deps-and-generate-settings"
+        vars:
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
+          CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
+          DEP_TASK: "deps:install-all-parallel"
 
-  install-all-init:
-    internal: true
-    cmds:
-      - "rm -rf {{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-      - "mkdir -p {{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-
-  install-all-run:
+  install-all-parallel:
     internal: true
     deps:
       - "install-Catch2"
       - "install-outcome"
-
-  install-all-finish:
-    internal: true
-    cmds:
-      - >-
-        for file in {{.G_DEPS_CMAKE_SETTINGS_DIR}}/*.cmake; do
-          if [ "$file" != "{{.G_DEPS_CMAKE_SETTINGS_FILE}}" ]; then
-            echo "include(\"$file\")" >> "{{.G_DEPS_CMAKE_SETTINGS_FILE}}";
-          fi
-        done
-
-  add-package-root-to-cmake-settings:
-    internal: true
-    requires:
-      vars:
-        - "NAME"
-        - "INSTALL_PREFIX"
-    cmds:
-      - >-
-        echo "set(
-          {{.NAME}}_ROOT
-          \"{{.INSTALL_PREFIX}}\"
-          CACHE PATH
-          \"Path to {{.NAME}} settings\"
-        )" >> "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.NAME}}.cmake"
 
   install-Catch2:
     internal: true
@@ -61,13 +34,10 @@ tasks:
       - task: ":utils:cmake:install-remote-tar"
         vars:
           CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
-      - task: "add-package-root-to-cmake-settings"
-        vars:
-          NAME: "{{.G_CATCH2_LIB_NAME}}"
-          INSTALL_PREFIX: "{{.G_CATCH2_WORK_DIR}}/{{.G_CATCH2_LIB_NAME}}-install"
 
   install-outcome:
     internal: true
@@ -83,13 +53,10 @@ tasks:
             - "-DCMAKE_BUILD_TYPE=Release"
             - "-DCMAKE_POLICY_DEFAULT_CMP0074=NEW"
           CMAKE_PACKAGE_NAME: "{{.G_OUTCOME_LIB_NAME}}"
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
           TAR_URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
           WORK_DIR: "{{.G_OUTCOME_WORK_DIR}}"
-      - task: "add-package-root-to-cmake-settings"
-        vars:
-          NAME: "{{.G_OUTCOME_LIB_NAME}}"
-          INSTALL_PREFIX: "{{.G_OUTCOME_WORK_DIR}}/{{.G_OUTCOME_LIB_NAME}}-install"
 
   install-quickcpplib:
     internal: true
@@ -101,10 +68,7 @@ tasks:
             - "-DBUILD_TESTING=OFF"
             - "-DCMAKE_BUILD_TYPE=Release"
           CMAKE_PACKAGE_NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
+          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "5d4c9b2d6fa177d3fb14f3fe3086867e43b44f4a7a944eb10ee4616b2b0f3c05"
           TAR_URL: "https://github.com/ned14/quickcpplib/archive/f3e452e.tar.gz"
           WORK_DIR: "{{.G_QUICKCPPLIB_WORK_DIR}}"
-      - task: "add-package-root-to-cmake-settings"
-        vars:
-          NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
-          INSTALL_PREFIX: "{{.G_QUICKCPPLIB_WORK_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}-install"
