@@ -58,15 +58,6 @@ tasks:
     aliases:
       - "cpp-static-fix"
     desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
-    sources:
-      - "{{.G_CMAKE_CACHE}}"
-      - "{{.G_COMPILE_COMMANDS_DB}}"
-      - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_CPP_SRC_DIR}}/**/*.cpp"
-      - "{{.G_CPP_SRC_DIR}}/**/*.h"
-      - "{{.G_CPP_SRC_DIR}}/**/*.hpp"
-      - "{{.ROOT_DIR}}/.clang-tidy"
-      - "{{.TASKFILE}}"
     deps:
       - ":build:init"
       - "cpp-configs"
@@ -77,7 +68,6 @@ tasks:
           FLAGS:
             - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
             - "-p '{{.G_COMPILE_COMMANDS_DB}}'"
-          INCLUDE_FILENAME_PATTERNS: ["*.cpp", "*.h", "*.hpp"]
           OUTPUT_DIR: "{{.G_LINT_CLANG_TIDY_DIR}}"
           ROOT_PATHS: ["{{.G_CPP_SRC_DIR}}"]
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
