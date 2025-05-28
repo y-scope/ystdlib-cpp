@@ -43,8 +43,8 @@ tasks:
         vars:
           WORK_DIR: "{{.G_DEPS_DIR}}/boost"
           FILE_SHA256: "2128a4c96862b5c0970c1e34d76b1d57e4a1016b80df85ad39667f30b1deba26"
-          URL: "https://github.com/boostorg/boost/releases/download/boost-1.88.0/\
-            boost-1.88.0-b2-nodocs.tar.gz"
+          URL: "https://github.com/boostorg/boost/releases/download/boost-1.87.0/\
+            boost-1.87.0-b2-nodocs.tar.gz"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TARGETS:
             - "filesystem"
