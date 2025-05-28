@@ -1,12 +1,11 @@
 #ifndef YSTDLIB_ERROR_HANDLING_RESULT_HPP
 #define YSTDLIB_ERROR_HANDLING_RESULT_HPP
 
-#include <system_error>
-
 #include <boost/outcome/config.hpp>
 #include <boost/outcome/std_result.hpp>
 #include <boost/outcome/success_failure.hpp>
 #include <boost/outcome/try.hpp>
+#include <system_error>
 
 namespace ystdlib::error_handling {
 /**
@@ -19,16 +18,16 @@ namespace ystdlib::error_handling {
  * @tparam ReturnType The type returned on success.
  * @tparam ErrorType The type used to represent errors.
  */
-    template <typename ReturnType, typename ErrorType = std::error_code>
-    using Result = BOOST_OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
+template <typename ReturnType, typename ErrorType = std::error_code>
+using Result = BOOST_OUTCOME_V2_NAMESPACE::std_result<ReturnType, ErrorType>;
 
 /**
  * @return A value indicating successful completion of a function that returns a void result (i.e.,
  * `Result<void, E>`).
  */
-    [[nodiscard]] inline auto success() -> BOOST_OUTCOME_V2_NAMESPACE::success_type<void> {
-        return BOOST_OUTCOME_V2_NAMESPACE::success();
-    }
+[[nodiscard]] inline auto success() -> BOOST_OUTCOME_V2_NAMESPACE::success_type<void> {
+    return BOOST_OUTCOME_V2_NAMESPACE::success();
+}
 
 /**
  * A function-style macro that emulates Rust’s try (`?`) operator for error propagation.
