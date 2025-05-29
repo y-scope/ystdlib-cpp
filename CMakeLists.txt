@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 include(ystdlib-cpp-helpers)
 include(CMakePackageConfigHelpers)
@@ -8,10 +7,7 @@ include(GNUInstallDirs)
 
 set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
-project(YSTDLIB_CPP
-    VERSION "${YSTDLIB_CPP_VERSION}"
-    LANGUAGES CXX
-)
+project(YSTDLIB_CPP VERSION "${YSTDLIB_CPP_VERSION}" LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
@@ -93,77 +89,69 @@ endif()
 set(YSTDLIB_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
 set(YSTDLIB_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
-file(GLOB_RECURSE SOURCE_FILES
-  CONFIGURE_DEPENDS
-  "${PROJECT_SOURCE_DIR}/src/*.cpp"
-  "${PROJECT_SOURCE_DIR}/src/*.hpp"
-  "${PROJECT_SOURCE_DIR}/src/*.h"
+file(
+    GLOB_RECURSE SOURCE_FILES
+    CONFIGURE_DEPENDS
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/*.hpp"
+    "${PROJECT_SOURCE_DIR}/src/*.h"
 )
 list(FILTER SOURCE_FILES EXCLUDE REGEX ".*test_*\..*")
 
 add_library(ystdlib ${SOURCE_FILES})
 add_library(ystdlib::ystdlib ALIAS ystdlib)
 
-target_include_directories(ystdlib
-        PUBLIC
+target_include_directories(
+    ystdlib
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        )
-
-target_compile_features(ystdlib
-    PRIVATE cxx_std_20
 )
 
-set_target_properties(ystdlib PROPERTIES LINKER_LANGUAGE CXX)
+target_compile_features(ystdlib PRIVATE cxx_std_20)
 
-install(
-    TARGETS
+set_target_properties(
     ystdlib
-    EXPORT
-    ystdlib-targets
+    PROPERTIES
+        LINKER_LANGUAGE
+            CXX
 )
 
-install(
-    EXPORT
-    ystdlib-targets
-    NAMESPACE
-    ystdlib::
-    DESTINATION
-    ${YSTDLIB_INSTALL_CONFIG_DIR}
-)
+install(TARGETS ystdlib EXPORT ystdlib-targets)
+
+install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${YSTDLIB_INSTALL_CONFIG_DIR})
 
 install(
     DIRECTORY
-    "${PROJECT_SOURCE_DIR}/src/ystdlib"
-    DESTINATION
-    "${YSTDLIB_INSTALL_INCLUDE_DIR}"
+        "${PROJECT_SOURCE_DIR}/src/ystdlib"
+    DESTINATION "${YSTDLIB_INSTALL_INCLUDE_DIR}"
     FILES_MATCHING
-    PATTERN "*.h"
-    PATTERN "*.hpp"
-    PATTERN "*.tpp"
+    PATTERN
+    "*.h"
+    PATTERN
+    "*.hpp"
+    PATTERN
+    "*.tpp"
 )
 
 configure_package_config_file(
     ${CMAKE_CURRENT_LIST_DIR}/CMake/ystdlib-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-    INSTALL_DESTINATION
-    ${YSTDLIB_INSTALL_CONFIG_DIR}
+    INSTALL_DESTINATION ${YSTDLIB_INSTALL_CONFIG_DIR}
     PATH_VARS
-    YSTDLIB_INSTALL_INCLUDE_DIR
-    )
+        YSTDLIB_INSTALL_INCLUDE_DIR
+)
 
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    COMPATIBILITY
-    SameMajorVersion
-    )
+    COMPATIBILITY SameMajorVersion
+)
 
 install(
     FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    DESTINATION
-    ${YSTDLIB_INSTALL_CONFIG_DIR}
-    )
+        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
+    DESTINATION ${YSTDLIB_INSTALL_CONFIG_DIR}
+)
 
 add_subdirectory(src/ystdlib)
