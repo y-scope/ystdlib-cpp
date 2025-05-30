@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-namespace ystdlib::wrapped_facade_headers::test { namespace {
+namespace ystdlib::wrapped_facade_headers::test {
 TEST_CASE("test_sys_types_u_char", "[wrapped_facade_headers][sys_types][u_char]") {
     u_char const i{0};
     REQUIRE(0 == i);
@@ -163,4 +163,4 @@ TEST_CASE("test_sys_types_fsfilcnt_t", "[wrapped_facade_headers][sys_types][fsfi
     fsfilcnt_t const i{0};
     REQUIRE(0 == i);
 }
-}}  // namespace ystdlib::wrapped_facade_headers::test
+}  // namespace ystdlib::wrapped_facade_headers::test

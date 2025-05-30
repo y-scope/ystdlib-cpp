@@ -1,11 +1,12 @@
 #ifndef YSTDLIB_ERROR_HANDLING_RESULT_HPP
 #define YSTDLIB_ERROR_HANDLING_RESULT_HPP
 
+#include <system_error>
+
 #include <boost/outcome/config.hpp>
 #include <boost/outcome/std_result.hpp>
 #include <boost/outcome/success_failure.hpp>
 #include <boost/outcome/try.hpp>
-#include <system_error>
 
 namespace ystdlib::error_handling {
 /**
