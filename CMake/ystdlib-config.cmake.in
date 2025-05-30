@@ -1,3 +1,5 @@
+# gersemi: off
+# this file is preprocessed and should not be linted like a CMake file
 include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
@@ -18,4 +20,4 @@ check_required_components(ystdlib)
 if(NOT TARGET ystdlib::ystdlib)
     include(${CMAKE_CURRENT_LIST_DIR}/ystdlib-targets.cmake)
 endif()
-
+# gersemi: on
