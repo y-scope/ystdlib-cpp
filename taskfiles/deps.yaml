@@ -3,10 +3,6 @@ version: "3"
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
   G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
-  G_OUTCOME_LIB_NAME: "outcome"
-  G_OUTCOME_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_OUTCOME_LIB_NAME}}"
-  G_QUICKCPPLIB_LIB_NAME: "quickcpplib"
-  G_QUICKCPPLIB_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}"
 
 tasks:
   install-all:
@@ -24,8 +20,8 @@ tasks:
   install-all-parallel:
     internal: true
     deps:
+      - "install-boost"
       - "install-Catch2"
-      - "install-outcome"
 
   install-Catch2:
     internal: true
@@ -39,36 +35,15 @@ tasks:
           TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
           WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
 
-  install-outcome:
-    internal: true
-    run: "once"
-    deps:
-      - "install-quickcpplib"
-    cmds:
-      - task: ":utils:cmake:install-remote-tar"
-        vars:
-          CMAKE_GEN_ARGS:
-            - "-C {{.G_DEPS_CMAKE_SETTINGS_DIR}}/{{.G_QUICKCPPLIB_LIB_NAME}}.cmake"
-            - "-DBUILD_TESTING=OFF"
-            - "-DCMAKE_BUILD_TYPE=Release"
-            - "-DCMAKE_POLICY_DEFAULT_CMP0074=NEW"
-          CMAKE_PACKAGE_NAME: "{{.G_OUTCOME_LIB_NAME}}"
-          CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-          TAR_SHA256: "0382248cbb00806ce4b5f3ce6939797dc3b597c85fd3531614959e31ef488b39"
-          TAR_URL: "https://github.com/ned14/outcome/archive/refs/tags/v2.2.11.tar.gz"
-          WORK_DIR: "{{.G_OUTCOME_WORK_DIR}}"
-
-  install-quickcpplib:
+  install-boost:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake:install-remote-tar"
+      - task: ":utils:boost:download-and-install"
         vars:
-          CMAKE_GEN_ARGS:
-            - "-DBUILD_TESTING=OFF"
-            - "-DCMAKE_BUILD_TYPE=Release"
-          CMAKE_PACKAGE_NAME: "{{.G_QUICKCPPLIB_LIB_NAME}}"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-          TAR_SHA256: "5d4c9b2d6fa177d3fb14f3fe3086867e43b44f4a7a944eb10ee4616b2b0f3c05"
-          TAR_URL: "https://github.com/ned14/quickcpplib/archive/f3e452e.tar.gz"
-          WORK_DIR: "{{.G_QUICKCPPLIB_WORK_DIR}}"
+          FILE_SHA256: "d6c69e4459eb5d6ec208250291221e7ff4a2affde9af6e49c9303b89c687461f"
+          URL: "https://github.com/boostorg/boost/releases/download/boost-1.87.0\
+            /boost-1.87.0-b2-nodocs.tar.gz"
+          TARGETS: ["headers"]
+          WORK_DIR: "{{.G_DEPS_DIR}}/boost"
