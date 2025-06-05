@@ -18,6 +18,6 @@ check_required_components(ystdlib)
 
 # Avoid repeatedly including the targets
 if(NOT TARGET ystdlib::ystdlib)
-    include(${CMAKE_CURRENT_LIST_DIR}/ystdlib-targets.cmake)
+    include("${CMAKE_CURRENT_LIST_DIR}/ystdlib-targets.cmake")
 endif()
 # gersemi: on
