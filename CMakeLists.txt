@@ -108,7 +108,7 @@ target_include_directories(
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_compile_features(ystdlib PRIVATE cxx_std_20)
+target_compile_features(ystdlib PUBLIC cxx_std_20)
 
 set_target_properties(
     ystdlib
