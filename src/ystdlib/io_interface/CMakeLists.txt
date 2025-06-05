@@ -8,6 +8,7 @@ cpp_library(
     PRIVATE_SOURCES
         ReaderInterface.cpp
     PUBLIC_LINK_LIBRARIES
+        ystdlib::error_handling
         ystdlib::wrapped_facade_headers
     TESTS_SOURCES
         test/test_ReaderInterface.cpp
