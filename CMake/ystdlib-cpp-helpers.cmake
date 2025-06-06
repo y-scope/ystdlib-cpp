@@ -102,6 +102,38 @@ function(cpp_library)
                 "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
+
+        target_sources(
+            ${arg_cpp_lib_NAME}
+            INTERFACE
+            FILE_SET HEADERS
+            FILES
+                ${arg_cpp_lib_PUBLIC_HEADERS}
+        )
+
+        # get_target_property(hdrs ${arg_cpp_lib_NAME} HEADER_SET)
+        # set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
+        # install(
+        #     FILES
+        #     ${hdrs}
+        #     DESTINATION "${INSTALL_INCLUDE_DIR}"
+        # )
+
+        # target_include_directories(${arg_cpp_lib_NAME} INTERFACE include)
+
+        # set(INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
+        # set(PREFIXED_SOURCES "")
+        # foreach(FILE ${arg_cpp_lib_PUBLIC_HEADERS})
+        #     list(APPEND PREFIXED_SOURCES "${INCLUDE_DIR}/${FILE}")
+        # endforeach()
+
+        # message(${arg_cpp_lib_PUBLIC_HEADERS})
+        # target_include_DIRECTORIES(
+        #     ${arg_cpp_lib_NAME}
+        #     INTERFACE
+        #         ${arg_cpp_lib_PUBLIC_HEADERS}
+        # )
+
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
         # defaults to static.
@@ -129,6 +161,20 @@ function(cpp_library)
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
+    # set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
+    # install(
+    #     FILES
+    #     ${arg_cpp_lib_PUBLIC_HEADERS}
+    #     DESTINATION "${INSTALL_INCLUDE_DIR}"
+    # )
+
+    set_target_properties(
+        ${arg_cpp_lib_NAME}
+        PROPERTIES
+            LINKER_LANGUAGE
+                CXX
+    )
+
     if(ystdlib_ENABLE_TESTS)
         # Build library-specific unit test target
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
@@ -148,6 +194,13 @@ function(cpp_library)
             PROPERTY
                 RUNTIME_OUTPUT_DIRECTORY
                     ${CMAKE_BINARY_DIR}/testbin
+        )
+
+        set_target_properties(
+            ${_UNIT_TEST_TARGET}
+            PROPERTIES
+                LINKER_LANGUAGE
+                    CXX
         )
 
         # Link against unified unit test

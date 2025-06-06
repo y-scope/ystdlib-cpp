@@ -87,50 +87,62 @@ endif()
 set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
 set(ystdlib_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
-file(
-    GLOB_RECURSE SOURCE_FILES
-    CONFIGURE_DEPENDS
-    "${PROJECT_SOURCE_DIR}/src/*.cpp"
-    "${PROJECT_SOURCE_DIR}/src/*.hpp"
-    "${PROJECT_SOURCE_DIR}/src/*.h"
+# file(
+#     GLOB_RECURSE SOURCE_FILES
+#     CONFIGURE_DEPENDS
+#     "${PROJECT_SOURCE_DIR}/src/*.cpp"
+#     "${PROJECT_SOURCE_DIR}/src/*.hpp"
+#     "${PROJECT_SOURCE_DIR}/src/*.h"
+# )
+# list(FILTER SOURCE_FILES EXCLUDE REGEX ".*test_*\..*")
+#
+# add_library(ystdlib ${SOURCE_FILES})
+# add_library(ystdlib::ystdlib ALIAS ystdlib)
+
+# target_include_directories(
+#     ystdlib
+#     PUBLIC
+#         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+#         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+# )
+
+# target_compile_features(ystdlib PUBLIC cxx_std_20)
+
+# set_target_properties(
+#     ystdlib
+#     PROPERTIES
+#         LINKER_LANGUAGE
+#             CXX
+# )
+
+add_subdirectory(src/ystdlib)
+
+install(TARGETS
+    containers
+    error_handling
+    io_interface
+    wrapped_facade_headers
+    EXPORT ystdlib-targets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        FILE_SET HEADERS
 )
-list(FILTER SOURCE_FILES EXCLUDE REGEX ".*test_*\..*")
-
-add_library(ystdlib ${SOURCE_FILES})
-add_library(ystdlib::ystdlib ALIAS ystdlib)
-
-target_include_directories(
-    ystdlib
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
-target_compile_features(ystdlib PUBLIC cxx_std_20)
-
-set_target_properties(
-    ystdlib
-    PROPERTIES
-        LINKER_LANGUAGE
-            CXX
-)
-
-install(TARGETS ystdlib EXPORT ystdlib-targets)
 
 install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})
 
-install(
-    DIRECTORY
-        "${PROJECT_SOURCE_DIR}/src/ystdlib"
-    DESTINATION "${ystdlib_INSTALL_INCLUDE_DIR}"
-    FILES_MATCHING
-    PATTERN
-    "*.h"
-    PATTERN
-    "*.hpp"
-    PATTERN
-    "*.tpp"
-)
+# install(
+#     DIRECTORY
+#         "${PROJECT_SOURCE_DIR}/src/ystdlib"
+#     DESTINATION "${ystdlib_INSTALL_INCLUDE_DIR}"
+#     FILES_MATCHING
+#     PATTERN
+#     "*.h"
+#     PATTERN
+#     "*.hpp"
+#     PATTERN
+#     "*.tpp"
+# )
 
 configure_package_config_file(
     ${CMAKE_CURRENT_LIST_DIR}/CMake/ystdlib-config.cmake.in
@@ -152,4 +164,3 @@ install(
     DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
 )
 
-add_subdirectory(src/ystdlib)

@@ -17,8 +17,18 @@ add_library(
     types.hpp
     constants.hpp
 )
-target_link_libraries(common PUBLIC ystdlib::ystdlib)
+target_link_libraries(common PUBLIC ystdlib::error_handling)
 add_executable(main main.cpp)
+
+get_target_property(_type ystdlib::error_handling TYPE)
+get_target_property(_sources ystdlib::error_handling SOURCES)
+get_target_property(_includes ystdlib::error_handling INCLUDE_DIRECTORIES)
+get_target_property(_libs ystdlib::error_handling LINK_LIBRARIES)
+
+message(STATUS "Target Type: ${_type}")
+message(STATUS "Sources: ${_sources}")
+message(STATUS "Include Dirs: ${_includes}")
+message(STATUS "Linked Libraries: ${_libs}")
 
 target_compile_features(main PRIVATE cxx_std_20)
 target_compile_features(common PRIVATE cxx_std_20)
@@ -26,6 +36,6 @@ target_compile_features(common PRIVATE cxx_std_20)
 target_link_libraries(
     main
     PUBLIC
-        ystdlib::ystdlib
+        ystdlib::error_handling
         common
 )
