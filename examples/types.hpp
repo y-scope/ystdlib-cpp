@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include <error_handling/ErrorCode.hpp>
+#include <ystdlib/error_handling/ErrorCode.hpp>
 
 namespace ystdlib::error_handling::test {
 enum class AlwaysSuccessErrorCodeEnum : uint8_t {

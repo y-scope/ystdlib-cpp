@@ -103,36 +103,10 @@ function(cpp_library)
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
 
-        target_sources(
-            ${arg_cpp_lib_NAME}
-            INTERFACE
-            FILE_SET HEADERS
-            FILES
-                ${arg_cpp_lib_PUBLIC_HEADERS}
-        )
-
-        # get_target_property(hdrs ${arg_cpp_lib_NAME} HEADER_SET)
-        # set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
-        # install(
-        #     FILES
-        #     ${hdrs}
-        #     DESTINATION "${INSTALL_INCLUDE_DIR}"
-        # )
-
-        # target_include_directories(${arg_cpp_lib_NAME} INTERFACE include)
-
-        # set(INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
-        # set(PREFIXED_SOURCES "")
-        # foreach(FILE ${arg_cpp_lib_PUBLIC_HEADERS})
-        #     list(APPEND PREFIXED_SOURCES "${INCLUDE_DIR}/${FILE}")
-        # endforeach()
-
-        # message(${arg_cpp_lib_PUBLIC_HEADERS})
-        # target_include_DIRECTORIES(
-        #     ${arg_cpp_lib_NAME}
-        #     INTERFACE
-        #         ${arg_cpp_lib_PUBLIC_HEADERS}
-        # )
+        # tells where headers are
+        target_include_directories(${arg_cpp_lib_NAME} INTERFACE 
+            # "$<INSTALL_INTERFACE:include/${arg_cpp_lib_NAME}>")
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
@@ -161,12 +135,13 @@ function(cpp_library)
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
-    # set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${arg_cpp_lib_NAME}")
-    # install(
-    #     FILES
-    #     ${arg_cpp_lib_PUBLIC_HEADERS}
-    #     DESTINATION "${INSTALL_INCLUDE_DIR}"
-    # )
+    # install headers
+    set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/ystdlib/${arg_cpp_lib_NAME}")
+    install(
+        FILES
+        ${arg_cpp_lib_PUBLIC_HEADERS}
+        DESTINATION "${INSTALL_INCLUDE_DIR}"
+    )
 
     set_target_properties(
         ${arg_cpp_lib_NAME}

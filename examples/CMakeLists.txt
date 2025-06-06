@@ -7,7 +7,7 @@ if(ystdlib-examples_IS_TOP_LEVEL)
     include("${CMAKE_SOURCE_DIR}/../build/deps/cmake-settings/settings.cmake" OPTIONAL)
 endif()
 
-set(ystdlib_ROOT "/home/john/docs/yscope/ystdlib-cpp/build/build_install")
+set(ystdlib_ROOT "${CMAKE_SOURCE_DIR}/../build/build_install")
 find_package(ystdlib REQUIRED)
 
 add_library(
