@@ -1,5 +1,5 @@
-#ifndef YSTDLIB_ERROR_HANDLING_TEST_CONSTANTS_HPP
-#define YSTDLIB_ERROR_HANDLING_TEST_CONSTANTS_HPP
+#ifndef EXAMPLE_CONSTANTS_HPP
+#define EXAMPLE_CONSTANTS_HPP
 
 #include <array>
 #include <string_view>
@@ -15,4 +15,4 @@ constexpr std::array cFailureConditions{std::errc::not_connected, std::errc::tim
 constexpr std::array cNoneFailureConditions{std::errc::broken_pipe, std::errc::address_in_use};
 }  // namespace ystdlib::error_handling::test
 
-#endif  // YSTDLIB_ERROR_HANDLING_TEST_CONSTANTS_HPP
+#endif  // EXAMPLE_CONSTANTS_HPP
