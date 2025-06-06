@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.22.1)
 
+set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
+
 project(YSTDLIB_CPP VERSION "${YSTDLIB_CPP_VERSION}" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 include(ystdlib-cpp-helpers)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
-
-set(YSTDLIB_CPP_VERSION "0.0.1" CACHE STRING "Project version.")
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(YSTDLIB_CPP_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
