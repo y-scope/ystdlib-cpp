@@ -6,7 +6,7 @@ IncludeCategories:
   # NOTE: clang-format retains leading white-space on a line in violation of the YAML spec.
   - Regex: "<(ystdlib)"
     Priority: 3
-  - Regex: "<(catch2|outcome)"
+  - Regex: "<(boost|catch2)"
     Priority: 4
   # C system headers
   - Regex: "^<.+\\.h>"

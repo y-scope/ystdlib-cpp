@@ -75,7 +75,7 @@ void test_list_initialization_in_function_call(
 
 namespace ystdlib::containers::test {
 TEST_CASE("test_array_empty", "[containers][Array]") {
-    Array<int> arr(0);
+    Array<size_t> arr(0);
     REQUIRE(arr.empty());
     // NOLINTNEXTLINE(readability-container-size-empty)
     REQUIRE((0 == arr.size()));
@@ -83,8 +83,8 @@ TEST_CASE("test_array_empty", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_reference", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    Array<size_t> arr(cBufferSize);
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         arr.at(idx) = idx;
     }
     auto const& arr_const_ref = arr;
@@ -92,19 +92,19 @@ TEST_CASE("test_array_reference", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_ranged_copy", "[containers][Array]") {
-    std::vector<int> vec;
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    std::vector<size_t> vec;
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         vec.push_back(idx);
     }
-    Array<int> arr(cBufferSize);
+    Array<size_t> arr(cBufferSize);
     std::ranges::copy(vec, arr.begin());
     REQUIRE(std::ranges::equal(vec, arr));
 }
 
 TEST_CASE("test_array_movable", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
-    Array<int> reference_array(cBufferSize);
-    for (int idx{0}; idx < cBufferSize; ++idx) {
+    Array<size_t> arr(cBufferSize);
+    Array<size_t> reference_array(cBufferSize);
+    for (size_t idx{0}; idx < cBufferSize; ++idx) {
         arr.at(idx) = idx;
         reference_array.at(idx) = idx;
     }
@@ -113,7 +113,7 @@ TEST_CASE("test_array_movable", "[containers][Array]") {
 }
 
 TEST_CASE("test_array_illegal_access", "[containers][Array]") {
-    Array<int> arr(cBufferSize);
+    Array<size_t> arr(cBufferSize);
     REQUIRE_THROWS_AS(arr.at(-1), std::out_of_range);
     REQUIRE_THROWS_AS(arr.at(cBufferSize), std::out_of_range);
 }

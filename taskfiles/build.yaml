@@ -10,7 +10,7 @@ tasks:
     deps:
       - "init"
     cmds:
-      - task: ":utils:cmake-build"
+      - task: ":utils:cmake:build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
@@ -21,7 +21,7 @@ tasks:
     deps:
       - "init"
     cmds:
-      - task: ":utils:cmake-build"
+      - task: ":utils:cmake:build"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
           TARGETS:
@@ -49,7 +49,7 @@ tasks:
   clean:
     desc: "Removes all built artifacts."
     deps:
-      - task: ":utils:cmake-clean"
+      - task: ":utils:cmake:clean"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
 
@@ -59,7 +59,7 @@ tasks:
       - ":deps:install-all"
     run: "once"
     cmds:
-      - task: ":utils:cmake-generate"
+      - task: ":utils:cmake:generate"
         vars:
           BUILD_DIR: "{{.G_BUILD_DIR}}"
           SOURCE_DIR: "{{.ROOT_DIR}}"

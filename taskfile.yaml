@@ -1,10 +1,13 @@
 version: "3"
 
+set: ["u", "pipefail"]
+shopt: ["globstar"]
+
 includes:
   build: "./taskfiles/build.yaml"
   deps: "./taskfiles/deps.yaml"
   lint: "./taskfiles/lint.yaml"
-  utils: "tools/yscope-dev-utils/taskfiles/utils.yaml"
+  utils: "tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 vars:
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
