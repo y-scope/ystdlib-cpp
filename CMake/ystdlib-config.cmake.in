@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
 
-find_dependency(outcome)
+find_dependency(Boost REQUIRED)
 
 set_and_check(ystdlib_INCLUDE_DIR "@PACKAGE_YSTDLIB_INSTALL_INCLUDE_DIR@")
 
