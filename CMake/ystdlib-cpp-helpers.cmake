@@ -28,8 +28,8 @@ endfunction()
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
-# If `YSTDLIB_CPP_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
-# links this library against the unified unit test target for the entire `ystdlib-cpp` project.
+# If `ystdlib_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
+# links this library against the unified unit test target for the entire `ystdlib` project.
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
@@ -40,7 +40,7 @@ endfunction()
 # @param {string[]} [PRIVATE_LINK_LIBRARIES]
 # @param {string[]} [TESTS_LINK_LIBRARIES]
 # @param {string[]} [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
-# building the library and for external projects that builds `ystdlib-cpp` as a CMAKE subproject via
+# building the library and for external projects that builds `ystdlib` as a CMAKE subproject via
 # the add_subdirectory() function.
 function(cpp_library)
     set(options "")
@@ -102,6 +102,12 @@ function(cpp_library)
                 "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
         )
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
+
+        # tells where headers are
+        target_include_directories(${arg_cpp_lib_NAME} INTERFACE 
+            # "$<INSTALL_INTERFACE:include/${arg_cpp_lib_NAME}>")
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
         # defaults to static.
@@ -129,7 +135,22 @@ function(cpp_library)
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
-    if(YSTDLIB_CPP_ENABLE_TESTS)
+    # install headers
+    set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/ystdlib/${arg_cpp_lib_NAME}")
+    install(
+        FILES
+        ${arg_cpp_lib_PUBLIC_HEADERS}
+        DESTINATION "${INSTALL_INCLUDE_DIR}"
+    )
+
+    set_target_properties(
+        ${arg_cpp_lib_NAME}
+        PROPERTIES
+            LINKER_LANGUAGE
+                CXX
+    )
+
+    if(ystdlib_ENABLE_TESTS)
         # Build library-specific unit test target
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
         add_executable(${_UNIT_TEST_TARGET})
@@ -148,6 +169,13 @@ function(cpp_library)
             PROPERTY
                 RUNTIME_OUTPUT_DIRECTORY
                     ${CMAKE_BINARY_DIR}/testbin
+        )
+
+        set_target_properties(
+            ${_UNIT_TEST_TARGET}
+            PROPERTIES
+                LINKER_LANGUAGE
+                    CXX
         )
 
         # Link against unified unit test
