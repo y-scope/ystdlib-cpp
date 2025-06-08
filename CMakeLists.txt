@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 3.23)
 
 set(ystdlib_VERSION "0.0.1" CACHE STRING "Project version.")
 
@@ -89,17 +89,25 @@ set(ystdlib_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 add_subdirectory(src/ystdlib)
 
-install(TARGETS
-    containers
-    error_handling
-    io_interface
-    wrapped_facade_headers
-    EXPORT ystdlib-targets
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        # FILE_SET HEADERS
-)
+set(ystdlib_targets
+        containers
+        error_handling
+        io_interface
+        wrapped_facade_headers)
+
+foreach(install_target_name IN LISTS ystdlib_targets)
+
+    install(TARGETS
+        ${install_target_name}
+        EXPORT ystdlib-targets
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            FILE_SET HEADERS
+    )
+
+endforeach()
+
 
 install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})
 

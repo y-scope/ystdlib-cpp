@@ -96,17 +96,8 @@ function(cpp_library)
         endif()
         add_library(${arg_cpp_lib_NAME} INTERFACE)
         target_link_libraries(${arg_cpp_lib_NAME} INTERFACE ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES})
-        target_include_directories(
-            ${arg_cpp_lib_NAME}
-            INTERFACE
-                "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
-        )
-        target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
 
-        # tells where headers are
-        target_include_directories(${arg_cpp_lib_NAME} INTERFACE 
-            # "$<INSTALL_INTERFACE:include/${arg_cpp_lib_NAME}>")
-            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+        target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
 
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
@@ -125,22 +116,22 @@ function(cpp_library)
             PRIVATE
                 ${arg_cpp_lib_PRIVATE_LINK_LIBRARIES}
         )
-        target_include_directories(
-            ${arg_cpp_lib_NAME}
-            PUBLIC
-                "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
-        )
         target_compile_features(${arg_cpp_lib_NAME} PUBLIC cxx_std_20)
     endif()
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
-    # install headers
-    set(INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}/ystdlib/${arg_cpp_lib_NAME}")
-    install(
+    # replaces header_include_directories
+    # replaces header installation
+    target_sources(
+        ${arg_cpp_lib_NAME}
+        PUBLIC
+        FILE_SET HEADERS
+        BASE_DIRS
+            "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
         FILES
-        ${arg_cpp_lib_PUBLIC_HEADERS}
-        DESTINATION "${INSTALL_INCLUDE_DIR}"
+            ${arg_cpp_lib_PUBLIC_HEADERS}
     )
 
     set_target_properties(
