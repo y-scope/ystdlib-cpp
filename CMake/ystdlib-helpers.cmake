@@ -155,13 +155,6 @@ function(cpp_library)
                     ${CMAKE_BINARY_DIR}/testbin
         )
 
-        set_target_properties(
-            ${_UNIT_TEST_TARGET}
-            PROPERTIES
-                LINKER_LANGUAGE
-                    CXX
-        )
-
         # Link against unified unit test
         target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
         target_link_libraries(
