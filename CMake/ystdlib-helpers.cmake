@@ -134,13 +134,6 @@ function(cpp_library)
             ${arg_cpp_lib_PUBLIC_HEADERS}
     )
 
-    set_target_properties(
-        ${arg_cpp_lib_NAME}
-        PROPERTIES
-            LINKER_LANGUAGE
-                CXX
-    )
-
     if(ystdlib_ENABLE_TESTS)
         # Build library-specific unit test target
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
