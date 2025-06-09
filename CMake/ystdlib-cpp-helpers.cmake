@@ -28,7 +28,7 @@ endfunction()
 # Adds a c++20 interface library in the subdirectory NAME with the target NAME and alias
 # NAMESPACE::NAME. Libraries with multiple levels of namespace nesting are currently not supported.
 #
-# If `ystdlib_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
+# If `YSTDLIB_CPP_ENABLE_TESTS` is ON, builds the unit tests specific to the current library, and
 # links this library against the unified unit test target for the entire `ystdlib` project.
 #
 # @param {string} NAME
@@ -141,7 +141,7 @@ function(cpp_library)
                 CXX
     )
 
-    if(ystdlib_ENABLE_TESTS)
+    if(YSTDLIB_CPP_ENABLE_TESTS)
         # Build library-specific unit test target
         set(_UNIT_TEST_TARGET "unit-test-${arg_cpp_lib_NAME}")
         add_executable(${_UNIT_TEST_TARGET})
