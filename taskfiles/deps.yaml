@@ -6,7 +6,7 @@ vars:
 
 tasks:
   install-all:
-    desc: "Install all dependencies required by ystdlib-cpp."
+    desc: "Install all dependencies required by ystdlib."
     run: "once"
     cmds:
       - "rm -rf '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"

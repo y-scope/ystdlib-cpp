@@ -6,7 +6,7 @@ vars:
 
 tasks:
   all:
-    desc: "Builds all of ystdlib-cpp."
+    desc: "Builds all of ystdlib."
     deps:
       - "init"
     cmds:

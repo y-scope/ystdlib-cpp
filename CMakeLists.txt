@@ -5,14 +5,14 @@ set(ystdlib_VERSION "0.0.1" CACHE STRING "Project version.")
 project(ystdlib VERSION "${ystdlib_VERSION}" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
-include(ystdlib-cpp-helpers)
+include(ystdlib-helpers)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
-option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib-cpp." ON)
+option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
 
-# Require compiler versions that support the C++20 features necessary for compiling ystdlib-cpp
+# Require compiler versions that support the C++20 features necessary for compiling ystdlib
 if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
     set(ystdlib_CMAKE_CXX_COMPILER_MIN_VERSION "16")
 elseif("Clang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
