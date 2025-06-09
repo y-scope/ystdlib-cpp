@@ -3,22 +3,19 @@ An open-source C++ library developed and used at YScope.
 
 # Usage
 
-## Via CMake's add_subdirectory()
-> Note: this is not accurate in this branch, which is a work in progress to use ystdlib-cpp as a
-CMake library
+## Via CMake's find_package
 
-Clone `ystdlib-cpp` into your project. Then, in your project's `CMakeLists.txt`, add the following:
+Install `ystdlib-cpp` into a directory. Then, in your project's `CMakeLists.txt`, add the following:
 ```cmake
 # Set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip building unit tests.
 # option(ystdlib_BUILD_TESTING "" OFF)
-add_subdirectory(/path/to/ystdlib-cpp EXCLUDE_FROM_ALL)
+set(ystdlib_ROOT "PATH_TO_INSTALLATION")
+find_package(ystdlib REQUIRED)
 target_link_libraries(<target_name> <link_options>
     ystdlib::<lib_1> ystdlib::<lib_2> ... ystdlib::<lib_N>
     # other libs...
 )
 ```
-Ensure that `ystdlib-cpp` is either within a subdirectory of the folder containing `CMakeLists.txt`
-or at the same level.
 
 # Contributing
 Follow the steps below to develop and contribute to the project.
@@ -26,6 +23,7 @@ Follow the steps below to develop and contribute to the project.
 ## Requirements
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
+* CMake 3.23 or higher
 
 ## Set up
 Initialize and update submodules:
