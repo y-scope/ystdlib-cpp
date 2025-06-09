@@ -6,9 +6,9 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(Boost REQUIRED)
 
-set_and_check(YSTDLIB_CPP_INCLUDE_DIR "@PACKAGE_YSTDLIB_CPP_INSTALL_INCLUDE_DIR@")
+set_and_check(ystdlib_INCLUDE_DIR "@PACKAGE_ystdlib_INSTALL_INCLUDE_DIR@")
 
-check_required_components(YSTDLIB_CPP)
+check_required_components(ystdlib)
 
 # Avoid repeatedly including the targets
 if(NOT TARGET ystdlib::ystdlib)
