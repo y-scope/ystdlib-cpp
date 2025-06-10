@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
 
-set(ystdlib_VERSION "0.0.1" CACHE STRING "Project version.")
-
 project(ystdlib VERSION "0.0.1" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")

@@ -5,7 +5,8 @@ An open-source C++ library developed and used at YScope.
 
 ## Via CMake's find_package
 
-Install `ystdlib` into a directory. Then, in your project's `CMakeLists.txt`, add the following:
+[Install](#installing-header) `ystdlib` into a directory. Then, in your project's `CMakeLists.txt`,
+add the following:
 ```cmake
 # Set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip building unit tests.
 # option(ystdlib_BUILD_TESTING "" OFF)
@@ -53,6 +54,14 @@ task build:unit-test-all
 To build an executable containing a single library's unit tests:
 ```shell
 task build:unit-test-<lib_name>
+```
+
+<h2 id="installing-header">Installing</h2>
+To install ystdlib after building:
+
+```shell
+cd build
+cmake --install . --prefix=/path/to/install/to
 ```
 
 ## Testing
