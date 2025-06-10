@@ -1,0 +1,26 @@
+version: "3"
+
+includes:
+  build:
+    internal: true
+    taskfile: "build.yaml"
+
+tasks:
+  test-*-*:
+    desc: >-
+      test-<target>-<build type>: Runs unit tests for the specified test target and build type.
+    vars:
+      BUILD_TYPE: "{{index .MATCH 1}}"
+      TARGET: "{{index .MATCH 0}}"
+      TEST_TARGET: "unit-test-{{.TARGET}}"
+    deps:
+      - task: ":validate-args"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "build:build"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TEST_TARGET}}"
+      - "{{.G_BUILD_DIR}}/testbin/{{.TEST_TARGET}}"
