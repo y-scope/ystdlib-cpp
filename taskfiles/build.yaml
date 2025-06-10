@@ -22,7 +22,7 @@ tasks:
       - task: ":validate-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TEST_TARGET}}"
+          TARGET: "{{.TARGET}}"
     cmds:
       - task: "build"
         vars:
@@ -40,7 +40,7 @@ tasks:
     cmds:
       - task: "utils:cmake:clean"
         vars:
-          BUILD_DIR: "{{.G_YSTDLIB_DIR}}/{{.BUILD_TYPE}}"
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
 
   examples-*:
     desc: "examples-<build type>: Builds the examples with build type."
@@ -68,7 +68,7 @@ tasks:
       - task: ":validate-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TEST_TARGET}}"
+          TARGET: "{{.TARGET}}"
     cmds:
       - task: "install"
         vars:
@@ -102,16 +102,12 @@ tasks:
     vars:
       INSTALL_PREFIX: "{{.G_EXAMPLES_BUILD_DIR}}/deps/ystdlib/{{.BUILD_TYPE}}"
     deps:
-      - task: "build"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
-    cmds:
       - task: "install"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
-          TARGET: "{{.TARGET}}"
+          TARGET: "all"
+    cmds:
       - task: "utils:cmake:generate"
         vars:
           BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
