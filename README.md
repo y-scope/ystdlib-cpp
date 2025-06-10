@@ -9,7 +9,9 @@ Install `ystdlib` into a directory. Then, in your project's `CMakeLists.txt`, ad
 ```cmake
 # Set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip building unit tests.
 # option(ystdlib_BUILD_TESTING "" OFF)
-set(ystdlib_ROOT "PATH_TO_INSTALLATION")
+# If ystdlib is not installed to a path that is searched by default, use `ystdlib_ROOT` to manually
+# specify the location.
+# set(ystdlib_ROOT "<PATH_TO_INSTALLATION>")
 find_package(ystdlib REQUIRED)
 target_link_libraries(<target_name> <link_options>
     ystdlib::<lib_1> ystdlib::<lib_2> ... ystdlib::<lib_N>
@@ -21,9 +23,9 @@ target_link_libraries(<target_name> <link_options>
 Follow the steps below to develop and contribute to the project.
 
 ## Requirements
+* CMake 3.23 or higher
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
-* CMake 3.23 or higher
 
 ## Set up
 Initialize and update submodules:

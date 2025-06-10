@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 set(ystdlib_VERSION "0.0.1" CACHE STRING "Project version.")
 
-project(ystdlib VERSION "${ystdlib_VERSION}" LANGUAGES CXX)
+project(ystdlib VERSION "0.0.1" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 include(ystdlib-helpers)
@@ -100,9 +100,9 @@ foreach(install_target_name IN LISTS ystdlib_targets)
     install(TARGETS
         ${install_target_name}
         EXPORT ystdlib-targets
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY
+            ARCHIVE
+            RUNTIME
             FILE_SET HEADERS
     )
 

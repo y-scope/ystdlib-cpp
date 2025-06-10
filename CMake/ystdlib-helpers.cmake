@@ -121,8 +121,6 @@ function(cpp_library)
 
     add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_cpp_lib_NAME})
 
-    # replaces header_include_directories
-    # replaces header installation
     target_sources(
         ${arg_cpp_lib_NAME}
         PUBLIC
