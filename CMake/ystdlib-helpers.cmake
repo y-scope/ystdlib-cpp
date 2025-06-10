@@ -98,7 +98,6 @@ function(cpp_library)
         target_link_libraries(${arg_cpp_lib_NAME} INTERFACE ${arg_cpp_lib_PUBLIC_LINK_LIBRARIES})
 
         target_compile_features(${arg_cpp_lib_NAME} INTERFACE cxx_std_20)
-
     else()
         # The library type is specified by `BUILD_SHARED_LIBS` if it is defined. Otherwise, the type
         # defaults to static.
@@ -124,12 +123,11 @@ function(cpp_library)
     target_sources(
         ${arg_cpp_lib_NAME}
         PUBLIC
-        FILE_SET HEADERS
-        BASE_DIRS
-            "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
-            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-        FILES
-            ${arg_cpp_lib_PUBLIC_HEADERS}
+            FILE_SET HEADERS
+            BASE_DIRS
+                "$<BUILD_INTERFACE:${arg_cpp_lib_BUILD_INCLUDE_DIR}>"
+                "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+            FILES ${arg_cpp_lib_PUBLIC_HEADERS}
     )
 
     if(ystdlib_ENABLE_TESTS)
@@ -152,7 +150,6 @@ function(cpp_library)
                 RUNTIME_OUTPUT_DIRECTORY
                     ${CMAKE_BINARY_DIR}/testbin
         )
-
         # Link against unified unit test
         target_sources(${UNIFIED_UNIT_TEST_TARGET} PRIVATE ${arg_cpp_lib_TESTS_SOURCES})
         target_link_libraries(

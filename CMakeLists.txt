@@ -88,24 +88,24 @@ set(ystdlib_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 add_subdirectory(src/ystdlib)
 
 set(ystdlib_targets
-        containers
-        error_handling
-        io_interface
-        wrapped_facade_headers)
+    containers
+    error_handling
+    io_interface
+    wrapped_facade_headers
+)
 
 foreach(install_target_name IN LISTS ystdlib_targets)
-
-    install(TARGETS
-        ${install_target_name}
+    install(
+        TARGETS
+            ${install_target_name}
         EXPORT ystdlib-targets
-            LIBRARY
-            ARCHIVE
-            RUNTIME
-            FILE_SET HEADERS
+        LIBRARY
+        ARCHIVE
+        RUNTIME
+        FILE_SET
+        HEADERS
     )
-
 endforeach()
-
 
 install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})
 
@@ -128,4 +128,3 @@ install(
         ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
     DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
 )
-
