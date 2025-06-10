@@ -1,4 +1,5 @@
 # ystdlib
+
 An open-source C++ library developed and used at YScope.
 
 # Usage
@@ -24,6 +25,7 @@ target_link_libraries(<target_name> <link_options>
 Follow the steps below to develop and contribute to the project.
 
 ## Requirements
+
 * CMake 3.23 or higher
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
@@ -56,7 +58,7 @@ To build an executable containing a single library's unit tests:
 task build:unit-test-<lib_name>
 ```
 
-<h2 id="installing-header">Installing</h2>
+## Installing {#installing-header}
 To install ystdlib after building:
 
 ```shell
