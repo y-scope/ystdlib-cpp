@@ -82,9 +82,6 @@ if(ystdlib_ENABLE_TESTS)
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
-set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
-set(ystdlib_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
-
 add_subdirectory(src/ystdlib)
 
 set(ystdlib_targets
@@ -107,14 +104,13 @@ foreach(install_target_name IN LISTS ystdlib_targets)
     )
 endforeach()
 
+set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
 install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})
 
 configure_package_config_file(
     ${CMAKE_CURRENT_LIST_DIR}/CMake/ystdlib-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
     INSTALL_DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
-    PATH_VARS
-        ystdlib_INSTALL_INCLUDE_DIR
 )
 
 write_basic_package_version_file(
