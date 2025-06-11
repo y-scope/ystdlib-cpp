@@ -164,8 +164,7 @@ function(cpp_library)
         TARGETS
             ${arg_cpp_lib_NAME}
         EXPORT ystdlib-targets
-        COMPONENT
-            "${arg_cpp_lib_NAME}"
+        COMPONENT "${arg_cpp_lib_NAME}"
         LIBRARY
         ARCHIVE
         RUNTIME
