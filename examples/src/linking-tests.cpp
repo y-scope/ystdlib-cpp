@@ -3,7 +3,8 @@
 #include <cstdint>
 #include <exception>
 #include <iostream>
-#include <string_view>
+#include <string>
+#include <system_error>
 
 #include <ystdlib/containers/Array.hpp>
 #include <ystdlib/error_handling/ErrorCode.hpp>
@@ -17,18 +18,28 @@ enum class BinaryErrorCodeEnum : uint8_t {
 };
 
 using BinaryErrorCode = ystdlib::error_handling::ErrorCode<BinaryErrorCodeEnum>;
-
 using BinaryErrorCategory = ystdlib::error_handling::ErrorCategory<BinaryErrorCodeEnum>;
-
-constexpr std::string_view cBinaryTestErrorCategoryName{"Binary Error Code"};
 
 template <>
 auto BinaryErrorCategory::name() const noexcept -> char const* {
-    return cBinaryTestErrorCategoryName.data();
+    return "Binary Error Code";
+}
+
+template <>
+auto BinaryErrorCategory::message(BinaryErrorCodeEnum error_enum) const -> std::string {
+    switch (error_enum) {
+        case BinaryErrorCodeEnum::Success:
+            return std::string{"Success"};
+        case BinaryErrorCodeEnum::Failure:
+            return std::string{"Failure"};
+        default:
+            return std::string{"Unrecognized Error Code"};
+    }
 }
 
 YSTDLIB_ERROR_HANDLING_MARK_AS_ERROR_CODE_ENUM(BinaryErrorCodeEnum);
 
+namespace {
 using ystdlib::io_interface::ErrorCode;
 
 class FailureReader : ystdlib::io_interface::ReaderInterface {
@@ -51,16 +62,15 @@ public:
     }
 };
 
-namespace {
 auto test_containers() -> bool {
     try {
         constexpr size_t cBufferSize{1024};
         ystdlib::containers::Array<size_t> arr(cBufferSize);
-            for (size_t idx{0}; idx < cBufferSize; ++idx) {
-                arr.at(idx) = idx;
-            }
-            auto const& arr_const_ref = arr;
-            return std::ranges::equal(arr, arr_const_ref);
+        for (size_t idx{0}; idx < cBufferSize; ++idx) {
+            arr.at(idx) = idx;
+        }
+        auto const& arr_const_ref = arr;
+        return std::ranges::equal(arr, arr_const_ref);
     } catch (std::exception const&) {
         return false;
     }
@@ -83,7 +93,7 @@ auto test_wrapped_facade_headers() -> bool {
     quad_t const quadt{3};
     return 1 == uint && 2 == ulong && 3 == quadt;
 }
-}
+}  // namespace
 
 auto main() -> int {
     if (false == test_containers()) {
