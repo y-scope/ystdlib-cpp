@@ -53,7 +53,12 @@ if(BUILD_TESTING AND ystdlib_BUILD_TESTING)
     set(ystdlib_ENABLE_TESTS ON)
 endif()
 
-set(boost_find_package_args 1.81.0 REQUIRED COMPONENTS headers)
+set(boost_find_package_args
+    1.81.0
+    REQUIRED
+    COMPONENTS
+    headers
+)
 find_package(Boost ${boost_find_package_args})
 if(Boost_FOUND)
     message(STATUS "Found Boost ${Boost_VERSION}.")
@@ -84,26 +89,6 @@ if(ystdlib_ENABLE_TESTS)
 endif()
 
 add_subdirectory(src/ystdlib)
-
-set(ystdlib_targets
-    containers
-    error_handling
-    io_interface
-    wrapped_facade_headers
-)
-
-foreach(install_target_name IN LISTS ystdlib_targets)
-    install(
-        TARGETS
-            ${install_target_name}
-        EXPORT ystdlib-targets
-        LIBRARY
-        ARCHIVE
-        RUNTIME
-        FILE_SET
-        HEADERS
-    )
-endforeach()
 
 set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
 install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})

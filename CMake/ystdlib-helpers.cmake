@@ -159,4 +159,15 @@ function(cpp_library)
                 ${arg_cpp_lib_TESTS_LINK_LIBRARIES}
         )
     endif()
+
+    install(
+        TARGETS
+            ${arg_cpp_lib_NAME}
+        EXPORT ystdlib-targets
+        LIBRARY
+        ARCHIVE
+        RUNTIME
+        FILE_SET
+        HEADERS
+    )
 endfunction()
