@@ -1,8 +1,8 @@
 #include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <exception>
+#include <iostream>
 #include <string_view>
 
 #include <ystdlib/containers/Array.hpp>
@@ -51,34 +51,59 @@ public:
     }
 };
 
-auto main() -> int {
-    // error_handling
-    BinaryErrorCode const success{BinaryErrorCodeEnum::Success};
-    BinaryErrorCode const failure{BinaryErrorCodeEnum::Failure};
-
-    // containers
-    constexpr size_t cBufferSize{1024};
-    ystdlib::containers::Array<size_t> arr(cBufferSize);
+namespace {
+auto test_containers() -> bool {
     try {
-        for (size_t idx{0}; idx < cBufferSize; ++idx) {
-            arr.at(idx) = idx;
-        }
-        auto const& arr_const_ref = arr;
-        assert(std::ranges::equal(arr, arr_const_ref));
+        constexpr size_t cBufferSize{1024};
+        ystdlib::containers::Array<size_t> arr(cBufferSize);
+            for (size_t idx{0}; idx < cBufferSize; ++idx) {
+                arr.at(idx) = idx;
+            }
+            auto const& arr_const_ref = arr;
+            return std::ranges::equal(arr, arr_const_ref);
+    } catch (std::exception const&) {
+        return false;
+    }
+}
 
-        // io_interface
-        FailureReader reader{};
-        assert(ErrorCode::ErrorCode_Unsupported == reader.seek_from_begin(0));
+auto test_error_handling() -> bool {
+    BinaryErrorCode const success{BinaryErrorCodeEnum::Success};
+    std::error_code const success_error_code{success};
+    return success == success_error_code;
+}
 
-        // wrapped_facade_headers
-        u_int const uint{0};
-        assert(0 == uint);
-        u_long const ulong{0};
-        assert(0 == ulong);
-        quad_t const quadt{0};
-        assert(0 == quadt);
-    } catch (std::exception const& e) {
+auto test_io_interface() -> bool {
+    FailureReader reader{};
+    return ErrorCode::ErrorCode_Unsupported == reader.seek_from_begin(0);
+}
+
+auto test_wrapped_facade_headers() -> bool {
+    u_int const uint{1};
+    u_long const ulong{2};
+    quad_t const quadt{3};
+    return 1 == uint && 2 == ulong && 3 == quadt;
+}
+}
+
+auto main() -> int {
+    if (false == test_containers()) {
+        std::cerr << "Error: containers test failed. Could not validate array.\n";
         return 1;
+    }
+
+    if (false == test_error_handling()) {
+        std::cerr << "Error: error_handling test failed. Could not validate array.\n";
+        return 2;
+    }
+
+    if (false == test_io_interface()) {
+        std::cerr << "Error: error_handling test failed. Could not validate array.\n";
+        return 3;
+    }
+
+    if (false == test_wrapped_facade_headers()) {
+        std::cerr << "Error: wrapped_facade_headers test failed. Could not create sys types.\n";
+        return 4;
     }
 
     return 0;
