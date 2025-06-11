@@ -102,17 +102,17 @@ auto main() -> int {
     }
 
     if (false == test_error_handling()) {
-        std::cerr << "Error: error_handling test failed. Could not validate array.\n";
+        std::cerr << "Error: error_handling test failed. Could not use BinaryErrorCode.\n";
         return 2;
     }
 
     if (false == test_io_interface()) {
-        std::cerr << "Error: error_handling test failed. Could not validate array.\n";
+        std::cerr << "Error: error_handling test failed. Could not use FailureReader.\n";
         return 3;
     }
 
     if (false == test_wrapped_facade_headers()) {
-        std::cerr << "Error: wrapped_facade_headers test failed. Could not create sys types.\n";
+        std::cerr << "Error: wrapped_facade_headers test failed. Could not create sys/types.\n";
         return 4;
     }
 
