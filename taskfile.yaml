@@ -6,14 +6,17 @@ shopt: ["globstar"]
 includes:
   build: "./taskfiles/build.yaml"
   deps: "./taskfiles/deps.yaml"
+  examples: "./taskfiles/examples.yaml"
   lint: "./taskfiles/lint.yaml"
   test: "./taskfiles/test.yaml"
   utils: "./tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 vars:
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
-  G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
+  G_EXAMPLES_BUILD_DIR: "{{.G_BUILD_DIR}}/examples"
+  G_EXAMPLES_SRC_DIR: "{{.ROOT_DIR}}/examples/src"
   G_YSTDLIB_BUILD_DIR: "{{.G_BUILD_DIR}}/ystdlib"
+  G_YSTDLIB_SRC_DIR: "{{.ROOT_DIR}}/src"
 
   G_VALID_BUILD_TYPES:
     - "debug"

@@ -1,0 +1,63 @@
+version: "3"
+
+includes:
+  build:
+    internal: true
+    taskfile: "build.yaml"
+  deps:
+    internal: true
+    taskfile: "deps.yaml"
+  utils:
+    internal: true
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+
+tasks:
+  build-*:
+    desc: "build-<build type>: Builds the examples with build type."
+    vars:
+      BUILD_TYPE: "{{index .MATCH 0}}"
+    deps:
+      - task: ":validate-build-type"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+    cmds:
+      - task: "build"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+
+  clean-*:
+    desc: "clean-<build type>: Clean the examples of build type."
+    vars:
+      BUILD_TYPE: "{{index .MATCH 0}}"
+    deps:
+      - task: ":validate-build-type"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+    cmds:
+      - task: "utils:cmake:clean"
+        vars:
+          BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
+
+  build:
+    internal: true
+    requires:
+      vars: ["BUILD_TYPE"]
+    vars:
+      INSTALL_PREFIX: "{{.G_EXAMPLES_BUILD_DIR}}/deps/ystdlib/{{.BUILD_TYPE}}"
+    deps:
+      - task: "build:install"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
+          TARGET: "all"
+    cmds:
+      - task: "utils:cmake:generate"
+        vars:
+          BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          EXTRA_ARGS:
+            - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
+            - "-Dystdlib_ROOT={{.INSTALL_PREFIX}}"
+          SOURCE_DIR: "{{.ROOT_DIR}}/examples"
+      - task: "utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
