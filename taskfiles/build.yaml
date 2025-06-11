@@ -15,7 +15,7 @@ tasks:
       BUILD_TYPE: "{{index .MATCH 1}}"
       TARGET: "{{index .MATCH 0}}"
     deps:
-      - task: ":validate-args"
+      - task: ":validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"
@@ -48,7 +48,7 @@ tasks:
     requires:
       vars: ["INSTALL_PREFIX"]
     deps:
-      - task: ":validate-args"
+      - task: ":validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"

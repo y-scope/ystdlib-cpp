@@ -14,7 +14,7 @@ tasks:
       TARGET: "{{index .MATCH 0}}"
       TEST_TARGET: "unit-test-{{.TARGET}}"
     deps:
-      - task: ":validate-args"
+      - task: ":validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"

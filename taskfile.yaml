@@ -40,7 +40,7 @@ tasks:
     cmds:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
 
-  validate-args:
+  validate-all-args:
     internal: true
     requires:
       vars: ["BUILD_TYPE", "TARGET"]
@@ -52,32 +52,38 @@ tasks:
         vars:
           TARGET: "{{.TARGET}}"
 
+  validate-arg:
+    internal: true
+    requires:
+      vars: ["ARG", "VALID_ARGS"]
+    preconditions:
+      - sh: >-
+          {{has .ARG .VALID_ARGS}}
+        msg: |-
+          {{- if not (has .ARG .VALID_ARGS)}}
+            {{.ERR_MSG}}
+            "{{.ARG}} is not a valid argument. List of valid arguments:"
+            {{- range .VALID_ARGS}}
+              {{.}}
+            {{- end}}
+          {{- end}}
+
   validate-build-type:
     internal: true
     requires:
       vars: ["BUILD_TYPE"]
-    preconditions:
-      - sh: >-
-          {{has .BUILD_TYPE .G_VALID_BUILD_TYPES}}
-        msg: |-
-          {{- if not (has .BUILD_TYPE .G_VALID_BUILD_TYPES)}}
-            {{.BUILD_TYPE}} is not a valid build type. List of valid build types:
-            {{- range .G_VALID_BUILD_TYPES}}
-              {{.}}
-            {{- end}}
-          {{- end}}
+    cmds:
+      - task: "validate-arg"
+        vars:
+          ARG: "{{.BUILD_TYPE}}"
+          VALID_ARGS: "{{.G_VALID_BUILD_TYPES}}"
 
   validate-target:
     internal: true
     requires:
       vars: ["TARGET"]
-    preconditions:
-      - sh: >-
-          {{has .TARGET .G_VALID_TARGETS}}
-        msg: |-
-          {{- if not (has .TARGET .G_VALID_TARGETS)}}
-            {{.TARGET}} is not a valid build target. List of valid build targets:
-            {{- range .G_VALID_TARGETS}}
-              {{.}}
-            {{- end}}
-          {{- end}}
+    cmds:
+      - task: "validate-arg"
+        vars:
+          ARG: "{{.TARGET}}"
+          VALID_ARGS: "{{.G_VALID_TARGETS}}"
