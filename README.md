@@ -31,6 +31,7 @@ Follow the steps below to develop and contribute to the project.
 * CMake 3.23 or higher
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
+* [uv] 0.7.10 or higher
 
 ## Set up
 Initialize and update submodules:
@@ -118,3 +119,4 @@ task -a
 Look for all tasks under the `lint` namespace (identified by the `lint:` prefix).
 
 [Task]: https://taskfile.dev
+[uv]: https://docs.astral.sh/uv
