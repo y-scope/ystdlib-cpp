@@ -4,9 +4,12 @@ includes:
   deps:
     internal: true
     taskfile: "deps.yaml"
-  utils:
+  dev-utils:
     internal: true
     taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+  utils:
+    internal: true
+    taskfile: "utils.yaml"
 
 tasks:
   build-*-*:
@@ -15,7 +18,7 @@ tasks:
       BUILD_TYPE: "{{index .MATCH 1}}"
       TARGET: "{{index .MATCH 0}}"
     deps:
-      - task: ":validate-all-args"
+      - task: "utils:validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"
@@ -30,11 +33,11 @@ tasks:
     vars:
       BUILD_TYPE: "{{index .MATCH 0}}"
     deps:
-      - task: ":validate-build-type"
+      - task: "utils:validate-build-type"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
     cmds:
-      - task: "utils:cmake:clean"
+      - task: "dev-utils:cmake:clean"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
 
@@ -48,7 +51,7 @@ tasks:
     requires:
       vars: ["INSTALL_PREFIX"]
     deps:
-      - task: ":validate-all-args"
+      - task: "utils:validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"
@@ -64,19 +67,30 @@ tasks:
     requires:
       vars: ["BUILD_TYPE", "TARGET"]
     deps:
+      - task: "generate"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "dev-utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          TARGETS:
+            - "{{.TARGET}}"
+
+  generate:
+    internal: true
+    requires:
+      vars: ["BUILD_TYPE", "TARGET"]
+    deps:
       - "deps:all"
     cmds:
-      - task: "utils:cmake:generate"
+      - task: "dev-utils:cmake:generate"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           EXTRA_ARGS:
             - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
           SOURCE_DIR: "{{.ROOT_DIR}}"
-      - task: "utils:cmake:build"
-        vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
-          TARGETS:
-            - "{{.TARGET}}"
 
   install:
     internal: true
@@ -88,7 +102,7 @@ tasks:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"
     cmds:
-      - task: "utils:cmake:install"
+      - task: "dev-utils:cmake:install"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"

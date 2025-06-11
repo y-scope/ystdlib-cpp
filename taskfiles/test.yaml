@@ -4,6 +4,9 @@ includes:
   build:
     internal: true
     taskfile: "build.yaml"
+  utils:
+    internal: true
+    taskfile: "utils.yaml"
 
 tasks:
   test-*-*:
@@ -14,7 +17,7 @@ tasks:
       TARGET: "{{index .MATCH 0}}"
       TEST_TARGET: "unit-test-{{.TARGET}}"
     deps:
-      - task: ":validate-all-args"
+      - task: "utils:validate-all-args"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"

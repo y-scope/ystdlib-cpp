@@ -1,7 +1,7 @@
 version: "3"
 
 includes:
-  utils:
+  dev-utils:
     internal: true
     taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
@@ -17,7 +17,7 @@ tasks:
     desc: "Install all dependencies required by ystdlib."
     run: "once"
     cmds:
-      - task: "utils:cmake:install-deps-and-generate-settings"
+      - task: "dev-utils:cmake:install-deps-and-generate-settings"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           DEP_TASK: "all-parallel"
@@ -33,7 +33,7 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: "utils:cmake:install-remote-tar"
+      - task: "dev-utils:cmake:install-remote-tar"
         vars:
           CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
@@ -45,7 +45,7 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: "utils:boost:download-and-install"
+      - task: "dev-utils:boost:download-and-install"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           FILE_SHA256: "d6c69e4459eb5d6ec208250291221e7ff4a2affde9af6e49c9303b89c687461f"
