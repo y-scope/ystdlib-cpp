@@ -42,7 +42,7 @@ YSTDLIB_ERROR_HANDLING_MARK_AS_ERROR_CODE_ENUM(BinaryErrorCodeEnum);
 namespace {
 using ystdlib::io_interface::ErrorCode;
 
-class FailureReader : ystdlib::io_interface::ReaderInterface {
+class FailureReader : public ystdlib::io_interface::ReaderInterface {
 public:
     [[nodiscard]] auto read(char* /*buf*/, size_t /*num_bytes_to_read*/, size_t& /*num_bytes_read*/)
             -> ErrorCode override {
