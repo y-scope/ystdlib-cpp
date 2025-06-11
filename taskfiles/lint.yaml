@@ -15,9 +15,8 @@ includes:
     taskfile: "./lint-yaml.yaml"
 
 vars:
-  G_LINT_CPP_ROOT_DIRS:
-    - "{{.G_EXAMPLES_SRC_DIR}}"
-    - "{{.G_YSTDLIB_SRC_DIR}}"
+  G_LINT_CPP_DIRS:
+    - "{{.G_CPP_SRC_DIR}}"
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
 

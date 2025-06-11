@@ -3,6 +3,6 @@
 
 definitions:
   - "CMake/ystdlib-helpers.cmake"
-  - "build/deps/Catch2-src/extras/Catch.cmake"
+  - "build/deps/Catch2/Catch2-src/extras/Catch.cmake"
 line_length: 100
 list_expansion: "favour-expansion"

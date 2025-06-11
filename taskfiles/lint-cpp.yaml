@@ -1,13 +1,5 @@
 version: "3"
 
-includes:
-  build:
-    internal: true
-    taskfile: "build.yaml"
-  examples:
-    internal: true
-    taskfile: "examples.yaml"
-
 vars:
   G_LINT_CLANG_TIDY_DIR: "{{.G_BUILD_DIR}}/lint-clang-tidy"
 
@@ -17,25 +9,20 @@ tasks:
     cmds:
       - task: "cpp-format-check"
       - task: "cpp-static-check"
-      - task: "cpp-static-check-examples"
 
   cpp-fix:
     desc: "Runs the C++ linters to fix all formatting issues and perform static code analysis. "
     cmds:
       - task: "cpp-format-fix"
       - task: "cpp-static-fix"
-      - task: "cpp-static-fix-examples"
 
   cpp-format-check:
     desc: "Runs the C++ linters that identify formatting issues."
     sources: &cpp_format_src_files
-      - "{{.G_EXAMPLES_SRC_DIR}}/**/*.cpp"
-      - "{{.G_EXAMPLES_SRC_DIR}}/**/*.h"
-      - "{{.G_EXAMPLES_SRC_DIR}}/**/*.hpp"
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
-      - "{{.G_YSTDLIB_SRC_DIR}}/**/*.cpp"
-      - "{{.G_YSTDLIB_SRC_DIR}}/**/*.h"
-      - "{{.G_YSTDLIB_SRC_DIR}}/**/*.hpp"
+      - "{{.G_CPP_SRC_DIR}}/**/*.cpp"
+      - "{{.G_CPP_SRC_DIR}}/**/*.h"
+      - "{{.G_CPP_SRC_DIR}}/**/*.hpp"
       - "{{.ROOT_DIR}}/.clang-format"
       - "{{.TASKFILE}}"
     deps:
@@ -45,8 +32,8 @@ tasks:
       - task: ":utils:cpp-lint:clang-format"
         vars:
           FLAGS: ["--dry-run"]
-          ROOT_PATHS:
-            ref: ".G_LINT_CPP_ROOT_DIRS"
+          INCLUDE_FILENAME_PATTERNS: ["*.cpp", "*.h", "*.hpp"]
+          ROOT_PATHS: ["{{.G_CPP_SRC_DIR}}"]
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-format-fix:
@@ -59,8 +46,8 @@ tasks:
       - task: ":utils:cpp-lint:clang-format"
         vars:
           FLAGS: ["-i"]
-          ROOT_PATHS:
-            ref: ".G_LINT_CPP_ROOT_DIRS"
+          INCLUDE_FILENAME_PATTERNS: ["*.cpp", "*.h", "*.hpp"]
+          ROOT_PATHS: ["{{.G_CPP_SRC_DIR}}"]
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-static-check:
@@ -72,48 +59,17 @@ tasks:
       - "cpp-static-fix"
     desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
     deps:
+      - ":build:init"
       - "cpp-configs"
-      - task: "build:generate"
-        vars:
-          BUILD_TYPE: "debug"
-          TARGET: "all"
-      - ":init"
       - "venv"
     cmds:
       - task: ":utils:cpp-lint:clang-tidy-find"
         vars:
           FLAGS:
             - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
-            - "-p '{{.G_YSTDLIB_BUILD_DIR}}/debug/compile_commands.json'"
+            - "-p '{{.G_COMPILE_COMMANDS_DB}}'"
           OUTPUT_DIR: "{{.G_LINT_CLANG_TIDY_DIR}}"
-          ROOT_PATHS:
-            - "{{.G_YSTDLIB_SRC_DIR}}"
-          VENV_DIR: "{{.G_LINT_VENV_DIR}}"
-
-  cpp-static-check-examples:
-    # Alias task to `cpp-static-fix-examples` since we don't currently support automatic fixes.
-    # NOTE: clang-tidy does have the ability to fix some errors, but the fixes can be inaccurate.
-    # When we eventually determine which errors can be safely fixed, we'll allow clang-tidy to
-    # fix them.
-    aliases:
-      - "cpp-static-fix-examples"
-    desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
-    deps:
-      - "cpp-configs"
-      - task: "examples:generate"
-        vars:
-          BUILD_TYPE: "debug"
-      - ":init"
-      - "venv"
-    cmds:
-      - task: ":utils:cpp-lint:clang-tidy-find"
-        vars:
-          FLAGS:
-            - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
-            - "-p '{{.G_EXAMPLES_BUILD_DIR}}/debug/compile_commands.json'"
-          OUTPUT_DIR: "{{.G_LINT_CLANG_TIDY_DIR}}"
-          ROOT_PATHS:
-            - "{{.G_EXAMPLES_SRC_DIR}}"
+          ROOT_PATHS: ["{{.G_CPP_SRC_DIR}}"]
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
 
   cpp-configs:

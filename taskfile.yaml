@@ -6,22 +6,20 @@ shopt: ["globstar"]
 includes:
   build: "./taskfiles/build.yaml"
   deps: "./taskfiles/deps.yaml"
-  examples: "./taskfiles/examples.yaml"
   lint: "./taskfiles/lint.yaml"
-  test: "./taskfiles/test.yaml"
-  utils: "./tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+  utils: "tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 vars:
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
-  G_EXAMPLES_BUILD_DIR: "{{.G_BUILD_DIR}}/examples"
-  G_EXAMPLES_SRC_DIR: "{{.ROOT_DIR}}/examples/src"
-  G_YSTDLIB_BUILD_DIR: "{{.G_BUILD_DIR}}/ystdlib"
-  G_YSTDLIB_SRC_DIR: "{{.ROOT_DIR}}/src"
+  G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
+  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
 
-  G_VALID_BUILD_TYPES:
-    - "debug"
-    - "release"
-  G_VALID_TARGETS:
+  # These should be kept in-sync with its usage in CMakeLists.txt
+  G_DEPS_CMAKE_SETTINGS_DIR: "{{.G_DEPS_DIR}}/cmake-settings"
+  G_DEPS_CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/settings.cmake"
+
+  G_TEST_BIN_DIR: "{{.G_BUILD_DIR}}/testbin"
+  G_TEST_TARGET_SUFFIXES:
     - "all"
     - "containers"
     - "error_handling"
@@ -39,3 +37,13 @@ tasks:
     run: "once"
     cmds:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
+
+  test-*:
+    desc: "Runs unit tests for the specified test target."
+    vars:
+      TEST_TARGET: >-
+        {{printf "unit-test-%s" (index .MATCH 0)}}
+    deps:
+      - "build:{{.TEST_TARGET}}"
+    cmds:
+      - "{{.G_TEST_BIN_DIR}}/{{.TEST_TARGET}}"

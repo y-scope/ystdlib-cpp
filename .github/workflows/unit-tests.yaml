@@ -25,9 +25,6 @@ jobs:
           - "macos-15"
           - "ubuntu-22.04"
           - "ubuntu-24.04"
-        build_type:
-          - "debug"
-          - "release"
     runs-on: "${{matrix.os}}"
     steps:
       - uses: "actions/checkout@v4"
@@ -48,7 +45,7 @@ jobs:
           brew install coreutils
           brew install llvm@16
 
-      - name: "Run unit tests and examples"
+      - name: "Run unit tests"
         env: >-
           ${{
           'macos-14' == matrix.os
@@ -58,8 +55,4 @@ jobs:
           }')
           || fromJson('{}')
           }}
-        # Currently unit tests rely on cassert and fail to compile in release mode.
-        run: |-
-          task test:test-all-debug
-          task examples:build-${{matrix.build_type}}
-          ./build/examples/${{matrix.build_type}}/linking-tests
+        run: "task test-all"
