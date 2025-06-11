@@ -94,10 +94,9 @@ tasks:
 
   install:
     internal: true
-    dir: "{{.USER_WORKING_DIR}}"  # relative INSTALL_PREFIX will be evaluated to current directory
     vars:
       ABSOLUTE_INSTALL_PREFIX:
-        sh: 'echo $(realpath {{.INSTALL_PREFIX}})'
+        sh: "realpath '{{.INSTALL_PREFIX}}'"
     requires:
       vars: ["BUILD_TYPE", "INSTALL_PREFIX", "TARGET"]
     deps:
