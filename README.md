@@ -6,7 +6,7 @@ An open-source C++ library developed and used at YScope.
 
 ## Via CMake's `find_package`
 
-First, [install](#installing-header) `ystdlib` onto your system. Then, in your project's `CMakeLists.txt`,
+First, [install](#installing) `ystdlib` onto your system. Then, in your project's `CMakeLists.txt`,
 add the following:
 
 ```cmake
@@ -62,7 +62,7 @@ e.g.:
 task build:build-error_handling-release
 ```
 
-## Installing {#installing-header}
+## Installing
 
 To build and install ystdlib run:
 
