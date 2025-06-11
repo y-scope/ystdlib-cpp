@@ -46,7 +46,7 @@ tasks:
     run: "once"
     cmds:
       # NOTE: boost:download-and-install only works when included from the top level taskfile
-      - task: ":::utils:boost:download-and-install"
+      - task: "::utils:boost:download-and-install"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           FILE_SHA256: "d6c69e4459eb5d6ec208250291221e7ff4a2affde9af6e49c9303b89c687461f"

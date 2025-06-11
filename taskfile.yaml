@@ -13,6 +13,7 @@ includes:
 vars:
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
   G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
+  G_YSTDLIB_BUILD_DIR: "{{.G_BUILD_DIR}}/ystdlib"
 
   G_VALID_BUILD_TYPES:
     - "debug"

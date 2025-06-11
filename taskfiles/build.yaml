@@ -10,7 +10,6 @@ includes:
 
 vars:
   G_EXAMPLES_BUILD_DIR: "{{.G_BUILD_DIR}}/examples"
-  G_YSTDLIB_BUILD_DIR: "{{.G_BUILD_DIR}}/ystdlib"
 
 tasks:
   build-*-*:
