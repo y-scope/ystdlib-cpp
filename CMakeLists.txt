@@ -43,7 +43,7 @@ if(ystdlib_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
     # NOTE: We mark the file optional because if the user happens to have the dependencies
     # installed, this file is not necessary.
-    include("build/deps/cmake-settings/settings.cmake" OPTIONAL)
+    include("build/deps/cmake-settings/all.cmake" OPTIONAL)
 
     # If previously undefined, `BUILD_TESTING` will be set to ON.
     include(CTest)
@@ -53,7 +53,7 @@ if(BUILD_TESTING AND ystdlib_BUILD_TESTING)
     set(ystdlib_ENABLE_TESTS ON)
 endif()
 
-find_package(Boost REQUIRED)
+find_package(Boost 1.81.0 REQUIRED COMPONENTS headers)
 if(Boost_FOUND)
     message(STATUS "Found Boost ${Boost_VERSION}.")
 endif()
