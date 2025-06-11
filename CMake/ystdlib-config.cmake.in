@@ -4,7 +4,9 @@ include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
 
-find_dependency(Boost 1.81.0 REQUIRED COMPONENTS headers)
+if(@Boost_FOUND@)
+    find_dependency(Boost @boost_find_package_args@)
+endif()
 
 check_required_components(ystdlib)
 
