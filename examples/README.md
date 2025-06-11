@@ -1,12 +1,12 @@
 # Examples
 
 The example program `linking-tests` references all of ystdlib's library targets to ensure they can
-be installed and link correctly.
+be installed and linked correctly.
 
 ## Building
 
 First ensure ystdlib has been installed. For example, after [building](../README.md#building)
-[install](../README.md#building) by running:
+[install](../README.md#installing) by running:
 
 ```shell
 cmake --install "./build" --prefix "./build/examples/ystdlib"

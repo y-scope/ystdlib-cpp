@@ -62,7 +62,7 @@ task build:unit-test-<lib_name>
 
 ## Installing
 
-After [building](building) install with:
+After [building](#building), install with:
 
 ```shell
 cmake --install "./build" --prefix "~/.local"
