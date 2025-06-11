@@ -5,8 +5,8 @@ be installed and linked correctly.
 
 ## Building
 
-First ensure ystdlib has been installed. For example, after [building](../README.md#building)
-[install](../README.md#installing) by running:
+First ensure ystdlib has been installed. For example, after
+[building ystdlib](../README.md#building), [install](../README.md#installing) by running:
 
 ```shell
 cmake --install "./build" --prefix "./build/examples/ystdlib"
