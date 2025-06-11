@@ -5,15 +5,23 @@ be installed and link correctly.
 
 ## Building
 
-To build the examples, run one of the following task commands:
+First ensure ystdlib has been installed. For example, after [building](../README.md#building)
+[install](../README.md#building) by running:
 
 ```shell
-# debug build
-task build:examples-debug
-
-# release build
-task build:examples-release
+cmake --install "./build" --prefix "./build/examples/ystdlib"
 ```
+
+To build the examples run:
+
+```shell
+cmake -S "./examples" -B "./build/examples" -Dystdlib_ROOT="./build/examples/ystdlib"
+
+cmake --build "./build/examples"
+```
+
+Setting `ystdlib_ROOT` is not necessary if `ystdlib` is installed on a path CMake searches by
+default.
 
 ## Running
 
