@@ -4,15 +4,16 @@ An open-source C++ library developed and used at YScope.
 
 # Usage
 
-## Via CMake's find_package
+## Via CMake's `find_package`
 
-[Install](#installing-header) `ystdlib` into a directory. Then, in your project's `CMakeLists.txt`,
+First, [install](#installing-header) `ystdlib` onto your system. Then, in your project's `CMakeLists.txt`,
 add the following:
 
 ```cmake
-# Set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip building unit tests.
+# If `BUILD_TESTING` is set, set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip
+# building ystdlib's unit tests.
 # option(ystdlib_BUILD_TESTING "" OFF)
-# If ystdlib is not installed to a path that is searched by default, use `ystdlib_ROOT` to manually
+# If ystdlib is not installed to a path that is searched by default, set `ystdlib_ROOT` to manually
 # specify the location.
 # set(ystdlib_ROOT "<PATH_TO_INSTALLATION>")
 find_package(ystdlib REQUIRED)
@@ -39,44 +40,57 @@ git submodule update --init --recursive
 
 If you want to open the project in an IDE, run the following command to install any necessary
 dependencies from source:
+
 ```shell
-task deps:install-all
+task deps:all
 ```
 
 ## Building
-To build all targets:
+
+To build all libraries (targets) run:
+
 ```shell
-task build:all
+task build:build-all-release
 ```
 
-To build an executable containing all unit tests:
-```shell
-task build:unit-test-all
-```
+To build a single library (target) use the format:
 
-To build an executable containing a single library's unit tests:
 ```shell
-task build:unit-test-<lib_name>
+task build:build-<target>-<build type>
+e.g.:
+task build:build-error_handling-release
 ```
 
 ## Installing {#installing-header}
 
-To install ystdlib after building:
+To build and install ystdlib run:
 
 ```shell
-cd build
-cmake --install . --prefix=/path/to/install/to
+task build:install-all-release INSTALL_PREFIX="/install/prefix/path"
+```
+
+To build and install a single library (target) use the format:
+
+```shell
+task build:install-<target>-<build type> INSTALL_PREFIX="<prefix path>"
+e.g.:
+task build:install-error_handling-release
 ```
 
 ## Testing
-To build and run all unit tests:
+
+To build and run all unit tests use:
+
 ```shell
-task test-all
+task test:test-all-debug
 ```
 
-To build and run unit tests for a specific library:
+To build and run the unit tests for a single library (target) use the format:
+
 ```shell
-task test-<lib_name>
+task test:test-<target>-<build type>
+e.g.:
+task test:test-error_handling-release
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled

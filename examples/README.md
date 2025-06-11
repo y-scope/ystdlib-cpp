@@ -1,10 +1,12 @@
 # Examples
 
-The example program `main` uses ystdlib's 4 different library targets.
+The example program `linking-tests` references all of ystdlib's library targets to ensure they can
+be installed and link correctly.
 
 ## Building
 
-To build the examples, run one of the following task commands
+To build the examples, run one of the following task commands:
+
 ```shell
 # debug build
 task build:examples-debug
@@ -15,7 +17,8 @@ task build:examples-release
 
 ## Running
 
-Run the example program as follows: it should display "Example is run!" at the end of execution
+Run the example program as follows:
+
 ```shell
-./examples/build/main
+./build/examples/debug/linking-tests
 ```
