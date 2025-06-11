@@ -57,7 +57,7 @@ tasks:
   install-*-*:
     desc: >-
       install-<target>-<build type> INSTALL_PREFIX="<prefix path>": Install the specified build
-      target with build type to the prefix path."
+      target with build type to the prefix path.
     vars:
       BUILD_TYPE: "{{index .MATCH 1}}"
       TARGET: "{{index .MATCH 0}}"
