@@ -58,7 +58,8 @@ jobs:
           }')
           || fromJson('{}')
           }}
+        # Currently unit tests rely on cassert and fail to compile in release mode.
         run: |-
-          task test:test-all-${{matrix.build_type}}
+          task test:test-all-debug
           task build:examples-${{matrix.build_type}}
           ./build/examples/${{matrix.build_type}}/linking-tests
