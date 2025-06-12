@@ -12,7 +12,7 @@ First ensure ystdlib has been installed. For example, after
 cmake --install "./build" --prefix "./build/examples/ystdlib"
 ```
 
-To build the examples run:
+To build the examples, run:
 
 ```shell
 cmake -S "./examples" -B "./build/examples" -Dystdlib_ROOT="./build/examples/ystdlib"
@@ -30,3 +30,5 @@ Run the example program as follows:
 ```shell
 ./build/examples/debug/linking-tests
 ```
+
+On success, the exit code will be 0 with no output printed.
