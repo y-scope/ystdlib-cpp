@@ -5,7 +5,7 @@ be installed and linked correctly.
 
 ## Building
 
-First ensure ystdlib has been installed. For example, after
+First, ensure ystdlib has been installed. For example, after
 [building ystdlib](../README.md#building), [install](../README.md#installing) by running:
 
 ```shell
