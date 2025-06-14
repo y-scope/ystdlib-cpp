@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 project(ystdlib VERSION "0.0.1" LANGUAGES CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(ystdlib-helpers)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
@@ -31,13 +31,26 @@ if("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "${ystdlib_CMAKE_CXX_COMPILER_MI
     )
 endif()
 
-# Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
     CACHE BOOL
     "Enable/Disable output of compile commands during generation."
     FORCE
 )
+
+set(YSTDLIB_LIBRARIES
+    "containers"
+    "error_handling"
+    "io_interface"
+    "wrapped_facade_headers"
+    CACHE STRING
+    "Semi-colon separated list of libraries to be built."
+)
+
+message(STATUS "Building the following libraries:")
+foreach(lib IN LISTS YSTDLIB_LIBRARIES)
+    message(" - ${lib}")
+endforeach()
 
 if(ystdlib_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
@@ -53,17 +66,6 @@ if(BUILD_TESTING AND ystdlib_BUILD_TESTING)
     set(ystdlib_ENABLE_TESTS ON)
 endif()
 
-set(boost_find_package_args
-    1.81.0
-    REQUIRED
-    COMPONENTS
-    headers
-)
-find_package(Boost ${boost_find_package_args})
-if(Boost_FOUND)
-    message(STATUS "Found Boost ${Boost_VERSION}.")
-endif()
-
 if(ystdlib_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
     if(Catch2_FOUND)
@@ -73,7 +75,6 @@ if(ystdlib_ENABLE_TESTS)
     endif()
     include(Catch)
 
-    # Set up the unified unit test target
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")
     add_executable(${UNIFIED_UNIT_TEST_TARGET})
     target_link_libraries(${UNIFIED_UNIT_TEST_TARGET} PRIVATE Catch2::Catch2WithMain)
@@ -88,13 +89,12 @@ if(ystdlib_ENABLE_TESTS)
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
+set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
+
 add_subdirectory(src/ystdlib)
 
-set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
-install(EXPORT ystdlib-targets NAMESPACE ystdlib:: DESTINATION ${ystdlib_INSTALL_CONFIG_DIR})
-
 configure_package_config_file(
-    ${CMAKE_CURRENT_LIST_DIR}/CMake/ystdlib-config.cmake.in
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/ystdlib-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
     INSTALL_DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
 )

@@ -45,6 +45,9 @@ task deps:install-all
 ```
 
 ## Building
+
+### Task
+
 To build all targets:
 ```shell
 task build:all
@@ -59,6 +62,27 @@ To build an executable containing a single library's unit tests:
 ```shell
 task build:unit-test-<lib_name>
 ```
+
+### CMake
+
+To build all libraries, run:
+
+```shell
+cmake -S . -D ./build
+cmake --build ./build
+```
+
+To build a subset of libraries set the variable `YSTDLIB_LIBRARIES` to a semi-colon(`;`) separated
+list of library names. The library names match their [directory name in src/](./src/ystdlib).
+For example:
+
+```shell
+cmake -S . -B ./build -DYSTDLIB_LIBRARIES="containers;io_interface"
+cmake --build ./build
+```
+
+It is not necessary to specify libraries your subset depends on. In the example, specifying
+`io_interface` automatically builds `wrapped_facade_headers`.
 
 ## Installing
 

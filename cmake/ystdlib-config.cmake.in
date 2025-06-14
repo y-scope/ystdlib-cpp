@@ -1,0 +1,29 @@
+# gersemi: off
+# this file is preprocessed and should not be linted like a CMake file
+include(CMakeFindDependencyMacro)
+
+@PACKAGE_INIT@
+
+# If no component is specified we require all libraries.
+# We guard against repeatedly including targets to support multiple find_package calls.
+if(NOT ystdlib_FIND_COMPONENTS)
+    set(_YSTDLIB_LIBRARIES "@YSTDLIB_LIBRARIES@")
+    foreach(lib IN LISTS _YSTDLIB_LIBRARIES)
+        if(NOT TARGET "ystdlib::${lib}")
+            include("${CMAKE_CURRENT_LIST_DIR}/libs/${lib}-config.cmake")
+        endif()
+    endforeach()
+else()
+    foreach(lib IN LISTS ystdlib_FIND_COMPONENTS)
+        if(NOT TARGET "ystdlib::${lib}")
+            if(${ystdlib_FIND_REQUIRED_${lib}})
+                include("${CMAKE_CURRENT_LIST_DIR}/libs/${lib}-config.cmake")
+            else()
+                include("${CMAKE_CURRENT_LIST_DIR}/libs/${lib}-config.cmake" OPTIONAL)
+            endif()
+        endif()
+    endforeach()
+endif()
+
+check_required_components(ystdlib)
+# gersemi: on
