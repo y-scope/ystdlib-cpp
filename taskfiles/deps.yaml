@@ -14,7 +14,6 @@ tasks:
       - task: ":utils:cmake:install-deps-and-generate-settings"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-          CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
           DEP_TASK: "deps:install-all-parallel"
 
   install-all-parallel:

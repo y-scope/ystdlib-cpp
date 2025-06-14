@@ -1,3 +1,18 @@
+if(TARGET ystdlib::error_handling)
+    return()
+endif()
+
+set(boost_find_package_args
+    1.81.0
+    REQUIRED
+    COMPONENTS
+    headers
+)
+find_package(Boost ${boost_find_package_args})
+if(Boost_FOUND)
+    message(STATUS "Found Boost ${Boost_VERSION}.")
+endif()
+
 cpp_library(
     NAME error_handling
     NAMESPACE ystdlib
@@ -8,11 +23,21 @@ cpp_library(
         utils.hpp
     PUBLIC_LINK_LIBRARIES
         Boost::headers
-    TESTS_SOURCES
-        test/constants.hpp
-        test/test_ErrorCode.cpp
-        test/test_Result.cpp
-        test/test_TraceableException.cpp
-        test/types.cpp
-        test/types.hpp
 )
+
+if(ystdlib_ENABLE_TESTS)
+    catch2_tests(
+        NAME error_handling
+        NAMESPACE ystdlib
+        SOURCES
+            test/constants.hpp
+            test/test_ErrorCode.cpp
+            test/test_Result.cpp
+            test/test_TraceableException.cpp
+            test/types.cpp
+            test/types.hpp
+        UNIFIED_TEST_TARGET "${UNIFIED_UNIT_TEST_TARGET}"
+    )
+endif()
+
+install_library(NAME error_handling NAMESPACE ystdlib)
