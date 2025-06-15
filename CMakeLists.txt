@@ -68,11 +68,7 @@ endif()
 
 if(ystdlib_ENABLE_TESTS)
     find_package(Catch2 3.8.0 REQUIRED)
-    if(Catch2_FOUND)
-        message(STATUS "Found Catch2 ${Catch2_VERSION}.")
-    else()
-        message(FATAL_ERROR "Could not find libraries for Catch2.")
-    endif()
+    message(STATUS "Found Catch2 ${Catch2_VERSION}.")
     include(Catch)
 
     set(UNIFIED_UNIT_TEST_TARGET "unit-test-all")

@@ -9,9 +9,7 @@ set(boost_find_package_args
     headers
 )
 find_package(Boost ${boost_find_package_args})
-if(Boost_FOUND)
-    message(STATUS "Found Boost ${Boost_VERSION}.")
-endif()
+message(STATUS "Found Boost ${Boost_VERSION}.")
 
 cpp_library(
     NAME error_handling

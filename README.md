@@ -68,11 +68,11 @@ task build:unit-test-<lib_name>
 To build all libraries, run:
 
 ```shell
-cmake -S . -D ./build
+cmake -S . -B ./build
 cmake --build ./build
 ```
 
-To build a subset of libraries set the variable `YSTDLIB_LIBRARIES` to a semi-colon(`;`) separated
+To build a subset of libraries, set the variable `YSTDLIB_LIBRARIES` to a semicolon(`;`) separated
 list of library names. The library names match their [directory name in src/](./src/ystdlib).
 For example:
 

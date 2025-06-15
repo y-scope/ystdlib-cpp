@@ -1,14 +1,24 @@
 include(CMakePackageConfigHelpers)
 
+# @param {string[]} REQUIRED_ARGS The list of arguments to check.
+# @param {string[]} ARG_KEYWORDS_MISSING_VALUES The list of arguments with missing values.
+function(require_argument_values REQUIRED_ARGS ARG_KEYWORDS_MISSING_VALUES)
+    foreach(ARG IN LISTS REQUIRED_ARGS)
+        if("${ARG}" IN_LIST ARG_KEYWORDS_MISSING_VALUES)
+            message(FATAL_ERROR "Missing values for argument: '${ARG}'")
+        endif()
+    endforeach()
+endfunction()
+
 # @param {string[]} SOURCE_LIST The list of source files to check.
 # @param {bool} IS_HEADER_ONLY Returns TRUE if list only contains header files, FALSE otherwise.
 # @param {string} NON_HEADER_FILE Returns the name of the first, if any, non-header file.
 function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
-    set(_LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
-    foreach(src_file IN LISTS _LOCAL_SOURCE_LIST)
-        if(NOT ${src_file} MATCHES ".*\\.(h|hpp)")
+    set(LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
+    foreach(SRC_FILE IN LISTS LOCAL_SOURCE_LIST)
+        if(NOT ${SRC_FILE} MATCHES ".*\\.(h|hpp)")
             set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
-            set(${NON_HEADER_FILE} ${src_file} PARENT_SCOPE)
+            set(${NON_HEADER_FILE} ${SRC_FILE} PARENT_SCOPE)
             return()
         endif()
     endforeach()
@@ -25,55 +35,49 @@ endfunction()
 # @param {string[]} [PRIVATE_SOURCES]
 # @param {string[]} [PUBLIC_LINK_LIBRARIES]
 # @param {string[]} [PRIVATE_LINK_LIBRARIES]
-# @param {string[]} [BUILD_INCLUDE_DIR="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
-# building the library and for external projects that builds `ystdlib` as a CMAKE subproject via
-# the add_subdirectory() function.
+# @param {string[]} [BUILD_INCLUDE_DIRS="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
+# building the library and for external projects that builds `ystdlib` as a CMAKE subproject via the
+# add_subdirectory() function.
 function(cpp_library)
-    set(oneValueArgs
+    set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
     )
-    set(multiValueArgs
+    set(MULTI_VALUE_ARGS
         PUBLIC_HEADERS
         PRIVATE_SOURCES
         PUBLIC_LINK_LIBRARIES
         PRIVATE_LINK_LIBRARIES
-        BUILD_INCLUDE_DIR
+        BUILD_INCLUDE_DIRS
     )
-    set(requireValueArgs
+    set(REQUIRED_ARGS
         NAME
         NAMESPACE
         PUBLIC_HEADERS
-        BUILD_INCLUDE_DIR
     )
-    cmake_parse_arguments(arg "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    if(arg_KEYWORDS_MISSING_VALUES)
+    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
+
+    if(NOT DEFINED arg_BUILD_INCLUDE_DIRS)
+        set(arg_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
+    endif()
+
+    set(ALIAS_TARGET_NAME "${arg_NAMESPACE}::${arg_NAME}")
+
+    check_if_header_only(arg_PUBLIC_HEADERS IS_VALID_INTERFACE INVALID_HEADER_FILE)
+    if(NOT IS_VALID_INTERFACE)
         message(
             FATAL_ERROR
-            "cpp_library missing required arguments: ${arg_KEYWORDS_MISSING_VALUES}"
+            "Invalid interface header file ${INVALID_HEADER_FILE} for ${ALIAS_TARGET_NAME}."
         )
     endif()
 
-    if(NOT DEFINED arg_BUILD_INCLUDE_DIR)
-        set(arg_BUILD_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src")
-    endif()
-
-    set(_ALIAS_TARGET_NAME "${arg_NAMESPACE}::${arg_NAME}")
-
-    check_if_header_only(arg_PUBLIC_HEADERS _IS_VALID_INTERFACE _INVALID_HEADER_FILE)
-    if(NOT _IS_VALID_INTERFACE)
-        message(
-            FATAL_ERROR
-            "Invalid interface header file ${_INVALID_HEADER_FILE} for ${_ALIAS_TARGET_NAME}."
-        )
-    endif()
-
-    check_if_header_only(arg_PRIVATE_SOURCES _IS_INTERFACE_LIB _)
-    if(_IS_INTERFACE_LIB)
+    check_if_header_only(arg_PRIVATE_SOURCES IS_INTERFACE_LIB _)
+    if(IS_INTERFACE_LIB)
         if(arg_PRIVATE_LINK_LIBRARIES)
             message(
                 FATAL_ERROR
-                "`PRIVATE_LINK_LIBRARIES` disabled for header-only library ${_ALIAS_TARGET_NAME}."
+                "`PRIVATE_LINK_LIBRARIES` disabled for header-only library ${ALIAS_TARGET_NAME}."
             )
         endif()
         add_library(${arg_NAME} INTERFACE)
@@ -98,14 +102,14 @@ function(cpp_library)
         target_compile_features(${arg_NAME} PUBLIC cxx_std_20)
     endif()
 
-    add_library(${_ALIAS_TARGET_NAME} ALIAS ${arg_NAME})
+    add_library(${ALIAS_TARGET_NAME} ALIAS ${arg_NAME})
 
     target_sources(
         ${arg_NAME}
         PUBLIC
             FILE_SET HEADERS
             BASE_DIRS
-                "$<BUILD_INTERFACE:${arg_BUILD_INCLUDE_DIR}>"
+                "$<BUILD_INTERFACE:${arg_BUILD_INCLUDE_DIRS}>"
                 "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
             FILES ${arg_PUBLIC_HEADERS}
     )
@@ -120,45 +124,39 @@ endfunction()
 # @param {string[]} [LINK_LIBRARIES]
 # @param {string} [UNIFIED_TEST_TARGET] If set the tests are also added to this unified target.
 function(catch2_tests)
-    set(oneValueArgs
+    set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
         UNIFIED_TEST_TARGET
     )
-    set(multiValueArgs
+    set(MULTI_VALUE_ARGS
         SOURCES
         LINK_LIBRARIES
     )
-    set(requireValueArgs
+    set(REQUIRED_ARGS
         NAME
         NAMESPACE
         SOURCES
     )
-    cmake_parse_arguments(arg "" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    if(arg_KEYWORDS_MISSING_VALUES)
-        message(
-            FATAL_ERROR
-            "catch2_tests missing required arguments:
-        ${arg_KEYWORDS_MISSING_VALUES}"
-        )
-    endif()
+    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
 
-    set(_ALIAS_TARGET "${arg_NAMESPACE}::${arg_NAME}")
-    set(_UNIT_TEST_TARGET "unit-test-${arg_NAME}")
+    set(ALIAS_TARGET "${arg_NAMESPACE}::${arg_NAME}")
+    set(UNIT_TEST_TARGET "unit-test-${arg_NAME}")
 
-    add_executable(${_UNIT_TEST_TARGET})
-    target_sources(${_UNIT_TEST_TARGET} PRIVATE ${arg_SOURCES})
+    add_executable(${UNIT_TEST_TARGET})
+    target_sources(${UNIT_TEST_TARGET} PRIVATE ${arg_SOURCES})
     target_link_libraries(
-        ${_UNIT_TEST_TARGET}
+        ${UNIT_TEST_TARGET}
         PRIVATE
             Catch2::Catch2WithMain
-            ${_ALIAS_TARGET}
+            ${ALIAS_TARGET}
             ${arg_LINK_LIBRARIES}
     )
-    target_compile_features(${_UNIT_TEST_TARGET} PRIVATE cxx_std_20)
+    target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
         TARGET
-            ${_UNIT_TEST_TARGET}
+            ${UNIT_TEST_TARGET}
         PROPERTY
             RUNTIME_OUTPUT_DIRECTORY
                 ${CMAKE_BINARY_DIR}/testbin
@@ -169,7 +167,7 @@ function(catch2_tests)
         target_link_libraries(
             ${arg_UNIFIED_TEST_TARGET}
             PRIVATE
-                ${_ALIAS_TARGET}
+                ${ALIAS_TARGET}
                 ${arg_LINK_LIBRARIES}
         )
     endif()
@@ -183,29 +181,24 @@ endfunction()
 # @param {string} NAMESPACE
 # @param {string} [CONFIG_DEST_PATH] Destination to install generated config file
 # (NAME-config.cmake).
-# @param {string} [CONFIG_INPUT_PATH] Paht to read configure_package_config_file input file
+# @param {string} [CONFIG_INPUT_PATH] Path to read configure_package_config_file input file
 # (NAME-config.cmake.in).
-# @param {string} [CONFIG_OUTPUT_PATH] Paht to write configure_package_config_file output file
+# @param {string} [CONFIG_OUTPUT_PATH] Path to write configure_package_config_file output file
 # (NAME-config.cmake).
 function(install_library)
-    set(oneValueArgs
+    set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
         CONFIG_DEST_PATH
         CONFIG_INPUT_PATH
         CONFIG_OUTPUT_PATH
     )
-    set(requireValueArgs
+    set(REQUIRED_ARGS
         NAME
         NAMESPACE
     )
-    cmake_parse_arguments(arg "" "${oneValueArgs}" "" ${ARGN})
-    if(arg_KEYWORDS_MISSING_VALUES)
-        message(
-            FATAL_ERROR
-            "install_library missing required arguments: ${arg_KEYWORDS_MISSING_VALUES}"
-        )
-    endif()
+    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
+    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
 
     if(NOT DEFINED arg_CONFIG_DEST_PATH)
         set(arg_CONFIG_DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cmake/${arg_NAMESPACE}/libs")
