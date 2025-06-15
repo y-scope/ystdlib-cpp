@@ -89,7 +89,7 @@ It is not necessary to specify libraries your subset depends on. In the example,
 After [building](#building), install with:
 
 ```shell
-cmake --install "./build" --prefix "~/.local"
+cmake --install "./build" --prefix "$HOME/.local"
 ```
 
 ## Testing
