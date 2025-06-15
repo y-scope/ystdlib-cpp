@@ -72,12 +72,12 @@ cmake -S . -B ./build
 cmake --build ./build
 ```
 
-To build a subset of libraries, set the variable `YSTDLIB_LIBRARIES` to a semicolon(`;`) separated
+To build a subset of libraries, set the variable `ystdlib_LIBRARIES` to a semicolon(`;`) separated
 list of library names. The library names match their [directory name in src/](./src/ystdlib).
 For example:
 
 ```shell
-cmake -S . -B ./build -DYSTDLIB_LIBRARIES="containers;io_interface"
+cmake -S . -B ./build -Dystdlib_LIBRARIES="containers;io_interface"
 cmake --build ./build
 ```
 

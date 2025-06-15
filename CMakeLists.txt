@@ -38,7 +38,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS
     FORCE
 )
 
-set(YSTDLIB_LIBRARIES
+set(ystdlib_LIBRARIES
     "containers"
     "error_handling"
     "io_interface"
@@ -48,8 +48,8 @@ set(YSTDLIB_LIBRARIES
 )
 
 message(STATUS "Building the following libraries:")
-foreach(lib IN LISTS YSTDLIB_LIBRARIES)
-    message(" - ${lib}")
+foreach(LIB IN LISTS ystdlib_LIBRARIES)
+    message(" - ${LIB}")
 endforeach()
 
 if(ystdlib_IS_TOP_LEVEL)

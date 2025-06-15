@@ -1,7 +1,7 @@
-if(NOT YSTDLIB_LIBRARIES)
-    message(FATAL_ERROR "YSTDLIB_LIBRARIES must be defined and non-empty.")
+if(NOT DEFINED ystdlib_LIBRARIES OR ystdlib_LIBRARIES STREQUAL "")
+    message(FATAL_ERROR "ystdlib_LIBRARIES must be defined and non-empty.")
 endif()
 
-foreach(lib IN LISTS YSTDLIB_LIBRARIES)
-    add_subdirectory("${lib}")
+foreach(LIB IN LISTS ystdlib_LIBRARIES)
+    add_subdirectory("${LIB}")
 endforeach()
