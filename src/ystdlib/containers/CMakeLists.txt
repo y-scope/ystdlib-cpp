@@ -2,10 +2,10 @@ if(TARGET ystdlib::containers)
     return()
 endif()
 
-cpp_library(NAME containers NAMESPACE ystdlib PUBLIC_HEADERS Array.hpp)
+add_cpp_library(NAME containers NAMESPACE ystdlib PUBLIC_HEADERS Array.hpp)
 
 if(ystdlib_ENABLE_TESTS)
-    catch2_tests(
+    add_catch2_tests(
         NAME containers
         NAMESPACE ystdlib
         SOURCES

@@ -9,7 +9,7 @@ if(NOT wrapped_facade_headers IN_LIST ystdlib_LIBRARIES)
     )
 endif()
 
-cpp_library(
+add_cpp_library(
     NAME io_interface
     NAMESPACE ystdlib
     PUBLIC_HEADERS
@@ -23,7 +23,7 @@ cpp_library(
 )
 
 if(ystdlib_ENABLE_TESTS)
-    catch2_tests(
+    add_catch2_tests(
         NAME io_interface
         NAMESPACE ystdlib
         SOURCES

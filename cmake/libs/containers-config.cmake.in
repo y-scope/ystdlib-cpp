@@ -1,5 +1,3 @@
-# gersemi: off
 if(NOT TARGET ystdlib::containers)
     include("${CMAKE_CURRENT_LIST_DIR}/containers-target.cmake")
 endif()
-# gersemi: on

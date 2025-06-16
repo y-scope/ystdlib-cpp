@@ -1,5 +1,3 @@
-# gersemi: off
 if(NOT TARGET ystdlib::wrapped_facade_headers)
     include("${CMAKE_CURRENT_LIST_DIR}/wrapped_facade_headers-target.cmake")
 endif()
-# gersemi: on

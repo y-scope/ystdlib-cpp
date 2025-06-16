@@ -11,7 +11,7 @@ set(boost_find_package_args
 find_package(Boost ${boost_find_package_args})
 message(STATUS "Found Boost ${Boost_VERSION}.")
 
-cpp_library(
+add_cpp_library(
     NAME error_handling
     NAMESPACE ystdlib
     PUBLIC_HEADERS
@@ -24,7 +24,7 @@ cpp_library(
 )
 
 if(ystdlib_ENABLE_TESTS)
-    catch2_tests(
+    add_catch2_tests(
         NAME error_handling
         NAMESPACE ystdlib
         SOURCES

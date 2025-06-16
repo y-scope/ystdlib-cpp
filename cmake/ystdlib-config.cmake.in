@@ -1,5 +1,3 @@
-# gersemi: off
-# This is a template file and shouldn't be linted like a CMake file
 include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
@@ -26,4 +24,3 @@ else()
 endif()
 
 check_required_components(ystdlib)
-# gersemi: on

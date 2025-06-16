@@ -1,14 +1,18 @@
 include(CMakePackageConfigHelpers)
 
-# @param {string[]} REQUIRED_ARGS The list of arguments to check.
-# @param {string[]} ARG_KEYWORDS_MISSING_VALUES The list of arguments with missing values.
-function(require_argument_values REQUIRED_ARGS ARG_KEYWORDS_MISSING_VALUES)
-    foreach(ARG IN LISTS REQUIRED_ARGS)
-        if("${ARG}" IN_LIST ARG_KEYWORDS_MISSING_VALUES)
-            message(FATAL_ERROR "Missing values for argument: '${ARG}'")
+# Checks that each argument name is defined and non-empty. Requires a prior call to
+# `cmake_parse_arguments` with `ARG` as the prefix to access the values of the arguments in
+# `REQUIRED_ARG_NAMES`.
+#
+# @param {string[]} REQUIRED_ARG_NAMES
+macro(require_argument_values REQUIRED_ARG_NAMES)
+    set(_REQUIRED_ARGS "${REQUIRED_ARG_NAMES}")
+    foreach(_REQUIRED_ARG IN LISTS _REQUIRED_ARGS)
+        if(NOT DEFINED ARG_${_REQUIRED_ARG} OR ARG_${_REQUIRED_ARG} STREQUAL "")
+            message(FATAL_ERROR "Non-empty value for argument: '${VAR_NAME}'")
         endif()
     endforeach()
-endfunction()
+endmacro()
 
 # @param {string[]} SOURCE_LIST The list of source files to check.
 # @param {bool} IS_HEADER_ONLY Returns TRUE if list only contains header files, FALSE otherwise.
@@ -37,7 +41,7 @@ endfunction()
 # @param {string[]} [PRIVATE_LINK_LIBRARIES]
 # @param {string[]} [BUILD_INCLUDE_DIRS="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
 # building the library and for external projects that use ystdlib via add_subdirectory().
-function(cpp_library)
+function(add_cpp_library)
     set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
@@ -54,16 +58,16 @@ function(cpp_library)
         NAMESPACE
         PUBLIC_HEADERS
     )
-    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}" "${arg_KEYWORDS_MISSING_VALUES}")
+    cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+    require_argument_values("${REQUIRED_ARGS}")
 
-    if(NOT DEFINED arg_BUILD_INCLUDE_DIRS)
-        set(arg_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
+    if(NOT DEFINED ARG_BUILD_INCLUDE_DIRS)
+        set(ARG_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
     endif()
 
-    set(ALIAS_TARGET_NAME "${arg_NAMESPACE}::${arg_NAME}")
+    set(ALIAS_TARGET_NAME "${ARG_NAMESPACE}::${ARG_NAME}")
 
-    check_if_header_only(arg_PUBLIC_HEADERS IS_VALID_INTERFACE INVALID_HEADER_FILE)
+    check_if_header_only(ARG_PUBLIC_HEADERS IS_VALID_INTERFACE INVALID_HEADER_FILE)
     if(NOT IS_VALID_INTERFACE)
         message(
             FATAL_ERROR
@@ -71,46 +75,41 @@ function(cpp_library)
         )
     endif()
 
-    check_if_header_only(arg_PRIVATE_SOURCES IS_INTERFACE_LIB _)
+    check_if_header_only(ARG_PRIVATE_SOURCES IS_INTERFACE_LIB _)
     if(IS_INTERFACE_LIB)
-        if(arg_PRIVATE_LINK_LIBRARIES)
+        if(ARG_PRIVATE_LINK_LIBRARIES)
             message(
                 FATAL_ERROR
                 "`PRIVATE_LINK_LIBRARIES` disabled for header-only library ${ALIAS_TARGET_NAME}."
             )
         endif()
-        add_library(${arg_NAME} INTERFACE)
-        target_link_libraries(${arg_NAME} INTERFACE ${arg_PUBLIC_LINK_LIBRARIES})
+        add_library(${ARG_NAME} INTERFACE)
+        target_link_libraries(${ARG_NAME} INTERFACE ${ARG_PUBLIC_LINK_LIBRARIES})
 
-        target_compile_features(${arg_NAME} INTERFACE cxx_std_20)
+        target_compile_features(${ARG_NAME} INTERFACE cxx_std_20)
     else()
-        add_library(${arg_NAME})
-        target_sources(
-            ${arg_NAME}
-            PRIVATE
-                ${arg_PUBLIC_HEADERS}
-                ${arg_PRIVATE_SOURCES}
-        )
+        add_library(${ARG_NAME})
+        target_sources(${ARG_NAME} PRIVATE ${ARG_PRIVATE_SOURCES})
         target_link_libraries(
-            ${arg_NAME}
+            ${ARG_NAME}
             PUBLIC
-                ${arg_PUBLIC_LINK_LIBRARIES}
+                ${ARG_PUBLIC_LINK_LIBRARIES}
             PRIVATE
-                ${arg_PRIVATE_LINK_LIBRARIES}
+                ${ARG_PRIVATE_LINK_LIBRARIES}
         )
-        target_compile_features(${arg_NAME} PUBLIC cxx_std_20)
+        target_compile_features(${ARG_NAME} PUBLIC cxx_std_20)
     endif()
 
-    add_library(${ALIAS_TARGET_NAME} ALIAS ${arg_NAME})
+    add_library(${ALIAS_TARGET_NAME} ALIAS ${ARG_NAME})
 
     target_sources(
-        ${arg_NAME}
+        ${ARG_NAME}
         PUBLIC
             FILE_SET HEADERS
             BASE_DIRS
-                "$<BUILD_INTERFACE:${arg_BUILD_INCLUDE_DIRS}>"
+                "$<BUILD_INTERFACE:${ARG_BUILD_INCLUDE_DIRS}>"
                 "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-            FILES ${arg_PUBLIC_HEADERS}
+            FILES ${ARG_PUBLIC_HEADERS}
     )
 endfunction()
 
@@ -123,7 +122,7 @@ endfunction()
 # @param {string[]} [LINK_LIBRARIES]
 # @param {string} [UNIFIED_TEST_TARGET] If set, SOURCES and LINK_LIBRARIES are also added to
 # UNIFIED_TEST_TARGET.
-function(catch2_tests)
+function(add_catch2_tests)
     set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
@@ -138,20 +137,20 @@ function(catch2_tests)
         NAMESPACE
         SOURCES
     )
-    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
+    cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
+    require_argument_values("${REQUIRED_ARGS}")
 
-    set(ALIAS_TARGET "${arg_NAMESPACE}::${arg_NAME}")
-    set(UNIT_TEST_TARGET "unit-test-${arg_NAME}")
+    set(ALIAS_TARGET "${ARG_NAMESPACE}::${ARG_NAME}")
+    set(UNIT_TEST_TARGET "unit-test-${ARG_NAME}")
 
     add_executable(${UNIT_TEST_TARGET})
-    target_sources(${UNIT_TEST_TARGET} PRIVATE ${arg_SOURCES})
+    target_sources(${UNIT_TEST_TARGET} PRIVATE ${ARG_SOURCES})
     target_link_libraries(
         ${UNIT_TEST_TARGET}
         PRIVATE
             Catch2::Catch2WithMain
             ${ALIAS_TARGET}
-            ${arg_LINK_LIBRARIES}
+            ${ARG_LINK_LIBRARIES}
     )
     target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
@@ -162,13 +161,13 @@ function(catch2_tests)
                 ${CMAKE_BINARY_DIR}/testbin
     )
 
-    if(arg_UNIFIED_TEST_TARGET)
-        target_sources(${arg_UNIFIED_TEST_TARGET} PRIVATE ${arg_SOURCES})
+    if(ARG_UNIFIED_TEST_TARGET)
+        target_sources(${ARG_UNIFIED_TEST_TARGET} PRIVATE ${ARG_SOURCES})
         target_link_libraries(
-            ${arg_UNIFIED_TEST_TARGET}
+            ${ARG_UNIFIED_TEST_TARGET}
             PRIVATE
                 ${ALIAS_TARGET}
-                ${arg_LINK_LIBRARIES}
+                ${ARG_LINK_LIBRARIES}
         )
     endif()
 endfunction()
@@ -177,44 +176,43 @@ endfunction()
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
-# Seems like the bottom 3 are dirs? Can we name them with a _DIR suffix?
-# @param {string} [CONFIG_DEST_PATH] Destination to install the generated config file
+# @param {string} [CONFIG_DEST_DIR] Destination to install the generated config file
 # (NAME-config.cmake).
-# @param {string} [CONFIG_INPUT_PATH] configure_package_config_file input file
+# @param {string} [CONFIG_INPUT_DIR] configure_package_config_file input file
 # (NAME-config.cmake.in).
-# @param {string} [CONFIG_OUTPUT_PATH] configure_package_config_file output file
+# @param {string} [CONFIG_OUTPUT_DIR] configure_package_config_file output file
 # (NAME-config.cmake).
 function(install_library)
     set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
-        CONFIG_DEST_PATH
-        CONFIG_INPUT_PATH
-        CONFIG_OUTPUT_PATH
+        CONFIG_DEST_DIR
+        CONFIG_INPUT_DIR
+        CONFIG_OUTPUT_DIR
     )
     set(REQUIRED_ARGS
         NAME
         NAMESPACE
     )
-    cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
-    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
+    cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
+    require_argument_values("${REQUIRED_ARGS}")
 
-    if(NOT DEFINED arg_CONFIG_DEST_PATH)
-        set(arg_CONFIG_DEST_PATH "${CMAKE_INSTALL_LIBDIR}/cmake/${arg_NAMESPACE}/libs")
+    if(NOT DEFINED ARG_CONFIG_DEST_DIR)
+        set(ARG_CONFIG_DEST_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs")
     endif()
 
-    if(NOT DEFINED arg_CONFIG_INPUT_PATH)
-        set(arg_CONFIG_INPUT_PATH "${PROJECT_SOURCE_DIR}/cmake/libs")
+    if(NOT DEFINED ARG_CONFIG_INPUT_DIR)
+        set(ARG_CONFIG_INPUT_DIR "${PROJECT_SOURCE_DIR}/cmake/libs")
     endif()
 
-    if(NOT DEFINED arg_CONFIG_OUTPUT_PATH)
-        set(arg_CONFIG_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+    if(NOT DEFINED ARG_CONFIG_OUTPUT_DIR)
+        set(ARG_CONFIG_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
 
     install(
         TARGETS
-            "${arg_NAME}"
-        EXPORT "${arg_NAME}-target"
+            "${ARG_NAME}"
+        EXPORT "${ARG_NAME}-target"
         LIBRARY
         ARCHIVE
         RUNTIME
@@ -223,21 +221,21 @@ function(install_library)
     )
 
     install(
-        EXPORT "${arg_NAME}-target"
-        DESTINATION ${arg_CONFIG_DEST_PATH}
-        NAMESPACE "${arg_NAMESPACE}::"
-        COMPONENT "${arg_NAME}"
+        EXPORT "${ARG_NAME}-target"
+        DESTINATION ${ARG_CONFIG_DEST_DIR}
+        NAMESPACE "${ARG_NAMESPACE}::"
+        COMPONENT "${ARG_NAME}"
     )
 
     configure_package_config_file(
-        ${arg_CONFIG_INPUT_PATH}/${arg_NAME}-config.cmake.in
-        ${arg_CONFIG_OUTPUT_PATH}/${arg_NAME}-config.cmake
-        INSTALL_DESTINATION ${arg_CONFIG_DEST_PATH}
+        ${ARG_CONFIG_INPUT_DIR}/${ARG_NAME}-config.cmake.in
+        ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
+        INSTALL_DESTINATION ${ARG_CONFIG_DEST_DIR}
     )
 
     install(
         FILES
-            ${arg_CONFIG_OUTPUT_PATH}/${arg_NAME}-config.cmake
-        DESTINATION ${arg_CONFIG_DEST_PATH}
+            ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
+        DESTINATION ${ARG_CONFIG_DEST_DIR}
     )
 endfunction()

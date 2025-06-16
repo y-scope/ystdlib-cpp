@@ -50,6 +50,6 @@ tasks:
         find . \
           \( -path '**/build' -o -path '**/cmake_install.cmake' -o -path '**/CMakeFiles' \
           -o -path '**/submodules' -o -path '**/tools' \) -prune -o \
-          \( -iname "CMakeLists.txt" -o -iname "*.cmake" -o -iname "*.cmake.in" \) \
+          \( -iname "CMakeLists.txt" -o -iname "*.cmake" \) \
           -print0 | \
             xargs -0 gersemi {{.FLAGS}}

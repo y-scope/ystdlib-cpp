@@ -2,10 +2,10 @@ if(TARGET ystdlib::wrapped_facade_headers)
     return()
 endif()
 
-cpp_library(NAME wrapped_facade_headers NAMESPACE ystdlib PUBLIC_HEADERS sys/types.h)
+add_cpp_library(NAME wrapped_facade_headers NAMESPACE ystdlib PUBLIC_HEADERS sys/types.h)
 
 if(ystdlib_ENABLE_TESTS)
-    catch2_tests(
+    add_catch2_tests(
         NAME wrapped_facade_headers
         NAMESPACE ystdlib
         SOURCES

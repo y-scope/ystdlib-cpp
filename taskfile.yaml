@@ -16,7 +16,7 @@ vars:
 
   # These should be kept in-sync with its usage in CMakeLists.txt
   G_DEPS_CMAKE_SETTINGS_DIR: "{{.G_DEPS_DIR}}/cmake-settings"
-  G_DEPS_CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/settings.cmake"
+  G_DEPS_CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/all.cmake"
 
   G_TEST_BIN_DIR: "{{.G_BUILD_DIR}}/testbin"
   G_TEST_TARGET_SUFFIXES:
