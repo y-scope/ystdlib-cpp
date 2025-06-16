@@ -1,7 +1,6 @@
-if(@Boost_FOUND@)
-    find_dependency(Boost @boost_find_package_args@)
+if(TARGET ystdlib::error_handling)
+    return()
 endif()
 
-if(NOT TARGET ystdlib::error_handling)
-    include("${CMAKE_CURRENT_LIST_DIR}/error_handling-target.cmake")
-endif()
+find_dependency(Boost @boost_find_package_args@)
+include("${CMAKE_CURRENT_LIST_DIR}/error_handling-target.cmake")
