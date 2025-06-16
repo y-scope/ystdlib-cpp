@@ -209,10 +209,11 @@ function(install_library)
         set(ARG_CONFIG_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
 
+    set(EXPORT_NAME "${ARG_NAME}-target")
     install(
         TARGETS
             "${ARG_NAME}"
-        EXPORT "${ARG_NAME}-target"
+        EXPORT "${EXPORT_NAME}"
         LIBRARY
         ARCHIVE
         RUNTIME
@@ -221,7 +222,7 @@ function(install_library)
     )
 
     install(
-        EXPORT "${ARG_NAME}-target"
+        EXPORT "${EXPORT_NAME}"
         DESTINATION ${ARG_CONFIG_DEST_DIR}
         NAMESPACE "${ARG_NAMESPACE}::"
         COMPONENT "${ARG_NAME}"
