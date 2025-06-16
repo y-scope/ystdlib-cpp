@@ -26,7 +26,7 @@ function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(${NON_HEADER_FILE} "" PARENT_SCOPE)
 endfunction()
 
-# Adds a c++20 library in the subdirectory NAME with the target NAME and alias NAMESPACE::NAME.
+# Adds a C++20 library in the subdirectory NAME with the target NAME and alias NAMESPACE::NAME.
 # Libraries with multiple levels of namespace nesting are currently not supported.
 #
 # @param {string} NAME
@@ -36,8 +36,7 @@ endfunction()
 # @param {string[]} [PUBLIC_LINK_LIBRARIES]
 # @param {string[]} [PRIVATE_LINK_LIBRARIES]
 # @param {string[]} [BUILD_INCLUDE_DIRS="${PROJECT_SOURCE_DIR}/src"] The list of include paths for
-# building the library and for external projects that builds `ystdlib` as a CMAKE subproject via the
-# add_subdirectory() function.
+# building the library and for external projects that use ystdlib via add_subdirectory().
 function(cpp_library)
     set(SINGLE_VALUE_ARGS
         NAME
@@ -56,7 +55,7 @@ function(cpp_library)
         PUBLIC_HEADERS
     )
     cmake_parse_arguments(arg "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values(REQUIRED_ARGS arg_KEYWORDS_MISSING_VALUES)
+    require_argument_values("${REQUIRED_ARGS}" "${arg_KEYWORDS_MISSING_VALUES}")
 
     if(NOT DEFINED arg_BUILD_INCLUDE_DIRS)
         set(arg_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
@@ -115,14 +114,15 @@ function(cpp_library)
     )
 endfunction()
 
-# Builds a C++ 20 test executable named unit-test-NAME linking it with Catch2.
-# The test SOURCES and any LINK_LIBRARIES are also added to the UNIFIED_TEST_TARGET if it is set.
+# Adds a C++ 20 test executable named unit-test-NAME that will be built with SOURCES and linked with
+# LINK_LIBRARIES, in addition to Catch2.
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
 # @param {string[]} SOURCES
 # @param {string[]} [LINK_LIBRARIES]
-# @param {string} [UNIFIED_TEST_TARGET] If set the tests are also added to this unified target.
+# @param {string} [UNIFIED_TEST_TARGET] If set, SOURCES and LINK_LIBRARIES are also added to
+# UNIFIED_TEST_TARGET.
 function(catch2_tests)
     set(SINGLE_VALUE_ARGS
         NAME
@@ -173,17 +173,16 @@ function(catch2_tests)
     endif()
 endfunction()
 
-# Installs library targets and generated configuration files.
-# Target, input config, and output config files are named NAME-target.cmake, NAME-config.cmake.in,
-# and NAME-config.cmake respectively.
+# Creates installation rules for library targets and generated configuration files.
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
-# @param {string} [CONFIG_DEST_PATH] Destination to install generated config file
+# Seems like the bottom 3 are dirs? Can we name them with a _DIR suffix?
+# @param {string} [CONFIG_DEST_PATH] Destination to install the generated config file
 # (NAME-config.cmake).
-# @param {string} [CONFIG_INPUT_PATH] Path to read configure_package_config_file input file
+# @param {string} [CONFIG_INPUT_PATH] configure_package_config_file input file
 # (NAME-config.cmake.in).
-# @param {string} [CONFIG_OUTPUT_PATH] Path to write configure_package_config_file output file
+# @param {string} [CONFIG_OUTPUT_PATH] configure_package_config_file output file
 # (NAME-config.cmake).
 function(install_library)
     set(SINGLE_VALUE_ARGS

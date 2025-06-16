@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(ystdlib VERSION "0.0.1" LANGUAGES CXX)
+project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(ystdlib-helpers)
