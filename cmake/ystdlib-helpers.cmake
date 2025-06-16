@@ -210,16 +210,7 @@ function(install_library)
     endif()
 
     set(EXPORT_NAME "${ARG_NAME}-target")
-    install(
-        TARGETS
-            "${ARG_NAME}"
-        EXPORT "${EXPORT_NAME}"
-        LIBRARY
-        ARCHIVE
-        RUNTIME
-        FILE_SET
-        HEADERS
-    )
+    install(TARGETS "${ARG_NAME}" EXPORT "${EXPORT_NAME}" LIBRARY ARCHIVE RUNTIME FILE_SET HEADERS)
 
     install(
         EXPORT "${EXPORT_NAME}"
