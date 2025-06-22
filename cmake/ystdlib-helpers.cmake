@@ -216,7 +216,6 @@ function(install_library)
         EXPORT "${EXPORT_NAME}"
         DESTINATION ${ARG_CONFIG_DEST_DIR}
         NAMESPACE "${ARG_NAMESPACE}::"
-        COMPONENT "${ARG_NAME}"
     )
 
     configure_package_config_file(
