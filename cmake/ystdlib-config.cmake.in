@@ -2,7 +2,7 @@ include(CMakeFindDependencyMacro)
 
 @PACKAGE_INIT@
 
-# If no component is specified, we require all libraries.
+# If no COMPONENTS are specified, we include all available libraries.
 # We guard against repeatedly including targets to support multiple find_package calls.
 if(NOT ystdlib_FIND_COMPONENTS)
     set(ystdlib_LIBRARIES_LIST "@ystdlib_LIBRARIES@")
