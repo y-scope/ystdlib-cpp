@@ -1,49 +1,55 @@
 version: "3"
 
+includes:
+  dev-utils:
+    internal: true
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+
 vars:
   G_CATCH2_LIB_NAME: "Catch2"
-  G_CATCH2_WORK_DIR: "{{.G_DEPS_DIR}}/{{.G_CATCH2_LIB_NAME}}"
+  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
+
+  # This path must be kept in-sync with its usage in CMakeLists.txt and examples/CMakeLists.txt.
+  G_DEPS_CMAKE_SETTINGS_DIR: "{{.G_DEPS_DIR}}/cmake-settings"
 
 tasks:
-  install-all:
-    desc: "Install all dependencies required by ystdlib-cpp."
+  all:
+    desc: "Install all dependencies required by ystdlib."
     run: "once"
     cmds:
-      - "rm -rf '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
-      - "mkdir -p '{{.G_DEPS_CMAKE_SETTINGS_DIR}}'"
-      - task: ":utils:cmake:install-deps-and-generate-settings"
+      - task: "dev-utils:cmake:install-deps-and-generate-settings"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
-          CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_FILE}}"
-          DEP_TASK: "deps:install-all-parallel"
+          DEP_TASK: "all-parallel"
 
-  install-all-parallel:
+  all-parallel:
     internal: true
+    run: "once"
     deps:
-      - "install-boost"
-      - "install-Catch2"
+      - "boost"
+      - "Catch2"
 
-  install-Catch2:
+  Catch2:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake:install-remote-tar"
+      - task: "dev-utils:cmake:install-remote-tar"
         vars:
           CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
-          WORK_DIR: "{{.G_CATCH2_WORK_DIR}}"
+          WORK_DIR: "{{.G_DEPS_DIR}}"
 
-  install-boost:
+  boost:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:boost:download-and-install"
+      - task: "dev-utils:boost:download-and-install"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           FILE_SHA256: "d6c69e4459eb5d6ec208250291221e7ff4a2affde9af6e49c9303b89c687461f"
           URL: "https://github.com/boostorg/boost/releases/download/boost-1.87.0\
             /boost-1.87.0-b2-nodocs.tar.gz"
           TARGETS: ["headers"]
-          WORK_DIR: "{{.G_DEPS_DIR}}/boost"
+          WORK_DIR: "{{.G_DEPS_DIR}}"

@@ -31,6 +31,7 @@ Follow the steps below to develop and contribute to the project.
 * CMake 3.23 or higher
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
+* [uv] 0.7.10 or higher
 
 ## Set up
 Initialize and update submodules:
@@ -40,27 +41,27 @@ git submodule update --init --recursive
 
 If you want to open the project in an IDE, run the following command to install any necessary
 dependencies from source:
+
 ```shell
-task deps:install-all
+task deps:all
 ```
 
 ## Building
 
 ### Task
 
-To build all targets:
+To build all libraries (targets), run:
+
 ```shell
-task build:all
+task build:all-release
 ```
 
-To build an executable containing all unit tests:
-```shell
-task build:unit-test-all
-```
+To build a single library (target), use the format:
 
-To build an executable containing a single library's unit tests:
 ```shell
-task build:unit-test-<lib_name>
+task build:<target>-<build type>
+e.g.:
+task build:error_handling-release
 ```
 
 ### CMake
@@ -86,6 +87,24 @@ It is not necessary to specify libraries your subset depends on. In the example,
 
 ## Installing
 
+### Task
+
+To build and install all of ystdlib, run:
+
+```shell
+task build:install-all-release INSTALL_PREFIX="/install/prefix/path"
+```
+
+To build and install a single library (target), use the format:
+
+```shell
+task build:install-<target>-<build type> INSTALL_PREFIX="<prefix path>"
+e.g.:
+task build:install-error_handling-release INSTALL_PREFIX="/install/prefix/path"
+```
+
+### CMake
+
 After [building](#building), install with:
 
 ```shell
@@ -93,14 +112,19 @@ cmake --install "./build" --prefix "$HOME/.local"
 ```
 
 ## Testing
-To build and run all unit tests:
+
+To build and run all unit tests, run:
+
 ```shell
-task test-all
+task test:all-debug
 ```
 
-To build and run unit tests for a specific library:
+To build and run the unit tests for a single library (target), use the format:
+
 ```shell
-task test-<lib_name>
+task test:<target>-<build type>
+e.g.:
+task test:error_handling-release
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled
@@ -128,3 +152,4 @@ task -a
 Look for all tasks under the `lint` namespace (identified by the `lint:` prefix).
 
 [Task]: https://taskfile.dev
+[uv]: https://docs.astral.sh/uv

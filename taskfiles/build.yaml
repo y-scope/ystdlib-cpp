@@ -1,65 +1,112 @@
 version: "3"
 
-vars:
-  G_CMAKE_CACHE: "{{.G_BUILD_DIR}}/CMakeCache.txt"
-  G_COMPILE_COMMANDS_DB: "{{.G_BUILD_DIR}}/compile_commands.json"
+includes:
+  deps:
+    internal: true
+    taskfile: "deps.yaml"
+  dev-utils:
+    internal: true
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+  utils:
+    internal: true
+    taskfile: "utils.yaml"
 
 tasks:
-  all:
-    desc: "Builds all of ystdlib-cpp."
-    deps:
-      - "init"
-    cmds:
-      - task: ":utils:cmake:build"
-        vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"
-
-  target-*:
-    desc: "Builds a CMake target."
+  "*-*":
+    desc: "<target>-<build type>: Builds the specified build target with build type."
     vars:
+      BUILD_TYPE: "{{index .MATCH 1}}"
       TARGET: "{{index .MATCH 0}}"
     deps:
-      - "init"
-    cmds:
-      - task: ":utils:cmake:build"
+      - task: "utils:validate-all-args"
         vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "build"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+
+  clean-*:
+    desc: "clean-<build type>: Clean the build type."
+    vars:
+      BUILD_TYPE: "{{index .MATCH 0}}"
+    deps:
+      - task: "utils:validate-build-type"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+    cmds:
+      - task: "dev-utils:cmake:clean"
+        vars:
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
+
+  install-*-*:
+    desc: >-
+      install-<target>-<build type> YSTDLIB_INSTALL_PREFIX="<prefix path>": Install the specified
+      build target with build type to the prefix path.
+    vars:
+      BUILD_TYPE: "{{index .MATCH 1}}"
+      TARGET: "{{index .MATCH 0}}"
+    requires:
+      vars: ["YSTDLIB_INSTALL_PREFIX"]
+    deps:
+      - task: "utils:validate-all-args"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "install"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          INSTALL_PREFIX: "{{.YSTDLIB_INSTALL_PREFIX}}"
+          TARGET: "{{.TARGET}}"
+
+  build:
+    internal: true
+    requires:
+      vars: ["BUILD_TYPE", "TARGET"]
+    deps:
+      - task: "generate"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "dev-utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           TARGETS:
             - "{{.TARGET}}"
 
-  unit-test-*:
-    desc: "Builds the specified unit test target."
-    vars:
-      TARGET_SUFFIX: >-
-        {{index .MATCH 0}}
-      TARGET_NAME: >-
-        {{printf "unit-test-%s" .TARGET_SUFFIX}}
-    preconditions:
-      - sh: >-
-          {{has .TARGET_SUFFIX .G_TEST_TARGET_SUFFIXES}}
-        msg: |-
-          {{.TARGET_NAME}} is not a valid unit test target!
-          List of unit test targets:
-          {{- range .G_TEST_TARGET_SUFFIXES }}
-            unit-test-{{.}}
-          {{- end}}
-    cmds:
-      - task: "target-{{.TARGET_NAME}}"
-
-  clean:
-    desc: "Removes all built artifacts."
-    deps:
-      - task: ":utils:cmake:clean"
-        vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"
-
-  init:
+  generate:
     internal: true
+    requires:
+      vars: ["BUILD_TYPE", "TARGET"]
     deps:
-      - ":deps:install-all"
-    run: "once"
+      - "deps:all"
     cmds:
-      - task: ":utils:cmake:generate"
+      - task: "dev-utils:cmake:generate"
         vars:
-          BUILD_DIR: "{{.G_BUILD_DIR}}"
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          EXTRA_ARGS:
+            - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
           SOURCE_DIR: "{{.ROOT_DIR}}"
+
+  install:
+    internal: true
+    vars:
+      ABSOLUTE_INSTALL_PREFIX:
+        sh: "realpath '{{.INSTALL_PREFIX}}'"
+    requires:
+      vars: ["BUILD_TYPE", "INSTALL_PREFIX", "TARGET"]
+    deps:
+      - task: "build"
+        vars:
+          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          TARGET: "{{.TARGET}}"
+    cmds:
+      - task: "dev-utils:cmake:install"
+        vars:
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          INSTALL_PREFIX: "{{.ABSOLUTE_INSTALL_PREFIX}}"
+          EXTRA_ARGS: ["{{if not (eq .TARGET \"all\")}}--component {{.TARGET}}{{end}}"]

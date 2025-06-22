@@ -9,9 +9,9 @@ includes:
     taskfile: "utils.yaml"
 
 tasks:
-  test-*-*:
+  "*-*":
     desc: >-
-      test-<target>-<build type>: Runs unit tests for the specified test target and build type.
+      <target>-<build type>: Runs unit tests for the specified test target and build type.
     vars:
       BUILD_TYPE: "{{index .MATCH 1}}"
       TARGET: "{{index .MATCH 0}}"
