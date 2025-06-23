@@ -5,7 +5,7 @@ This directory contains example programs that demonstrate how to use the ystdlib
 The example program `linking-tests` references all of ystdlib's library targets to ensure they can
 be installed and linked correctly.
 
-# Requirements
+## Requirements
 
 [Build](../README.md#building) and [install](../README.md#installing) ystdlib. The commands below
 assume you've built and installed ystdlib to `./build/examples/ystdlib`. If you installed it to a

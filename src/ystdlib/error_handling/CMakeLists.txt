@@ -3,7 +3,7 @@ if(TARGET ystdlib::error_handling)
 endif()
 
 set(BOOST_FIND_PACKAGE_ARGS
-    "${MIN_BOOST_VERSOIN}"
+    "${MIN_BOOST_VERSION}"
     REQUIRED
     COMPONENTS
     headers

@@ -86,7 +86,7 @@ if(ystdlib_ENABLE_TESTS)
 endif()
 
 # All libraries are required to use the same minimum version of dependencies to avoid issues.
-set(MIN_BOOST_VERSOIN "1.81.0")
+set(MIN_BOOST_VERSION "1.81.0")
 
 add_subdirectory(src/ystdlib)
 

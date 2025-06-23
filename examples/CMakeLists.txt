@@ -19,13 +19,13 @@ if(ystdlib-examples_IS_TOP_LEVEL)
     # Include dependency settings if the project isn't being included as a subproject.
     # NOTE: We mark the file optional because if the user happens to have the dependencies
     # installed, this file is not necessary.
-    include("${CMAKE_SOURCE_DIR}/../build/deps/cmake-settings/all.cmake" OPTIONAL)
+    include("${CMAKE_CURRENT_LIST_DIR}/../build/deps/cmake-settings/all.cmake" OPTIONAL)
 endif()
 
 find_package(ystdlib REQUIRED)
 message(STATUS "Found ystdlib ${ystdlib_VERSION}.")
 
-add_executable(linking-tests "${CMAKE_SOURCE_DIR}/src/linking-tests.cpp")
+add_executable(linking-tests "${CMAKE_CURRENT_LIST_DIR}/src/linking-tests.cpp")
 
 target_compile_features(linking-tests PRIVATE cxx_std_20)
 

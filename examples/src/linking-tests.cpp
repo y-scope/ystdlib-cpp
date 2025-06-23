@@ -112,7 +112,7 @@ auto main() -> int {
     }
 
     if (false == test_io_interface()) {
-        std::cerr << "Error: error_handling test failed. Could not use FailureReader.\n";
+        std::cerr << "Error: io_interface test failed. Could not use FailureReader.\n";
         return 3;
     }
 
