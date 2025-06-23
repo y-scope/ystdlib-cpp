@@ -8,11 +8,10 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-# Enable exporting compile commands
 set(CMAKE_EXPORT_COMPILE_COMMANDS
     ON
     CACHE BOOL
-    "Enable/Disable output of compile commands during generation."
+    "Enable/disable output of compile commands during generation."
     FORCE
 )
 
