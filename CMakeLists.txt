@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.23)
 project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(ystdlib-helpers)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+include(ystdlib-helpers)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
@@ -44,12 +44,12 @@ set(ystdlib_LIBRARIES
     "io_interface"
     "wrapped_facade_headers"
     CACHE STRING
-    "Semi-colon separated list of libraries to be built."
+    "Semicolon-separated list of libraries to be built."
 )
 
 message(STATUS "Building the following libraries:")
 foreach(LIB IN LISTS ystdlib_LIBRARIES)
-    message(" - ${LIB}")
+    message(STATUS " - ${LIB}")
 endforeach()
 
 if(ystdlib_IS_TOP_LEVEL)
