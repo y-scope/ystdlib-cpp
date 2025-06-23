@@ -3,7 +3,7 @@ if(TARGET ystdlib::error_handling)
 endif()
 
 set(BOOST_FIND_PACKAGE_ARGS
-    "${MIN_BOOST_VERSION}"
+    "${BOOST_MIN_VERSION}"
     REQUIRED
     COMPONENTS
     headers
@@ -36,4 +36,9 @@ if(ystdlib_ENABLE_TESTS)
     )
 endif()
 
-install_library(NAME error_handling NAMESPACE ystdlib)
+install_library(
+    NAME error_handling
+    NAMESPACE ystdlib
+    CONFIG_DEST_DIR "${CONFIG_LIBS_DEST_DIR}"
+    CONFIG_INPUT_DIR "${CONFIG_LIBS_INPUT_DIR}"
+)

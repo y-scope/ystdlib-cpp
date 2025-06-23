@@ -66,6 +66,7 @@ function(add_cpp_library)
         set(ARG_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
     endif()
 
+    set(TARGET_NAME "${ARG_NAMESPACE}_${ARG_NAME}")
     set(ALIAS_TARGET_NAME "${ARG_NAMESPACE}::${ARG_NAME}")
 
     check_if_header_only(ARG_PUBLIC_HEADERS IS_VALID_INTERFACE INVALID_HEADER_FILE)
@@ -177,42 +178,34 @@ endfunction()
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
-# @param {string} [CONFIG_DEST_DIR="${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs"]
-# Destination to install the generated config file (`NAME-config.cmake`).
-# @param {string} [CONFIG_INPUT_DIR="${PROJECT_SOURCE_DIR}/cmake/libs"]
-# `configure_package_config_file` input file (`NAME-config.cmake.in`).
-# @param {string} [CONFIG_OUTPUT_DIR="${CMAKE_CURRENT_BINARY_DIR}"] `configure_package_config_file`
-# output file (`NAME-config.cmake`).
+# @param {string} CONFIG_DEST_DIR Destination to install the generated config file
+# (`NAME-config.cmake`).
+# @param {string} CONFIG_INPUT_DIR `configure_package_config_file` input file
+# (`NAME-config.cmake.in`).
 function(install_library)
     set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
         CONFIG_DEST_DIR
         CONFIG_INPUT_DIR
-        CONFIG_OUTPUT_DIR
     )
     set(REQUIRED_ARGS
         NAME
         NAMESPACE
+        CONFIG_DEST_DIR
+        CONFIG_INPUT_DIR
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
     check_required_arguments_exist("${REQUIRED_ARGS}")
 
-    if(NOT DEFINED ARG_CONFIG_DEST_DIR)
-        set(ARG_CONFIG_DEST_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs")
-    endif()
-
-    if(NOT DEFINED ARG_CONFIG_INPUT_DIR)
-        set(ARG_CONFIG_INPUT_DIR "${PROJECT_SOURCE_DIR}/cmake/libs")
-    endif()
-
-    if(NOT DEFINED ARG_CONFIG_OUTPUT_DIR)
-        set(ARG_CONFIG_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-    endif()
-
     set(EXPORT_NAME "${ARG_NAME}-target")
     install(TARGETS "${ARG_NAME}" EXPORT "${EXPORT_NAME}" LIBRARY ARCHIVE RUNTIME FILE_SET HEADERS)
-
+    set_target_properties(
+        "${ARG_NAME}"
+        PROPERTIES
+            OUTPUT_NAME
+                "${ARG_NAMESPACE}_${ARG_NAME}"
+    )
     install(
         EXPORT "${EXPORT_NAME}"
         DESTINATION ${ARG_CONFIG_DEST_DIR}
@@ -220,12 +213,14 @@ function(install_library)
     )
 
     set(CONFIG_FILE_NAME "${ARG_NAME}-config.cmake")
-    set(CONFIG_OUTPUT_PATH "${ARG_CONFIG_OUTPUT_DIR}/${CONFIG_FILE_NAME}")
     configure_package_config_file(
         "${ARG_CONFIG_INPUT_DIR}/${CONFIG_FILE_NAME}.in"
-        "${CONFIG_OUTPUT_PATH}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}"
         INSTALL_DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
-
-    install(FILES "${CONFIG_OUTPUT_PATH}" DESTINATION "${ARG_CONFIG_DEST_DIR}")
+    install(
+        FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}"
+        DESTINATION "${ARG_CONFIG_DEST_DIR}"
+    )
 endfunction()

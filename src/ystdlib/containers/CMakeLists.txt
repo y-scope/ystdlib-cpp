@@ -14,4 +14,9 @@ if(ystdlib_ENABLE_TESTS)
     )
 endif()
 
-install_library(NAME containers NAMESPACE ystdlib)
+install_library(
+    NAME containers
+    NAMESPACE ystdlib
+    CONFIG_DEST_DIR "${CONFIG_LIBS_DEST_DIR}"
+    CONFIG_INPUT_DIR "${CONFIG_LIBS_INPUT_DIR}"
+)
