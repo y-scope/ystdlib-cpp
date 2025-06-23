@@ -1,7 +1,7 @@
 include(CMakePackageConfigHelpers)
 
 # Checks that each argument name in `REQUIRED_ARG_NAMES` is defined and non-empty. Assumes the
-# arguments are stored in variables prefixed with `ARG_<NAME>`.
+# arguments are stored in variables of the form `ARG_<NAME>`.
 #
 # @param {string[]} REQUIRED_ARG_NAMES
 macro(check_required_arguments_exist REQUIRED_ARG_NAMES)
@@ -149,9 +149,9 @@ function(add_catch2_tests)
     target_link_libraries(
         ${UNIT_TEST_TARGET}
         PRIVATE
-            Catch2::Catch2WithMain
-            ${ARG_LINK_LIBRARIES}
             ${ALIAS_TARGET}
+            ${ARG_LINK_LIBRARIES}
+            Catch2::Catch2WithMain
     )
     target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
@@ -167,8 +167,8 @@ function(add_catch2_tests)
         target_link_libraries(
             ${ARG_UNIFIED_TEST_TARGET}
             PRIVATE
-                ${ARG_LINK_LIBRARIES}
                 ${ALIAS_TARGET}
+                ${ARG_LINK_LIBRARIES}
         )
     endif()
 endfunction()

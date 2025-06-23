@@ -24,8 +24,8 @@ Where
   target.
 
 > [!NOTE]
-> If `BUILD_TESTING` is set, set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip
-> building ystdlib's unit tests.
+> If `BUILD_TESTING` is `ON`, set `ystdlib_BUILD_TESTING` to `OFF` to skip building ystdlib's unit
+> tests.
 
 > [!TIP]
 > If ystdlib is not installed to a path that is searched by default, set `ystdlib_ROOT` to manually
@@ -98,8 +98,8 @@ cmake --build ./build
 
 > [!NOTE]
 > Internal dependencies of the libraries you choose will be automatically built, even if you don't
-> explicitly specify them. In the example, specifying `io_interface` automatically builds
-> `wrapped_facade_headers`.
+> explicitly specify them. In the example, specifying `io_interface` automatically adds
+> `wrapped_facade_headers` to the build.
 
 ## Installing
 

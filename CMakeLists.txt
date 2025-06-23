@@ -85,7 +85,7 @@ if(ystdlib_ENABLE_TESTS)
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
-# All libraries are required to use the same minimum version of dependencies to avoid issues.
+# We require all libraries use the same minimum version of dependencies to avoid issues.
 set(MIN_BOOST_VERSION "1.81.0")
 
 add_subdirectory(src/ystdlib)
