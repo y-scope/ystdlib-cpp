@@ -1,18 +1,17 @@
 # Examples
 
+This directory contains example programs that demonstrate how to use the ystdlib library.
+
 The example program `linking-tests` references all of ystdlib's library targets to ensure they can
 be installed and linked correctly.
 
+# Requirements
+
+[Build](../README.md#building) and [install](../README.md#installing) ystdlib. The commands below
+assume you've built and installed ystdlib to `./build/examples/ystdlib`. If you installed it to a
+different location, adjust the paths accordingly.
+
 ## Building
-
-First, ensure ystdlib has been installed. For example, after
-[building ystdlib](../README.md#building), [install it](../README.md#installing) by running:
-
-```shell
-cmake --install "./build" --prefix "./build/examples/ystdlib"
-```
-
-To build the examples, run:
 
 ```shell
 cmake -S "./examples" -B "./build/examples" -Dystdlib_ROOT="./build/examples/ystdlib"
@@ -20,12 +19,7 @@ cmake -S "./examples" -B "./build/examples" -Dystdlib_ROOT="./build/examples/yst
 cmake --build "./build/examples"
 ```
 
-Setting `ystdlib_ROOT` is not necessary if `ystdlib` is installed on a path CMake searches by
-default.
-
 ## Running
-
-Run the example program as follows:
 
 ```shell
 ./build/examples/linking-tests

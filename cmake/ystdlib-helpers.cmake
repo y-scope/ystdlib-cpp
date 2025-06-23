@@ -1,28 +1,29 @@
 include(CMakePackageConfigHelpers)
 
-# Checks that each argument name is defined and non-empty. Requires a prior call to
-# `cmake_parse_arguments` with `ARG` as the prefix to access the values of the arguments in
-# `REQUIRED_ARG_NAMES`.
+# Checks that each argument name in `REQUIRED_ARG_NAMES` is defined and non-empty. Assumes the
+# arguments are stored in variables prefixed with `ARG_<NAME>`.
 #
 # @param {string[]} REQUIRED_ARG_NAMES
 macro(require_argument_values REQUIRED_ARG_NAMES)
     set(_REQUIRED_ARGS "${REQUIRED_ARG_NAMES}")
     foreach(_REQUIRED_ARG IN LISTS _REQUIRED_ARGS)
         if(NOT DEFINED ARG_${_REQUIRED_ARG} OR ARG_${_REQUIRED_ARG} STREQUAL "")
-            message(FATAL_ERROR "Non-empty value for argument: '${_REQUIRED_ARG}'")
+            message(FATAL_ERROR "Empty value for argument: '${_REQUIRED_ARG}'")
         endif()
     endforeach()
 endmacro()
 
-# @param {string[]} SOURCE_LIST The list of source files to check.
-# @param {bool} IS_HEADER_ONLY Returns TRUE if list only contains header files, FALSE otherwise.
+# Checks if `SOURCE_LIST` contains only header files.
+#
+# @param {string[]} SOURCE_LIST
+# @param {bool} IS_HEADER_ONLY Returns whether the list contains only header files.
 # @param {string} NON_HEADER_FILE Returns the name of the first, if any, non-header file.
 function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
     foreach(SRC_FILE IN LISTS LOCAL_SOURCE_LIST)
-        if(NOT ${SRC_FILE} MATCHES ".*\\.(h|hpp)")
+        if(NOT "${SRC_FILE}" MATCHES ".*\\.(h|hpp)")
             set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
-            set(${NON_HEADER_FILE} ${SRC_FILE} PARENT_SCOPE)
+            set(${NON_HEADER_FILE} "${SRC_FILE}" PARENT_SCOPE)
             return()
         endif()
     endforeach()
@@ -113,15 +114,15 @@ function(add_cpp_library)
     )
 endfunction()
 
-# Adds a C++ 20 test executable named unit-test-NAME that will be built with SOURCES and linked with
-# LINK_LIBRARIES, in addition to Catch2.
+# Adds a C++ 20 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
+# with `LINK_LIBRARIES`, in addition to Catch2.
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
 # @param {string[]} SOURCES
 # @param {string[]} [LINK_LIBRARIES]
-# @param {string} [UNIFIED_TEST_TARGET] If set, SOURCES and LINK_LIBRARIES are also added to
-# UNIFIED_TEST_TARGET.
+# @param {string} [UNIFIED_TEST_TARGET] If set, `SOURCES` and `LINK_LIBRARIES` are also added to
+# `UNIFIED_TEST_TARGET`.
 function(add_catch2_tests)
     set(SINGLE_VALUE_ARGS
         NAME
@@ -177,11 +178,11 @@ endfunction()
 # @param {string} NAME
 # @param {string} NAMESPACE
 # @param {string} [CONFIG_DEST_DIR] Destination to install the generated config file
-# (NAME-config.cmake).
-# @param {string} [CONFIG_INPUT_DIR] configure_package_config_file input file
-# (NAME-config.cmake.in).
-# @param {string} [CONFIG_OUTPUT_DIR] configure_package_config_file output file
-# (NAME-config.cmake).
+# (`NAME-config.cmake`).
+# @param {string} [CONFIG_INPUT_DIR] `configure_package_config_file` input file
+# (`NAME-config.cmake.in`).
+# @param {string} [CONFIG_OUTPUT_DIR] `configure_package_config_file` output file
+# (`NAME-config.cmake`).
 function(install_library)
     set(SINGLE_VALUE_ARGS
         NAME
