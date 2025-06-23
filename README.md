@@ -4,24 +4,36 @@ An open-source C++ library developed and used at YScope.
 
 # Usage
 
-## Via CMake's `find_package`
-
 First, [build](#building) and [install](#installing) `ystdlib` onto your system. Then, in your
 project's `CMakeLists.txt`, add the following:
 
 ```cmake
-# If `BUILD_TESTING` is set, set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip
-# building ystdlib's unit tests.
-# option(ystdlib_BUILD_TESTING "" OFF)
-# If ystdlib is not installed to a path that is searched by default, set `ystdlib_ROOT` to manually
-# specify the location.
-# set(ystdlib_ROOT "<PATH_TO_INSTALLATION>")
 find_package(ystdlib REQUIRED)
-target_link_libraries(<target_name> <link_options>
-    ystdlib::<lib_1> ystdlib::<lib_2> ... ystdlib::<lib_N>
-    # other libs...
+target_link_libraries(<target_name>
+    [<link-options>]
+    ystdlib::<lib_1>
+    [ystdlib::<lib_2> ... ystdlib::<lib_N>]
 )
 ```
+
+Where
+
+* `<target_name>` is the name of your target.
+* `<link-options>` are the link options for your target.
+* `lib_1`, `lib_2`, ..., `lib_N` are the names of the ystdlib libraries you wish to link with your
+  target.
+
+> [!NOTE]
+> If `BUILD_TESTING` is set, set `ystdlib_BUILD_TESTING` to an accepted `FALSE` class value to skip
+> building ystdlib's unit tests.
+
+> [!TIP]
+> If ystdlib is not installed to a path that is searched by default, set `ystdlib_ROOT` to manually
+> specify the location:
+> 
+> ```cmake
+> set(ystdlib_ROOT "<PATH_TO_INSTALLATION>")
+> ```
 
 # Contributing
 Follow the steps below to develop and contribute to the project.
@@ -46,7 +58,10 @@ task deps:install-all
 
 ## Building
 
-### Task
+The library can be built directly using [CMake](#using-cmake) or indirectly using
+[Task](#using-task).
+
+### Using Task
 
 To build all targets:
 ```shell
@@ -63,7 +78,7 @@ To build an executable containing a single library's unit tests:
 task build:unit-test-<lib_name>
 ```
 
-### CMake
+### Using CMake
 
 To build all libraries, run:
 
@@ -72,17 +87,19 @@ cmake -S . -B ./build
 cmake --build ./build
 ```
 
-To build a subset of libraries, set the variable `ystdlib_LIBRARIES` to a semicolon(`;`) separated
-list of library names. The library names match their [directory name in src/](./src/ystdlib).
-For example:
+To build a subset of libraries, set the variable `ystdlib_LIBRARIES` to a semicolon-separated (`;`)
+list of library names. The library names match their [directory name in src/](./src/ystdlib). For
+example:
 
 ```shell
 cmake -S . -B ./build -Dystdlib_LIBRARIES="containers;io_interface"
 cmake --build ./build
 ```
 
-It is not necessary to specify libraries your subset depends on. In the example, specifying
-`io_interface` automatically builds `wrapped_facade_headers`.
+> [!NOTE]
+> Internal dependencies of the libraries you choose will be automatically built, even if you don't
+> explicitly specify them. In the example, specifying `io_interface` automatically builds
+> `wrapped_facade_headers`.
 
 ## Installing
 
