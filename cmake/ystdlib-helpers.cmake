@@ -4,11 +4,11 @@ include(CMakePackageConfigHelpers)
 # arguments are stored in variables prefixed with `ARG_<NAME>`.
 #
 # @param {string[]} REQUIRED_ARG_NAMES
-macro(require_argument_values REQUIRED_ARG_NAMES)
-    set(_REQUIRED_ARGS "${REQUIRED_ARG_NAMES}")
-    foreach(_REQUIRED_ARG IN LISTS _REQUIRED_ARGS)
-        if(NOT DEFINED ARG_${_REQUIRED_ARG} OR ARG_${_REQUIRED_ARG} STREQUAL "")
-            message(FATAL_ERROR "Empty value for argument: '${_REQUIRED_ARG}'")
+macro(check_required_arguments_exist REQUIRED_ARG_NAMES)
+    set(_NAMES "${REQUIRED_ARG_NAMES}")
+    foreach(_NAME IN LISTS _NAMES)
+        if(NOT DEFINED ARG_${_NAME} OR ARG_${_NAME} STREQUAL "")
+            message(FATAL_ERROR "Empty value for argument: '${_NAME}'")
         endif()
     endforeach()
 endmacro()
@@ -60,7 +60,7 @@ function(add_cpp_library)
         PUBLIC_HEADERS
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     if(NOT DEFINED ARG_BUILD_INCLUDE_DIRS)
         set(ARG_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
@@ -139,7 +139,7 @@ function(add_catch2_tests)
         SOURCES
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     set(ALIAS_TARGET "${ARG_NAMESPACE}::${ARG_NAME}")
     set(UNIT_TEST_TARGET "unit-test-${ARG_NAME}")
@@ -150,8 +150,8 @@ function(add_catch2_tests)
         ${UNIT_TEST_TARGET}
         PRIVATE
             Catch2::Catch2WithMain
-            ${ALIAS_TARGET}
             ${ARG_LINK_LIBRARIES}
+            ${ALIAS_TARGET}
     )
     target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
@@ -167,8 +167,8 @@ function(add_catch2_tests)
         target_link_libraries(
             ${ARG_UNIFIED_TEST_TARGET}
             PRIVATE
-                ${ALIAS_TARGET}
                 ${ARG_LINK_LIBRARIES}
+                ${ALIAS_TARGET}
         )
     endif()
 endfunction()
@@ -177,12 +177,12 @@ endfunction()
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
-# @param {string} [CONFIG_DEST_DIR] Destination to install the generated config file
-# (`NAME-config.cmake`).
-# @param {string} [CONFIG_INPUT_DIR] `configure_package_config_file` input file
-# (`NAME-config.cmake.in`).
-# @param {string} [CONFIG_OUTPUT_DIR] `configure_package_config_file` output file
-# (`NAME-config.cmake`).
+# @param {string} [CONFIG_DEST_DIR="${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs"]
+# Destination to install the generated config file (`NAME-config.cmake`).
+# @param {string} [CONFIG_INPUT_DIR="${PROJECT_SOURCE_DIR}/cmake/libs"]
+# `configure_package_config_file` input file (`NAME-config.cmake.in`).
+# @param {string} [CONFIG_OUTPUT_DIR="${CMAKE_CURRENT_BINARY_DIR}"] `configure_package_config_file`
+# output file (`NAME-config.cmake`).
 function(install_library)
     set(SINGLE_VALUE_ARGS
         NAME
@@ -196,7 +196,7 @@ function(install_library)
         NAMESPACE
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     if(NOT DEFINED ARG_CONFIG_DEST_DIR)
         set(ARG_CONFIG_DEST_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs")
@@ -219,15 +219,13 @@ function(install_library)
         NAMESPACE "${ARG_NAMESPACE}::"
     )
 
+    set(CONFIG_FILE_NAME "${ARG_NAME}-config.cmake")
+    set(CONFIG_OUTPUT_PATH "${ARG_CONFIG_OUTPUT_DIR}/${CONFIG_FILE_NAME}")
     configure_package_config_file(
-        ${ARG_CONFIG_INPUT_DIR}/${ARG_NAME}-config.cmake.in
-        ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
-        INSTALL_DESTINATION ${ARG_CONFIG_DEST_DIR}
+        "${ARG_CONFIG_INPUT_DIR}/${CONFIG_FILE_NAME}.in"
+        "${CONFIG_OUTPUT_PATH}"
+        INSTALL_DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
 
-    install(
-        FILES
-            ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
-        DESTINATION ${ARG_CONFIG_DEST_DIR}
-    )
+    install(FILES "${CONFIG_OUTPUT_PATH}" DESTINATION "${ARG_CONFIG_DEST_DIR}")
 endfunction()

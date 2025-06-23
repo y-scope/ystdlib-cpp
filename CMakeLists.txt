@@ -85,24 +85,27 @@ if(ystdlib_ENABLE_TESTS)
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
-set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
+# All libraries are required to use the same minimum version of dependencies to avoid issues.
+set(MIN_BOOST_VERSOIN "1.81.0")
 
 add_subdirectory(src/ystdlib)
 
+set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
+
+set(CONFIG_FILE_PREFIX "ystdlib-config")
+set(CONFIG_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_PREFIX}.cmake")
+set(CONFIG_VERSION_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_PREFIX}-version.cmake")
 configure_package_config_file(
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/ystdlib-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-    INSTALL_DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/${CONFIG_FILE_PREFIX}.cmake.in"
+    "${CONFIG_OUTPUT_PATH}"
+    INSTALL_DESTINATION "${ystdlib_INSTALL_CONFIG_DIR}"
 )
 
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    COMPATIBILITY SameMajorVersion
-)
+write_basic_package_version_file("${CONFIG_VERSION_OUTPUT_PATH}" COMPATIBILITY SameMajorVersion)
 
 install(
     FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
+        "${CONFIG_OUTPUT_PATH}"
+        "${CONFIG_VERSION_OUTPUT_PATH}"
+    DESTINATION "${ystdlib_INSTALL_CONFIG_DIR}"
 )
