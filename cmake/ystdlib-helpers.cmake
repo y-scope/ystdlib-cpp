@@ -66,7 +66,6 @@ function(add_cpp_library)
         set(ARG_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
     endif()
 
-    set(TARGET_NAME "${ARG_NAMESPACE}_${ARG_NAME}")
     set(ALIAS_TARGET_NAME "${ARG_NAMESPACE}::${ARG_NAME}")
 
     check_if_header_only(ARG_PUBLIC_HEADERS IS_VALID_INTERFACE INVALID_HEADER_FILE)
