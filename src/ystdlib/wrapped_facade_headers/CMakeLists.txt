@@ -1,7 +1,3 @@
-if(TARGET ystdlib::wrapped_facade_headers)
-    return()
-endif()
-
 add_cpp_library(NAME wrapped_facade_headers NAMESPACE ystdlib PUBLIC_HEADERS sys/types.h)
 
 if(ystdlib_ENABLE_TESTS)

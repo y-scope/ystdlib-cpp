@@ -1,7 +1,3 @@
-if(TARGET ystdlib::io_interface)
-    return()
-endif()
-
 if(NOT "wrapped_facade_headers" IN_LIST ystdlib_LIBRARIES)
     add_subdirectory(
         "${CMAKE_CURRENT_LIST_DIR}/../wrapped_facade_headers"

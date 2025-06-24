@@ -1,5 +1,3 @@
-if(TARGET ystdlib::containers)
-    return()
-endif()
+include_guard(GLOBAL)
 
 include("${CMAKE_CURRENT_LIST_DIR}/containers-target.cmake")

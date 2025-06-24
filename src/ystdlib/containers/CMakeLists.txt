@@ -1,7 +1,3 @@
-if(TARGET ystdlib::containers)
-    return()
-endif()
-
 add_cpp_library(NAME containers NAMESPACE ystdlib PUBLIC_HEADERS Array.hpp)
 
 if(ystdlib_ENABLE_TESTS)
