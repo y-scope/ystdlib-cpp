@@ -22,6 +22,10 @@ if(ystdlib-examples_IS_TOP_LEVEL)
     include("${CMAKE_CURRENT_LIST_DIR}/../build/deps/cmake-settings/all.cmake" OPTIONAL)
 endif()
 
+# Prefer the new BoostConfig.cmake package configuration if possible.
+if(POLICY "CMP0167")
+    cmake_policy(SET "CMP0167" "NEW")
+endif()
 find_package(ystdlib REQUIRED)
 message(STATUS "Found ystdlib ${ystdlib_VERSION}.")
 

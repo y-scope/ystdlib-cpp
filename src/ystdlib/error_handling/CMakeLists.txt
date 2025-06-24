@@ -2,6 +2,10 @@ if(TARGET ystdlib::error_handling)
     return()
 endif()
 
+# Prefer the new BoostConfig.cmake package configuration if possible.
+if(POLICY "CMP0167")
+    cmake_policy(SET "CMP0167" "NEW")
+endif()
 set(BOOST_FIND_PACKAGE_ARGS
     "${BOOST_MIN_VERSION}"
     REQUIRED
