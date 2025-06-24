@@ -219,9 +219,5 @@ function(install_library)
         "${CONFIG_FILE_OUTPUT_PATH}"
         INSTALL_DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
-    install(
-        FILES
-            "${CONFIG_FILE_OUTPUT_PATH}"
-        DESTINATION "${ARG_CONFIG_DEST_DIR}"
-    )
+    install(FILES "${CONFIG_FILE_OUTPUT_PATH}" DESTINATION "${ARG_CONFIG_DEST_DIR}")
 endfunction()
