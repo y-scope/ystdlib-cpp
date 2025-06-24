@@ -213,14 +213,15 @@ function(install_library)
     )
 
     set(CONFIG_FILE_NAME "${ARG_NAME}-config.cmake")
+    set(CONFIG_FILE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}")
     configure_package_config_file(
         "${ARG_CONFIG_INPUT_DIR}/${CONFIG_FILE_NAME}.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}"
+        "${CONFIG_FILE_OUTPUT_PATH}"
         INSTALL_DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
     install(
         FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}"
+            "${CONFIG_FILE_OUTPUT_PATH}"
         DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
 endfunction()
