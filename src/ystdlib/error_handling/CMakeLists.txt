@@ -1,14 +1,14 @@
-if(TARGET ystdlib::error_handling)
-    return()
+# Prefer the new BoostConfig.cmake package configuration if possible.
+if(POLICY "CMP0167")
+    cmake_policy(SET "CMP0167" "NEW")
 endif()
-
-set(boost_find_package_args
-    1.81.0
+set(BOOST_FIND_PACKAGE_ARGS
+    "${BOOST_MIN_VERSION}"
     REQUIRED
     COMPONENTS
     headers
 )
-find_package(Boost ${boost_find_package_args})
+find_package(Boost ${BOOST_FIND_PACKAGE_ARGS})
 message(STATUS "Found Boost ${Boost_VERSION}.")
 
 add_cpp_library(
@@ -28,14 +28,17 @@ if(ystdlib_ENABLE_TESTS)
         NAME error_handling
         NAMESPACE ystdlib
         SOURCES
-            test/constants.hpp
             test/test_ErrorCode.cpp
             test/test_Result.cpp
             test/test_TraceableException.cpp
             test/types.cpp
-            test/types.hpp
         UNIFIED_TEST_TARGET "${UNIFIED_UNIT_TEST_TARGET}"
     )
 endif()
 
-install_library(NAME error_handling NAMESPACE ystdlib)
+install_library(
+    NAME error_handling
+    NAMESPACE ystdlib
+    CONFIG_DEST_DIR "${CONFIG_LIBS_DEST_DIR}"
+    CONFIG_INPUT_DIR "${CONFIG_LIBS_INPUT_DIR}"
+)

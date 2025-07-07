@@ -1,7 +1,3 @@
-if(TARGET ystdlib::io_interface)
-    return()
-endif()
-
 if(NOT "wrapped_facade_headers" IN_LIST ystdlib_LIBRARIES)
     add_subdirectory(
         "${CMAKE_CURRENT_LIST_DIR}/../wrapped_facade_headers"
@@ -33,4 +29,9 @@ if(ystdlib_ENABLE_TESTS)
     )
 endif()
 
-install_library(NAME io_interface NAMESPACE ystdlib)
+install_library(
+    NAME io_interface
+    NAMESPACE ystdlib
+    CONFIG_DEST_DIR "${CONFIG_LIBS_DEST_DIR}"
+    CONFIG_INPUT_DIR "${CONFIG_LIBS_INPUT_DIR}"
+)

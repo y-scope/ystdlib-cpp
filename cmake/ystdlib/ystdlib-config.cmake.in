@@ -1,0 +1,12 @@
+include(CMakeFindDependencyMacro)
+
+@PACKAGE_INIT@
+
+set(ystdlib_LIBRARIES_LIST "@ystdlib_LIBRARIES@")
+foreach(LIB IN LISTS ystdlib_LIBRARIES_LIST)
+    if(NOT TARGET ystdlib::${LIB})
+        include("${CMAKE_CURRENT_LIST_DIR}/libs/${LIB}-config.cmake")
+    endif()
+endforeach()
+
+check_required_components(ystdlib)

@@ -1,28 +1,29 @@
 include(CMakePackageConfigHelpers)
 
-# Checks that each argument name is defined and non-empty. Requires a prior call to
-# `cmake_parse_arguments` with `ARG` as the prefix to access the values of the arguments in
-# `REQUIRED_ARG_NAMES`.
+# Checks that each argument name in `REQUIRED_ARG_NAMES` is defined and non-empty. Assumes the
+# arguments are stored in variables of the form `ARG_<NAME>`.
 #
 # @param {string[]} REQUIRED_ARG_NAMES
-macro(require_argument_values REQUIRED_ARG_NAMES)
-    set(_REQUIRED_ARGS "${REQUIRED_ARG_NAMES}")
-    foreach(_REQUIRED_ARG IN LISTS _REQUIRED_ARGS)
-        if(NOT DEFINED ARG_${_REQUIRED_ARG} OR ARG_${_REQUIRED_ARG} STREQUAL "")
-            message(FATAL_ERROR "Non-empty value for argument: '${_REQUIRED_ARG}'")
+macro(check_required_arguments_exist REQUIRED_ARG_NAMES)
+    set(_NAMES "${REQUIRED_ARG_NAMES}")
+    foreach(_NAME IN LISTS _NAMES)
+        if(NOT DEFINED ARG_${_NAME} OR ARG_${_NAME} STREQUAL "")
+            message(FATAL_ERROR "Missing or empty value for argument: '${_NAME}'")
         endif()
     endforeach()
 endmacro()
 
-# @param {string[]} SOURCE_LIST The list of source files to check.
-# @param {bool} IS_HEADER_ONLY Returns TRUE if list only contains header files, FALSE otherwise.
+# Checks if `SOURCE_LIST` contains only header files.
+#
+# @param {string[]} SOURCE_LIST
+# @param {bool} IS_HEADER_ONLY Returns whether the list contains only header files.
 # @param {string} NON_HEADER_FILE Returns the name of the first, if any, non-header file.
 function(check_if_header_only SOURCE_LIST IS_HEADER_ONLY NON_HEADER_FILE)
     set(LOCAL_SOURCE_LIST "${${SOURCE_LIST}}")
     foreach(SRC_FILE IN LISTS LOCAL_SOURCE_LIST)
-        if(NOT ${SRC_FILE} MATCHES ".*\\.(h|hpp)")
+        if(NOT "${SRC_FILE}" MATCHES ".*\\.(h|hpp)")
             set(${IS_HEADER_ONLY} FALSE PARENT_SCOPE)
-            set(${NON_HEADER_FILE} ${SRC_FILE} PARENT_SCOPE)
+            set(${NON_HEADER_FILE} "${SRC_FILE}" PARENT_SCOPE)
             return()
         endif()
     endforeach()
@@ -59,7 +60,7 @@ function(add_cpp_library)
         PUBLIC_HEADERS
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     if(NOT DEFINED ARG_BUILD_INCLUDE_DIRS)
         set(ARG_BUILD_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/src")
@@ -113,15 +114,15 @@ function(add_cpp_library)
     )
 endfunction()
 
-# Adds a C++ 20 test executable named unit-test-NAME that will be built with SOURCES and linked with
-# LINK_LIBRARIES, in addition to Catch2.
+# Adds a C++ 20 test executable named `unit-test-NAME` that will be built with `SOURCES` and linked
+# with `LINK_LIBRARIES`, in addition to Catch2.
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
 # @param {string[]} SOURCES
 # @param {string[]} [LINK_LIBRARIES]
-# @param {string} [UNIFIED_TEST_TARGET] If set, SOURCES and LINK_LIBRARIES are also added to
-# UNIFIED_TEST_TARGET.
+# @param {string} [UNIFIED_TEST_TARGET] If set, `SOURCES` and `LINK_LIBRARIES` are also added to
+# `UNIFIED_TEST_TARGET`.
 function(add_catch2_tests)
     set(SINGLE_VALUE_ARGS
         NAME
@@ -138,7 +139,7 @@ function(add_catch2_tests)
         SOURCES
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     set(ALIAS_TARGET "${ARG_NAMESPACE}::${ARG_NAME}")
     set(UNIT_TEST_TARGET "unit-test-${ARG_NAME}")
@@ -148,9 +149,9 @@ function(add_catch2_tests)
     target_link_libraries(
         ${UNIT_TEST_TARGET}
         PRIVATE
-            Catch2::Catch2WithMain
             ${ALIAS_TARGET}
             ${ARG_LINK_LIBRARIES}
+            Catch2::Catch2WithMain
     )
     target_compile_features(${UNIT_TEST_TARGET} PRIVATE cxx_std_20)
     set_property(
@@ -176,58 +177,46 @@ endfunction()
 #
 # @param {string} NAME
 # @param {string} NAMESPACE
-# @param {string} [CONFIG_DEST_DIR] Destination to install the generated config file
-# (NAME-config.cmake).
-# @param {string} [CONFIG_INPUT_DIR] configure_package_config_file input file
-# (NAME-config.cmake.in).
-# @param {string} [CONFIG_OUTPUT_DIR] configure_package_config_file output file
-# (NAME-config.cmake).
+# @param {string} CONFIG_DEST_DIR Destination to install the generated config file
+# (`NAME-config.cmake`).
+# @param {string} CONFIG_INPUT_DIR `configure_package_config_file` input file
+# (`NAME-config.cmake.in`).
 function(install_library)
     set(SINGLE_VALUE_ARGS
         NAME
         NAMESPACE
         CONFIG_DEST_DIR
         CONFIG_INPUT_DIR
-        CONFIG_OUTPUT_DIR
     )
     set(REQUIRED_ARGS
         NAME
         NAMESPACE
+        CONFIG_DEST_DIR
+        CONFIG_INPUT_DIR
     )
     cmake_parse_arguments(ARG "" "${SINGLE_VALUE_ARGS}" "" ${ARGN})
-    require_argument_values("${REQUIRED_ARGS}")
-
-    if(NOT DEFINED ARG_CONFIG_DEST_DIR)
-        set(ARG_CONFIG_DEST_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${ARG_NAMESPACE}/libs")
-    endif()
-
-    if(NOT DEFINED ARG_CONFIG_INPUT_DIR)
-        set(ARG_CONFIG_INPUT_DIR "${PROJECT_SOURCE_DIR}/cmake/libs")
-    endif()
-
-    if(NOT DEFINED ARG_CONFIG_OUTPUT_DIR)
-        set(ARG_CONFIG_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-    endif()
+    check_required_arguments_exist("${REQUIRED_ARGS}")
 
     set(EXPORT_NAME "${ARG_NAME}-target")
     install(TARGETS "${ARG_NAME}" EXPORT "${EXPORT_NAME}" LIBRARY ARCHIVE RUNTIME FILE_SET HEADERS)
-
+    set_target_properties(
+        "${ARG_NAME}"
+        PROPERTIES
+            OUTPUT_NAME
+                "${ARG_NAMESPACE}_${ARG_NAME}"
+    )
     install(
         EXPORT "${EXPORT_NAME}"
         DESTINATION ${ARG_CONFIG_DEST_DIR}
         NAMESPACE "${ARG_NAMESPACE}::"
-        COMPONENT "${ARG_NAME}"
     )
 
+    set(CONFIG_FILE_NAME "${ARG_NAME}-config.cmake")
+    set(CONFIG_FILE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_NAME}")
     configure_package_config_file(
-        ${ARG_CONFIG_INPUT_DIR}/${ARG_NAME}-config.cmake.in
-        ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
-        INSTALL_DESTINATION ${ARG_CONFIG_DEST_DIR}
+        "${ARG_CONFIG_INPUT_DIR}/${CONFIG_FILE_NAME}.in"
+        "${CONFIG_FILE_OUTPUT_PATH}"
+        INSTALL_DESTINATION "${ARG_CONFIG_DEST_DIR}"
     )
-
-    install(
-        FILES
-            ${ARG_CONFIG_OUTPUT_DIR}/${ARG_NAME}-config.cmake
-        DESTINATION ${ARG_CONFIG_DEST_DIR}
-    )
+    install(FILES "${CONFIG_FILE_OUTPUT_PATH}" DESTINATION "${ARG_CONFIG_DEST_DIR}")
 endfunction()

@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.23)
 project(ystdlib VERSION "0.1.0" LANGUAGES CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(ystdlib-helpers)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
+include(ystdlib-helpers)
 
 option(BUILD_SHARED_LIBS "Build using shared libraries." OFF)
 option(ystdlib_BUILD_TESTING "Build the testing tree for ystdlib." ON)
@@ -44,12 +44,12 @@ set(ystdlib_LIBRARIES
     "io_interface"
     "wrapped_facade_headers"
     CACHE STRING
-    "Semi-colon separated list of libraries to be built."
+    "Semicolon-separated list of libraries to be built."
 )
 
 message(STATUS "Building the following libraries:")
 foreach(LIB IN LISTS ystdlib_LIBRARIES)
-    message(" - ${LIB}")
+    message(STATUS " - ${LIB}")
 endforeach()
 
 if(ystdlib_IS_TOP_LEVEL)
@@ -85,24 +85,32 @@ if(ystdlib_ENABLE_TESTS)
     catch_discover_tests(${UNIFIED_UNIT_TEST_TARGET} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testbin)
 endif()
 
-set(ystdlib_INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/ystdlib)
+# We require all libraries use the same minimum version of dependencies to avoid issues.
+set(BOOST_MIN_VERSION "1.81.0")
+
+set(CONFIG_PATH_SUFFIX "cmake/ystdlib")
+set(CONFIG_LIBS_PATH_SUFFIX "${CONFIG_PATH_SUFFIX}/libs")
+
+# Used by libraries and must come before add_subdirectory.
+set(CONFIG_LIBS_DEST_DIR "${CMAKE_INSTALL_LIBDIR}/${CONFIG_LIBS_PATH_SUFFIX}")
+set(CONFIG_LIBS_INPUT_DIR "${PROJECT_SOURCE_DIR}/${CONFIG_LIBS_PATH_SUFFIX}")
 
 add_subdirectory(src/ystdlib)
 
+set(CONFIG_FILE_PREFIX "ystdlib-config")
+set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/${CONFIG_PATH_SUFFIX}")
+set(CONFIG_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_PREFIX}.cmake")
+set(CONFIG_VERSION_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/${CONFIG_FILE_PREFIX}-version.cmake")
+
 configure_package_config_file(
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/ystdlib-config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-    INSTALL_DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
+    "${CMAKE_CURRENT_LIST_DIR}/${CONFIG_PATH_SUFFIX}/${CONFIG_FILE_PREFIX}.cmake.in"
+    "${CONFIG_OUTPUT_PATH}"
+    INSTALL_DESTINATION "${CONFIG_INSTALL_DIR}"
 )
-
-write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    COMPATIBILITY SameMajorVersion
-)
-
+write_basic_package_version_file("${CONFIG_VERSION_OUTPUT_PATH}" COMPATIBILITY SameMajorVersion)
 install(
     FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/ystdlib-config-version.cmake
-    DESTINATION ${ystdlib_INSTALL_CONFIG_DIR}
+        "${CONFIG_OUTPUT_PATH}"
+        "${CONFIG_VERSION_OUTPUT_PATH}"
+    DESTINATION "${CONFIG_INSTALL_DIR}"
 )

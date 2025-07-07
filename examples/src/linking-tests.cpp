@@ -44,23 +44,28 @@ using ystdlib::io_interface::ErrorCode;
 
 class FailureReader : public ystdlib::io_interface::ReaderInterface {
 public:
-    [[nodiscard]] auto read(char* /*buf*/, size_t /*num_bytes_to_read*/, size_t& /*num_bytes_read*/)
+    [[nodiscard]] auto read([[maybe_unused]] char* buf, [[maybe_unused]] size_t num_bytes_to_read, [[maybe_unused]] size_t& num_bytes_read)
             -> ErrorCode override {
         return ErrorCode::ErrorCode_Unsupported;
     }
 
-    [[nodiscard]] auto seek_from_begin(size_t /*pos*/) -> ErrorCode override {
+    [[nodiscard]] auto seek_from_begin([[maybe_unused]] size_t pos) -> ErrorCode override {
         return ErrorCode::ErrorCode_Unsupported;
     }
 
-    [[nodiscard]] auto seek_from_current(off_t /*offset*/) -> ErrorCode override {
+    [[nodiscard]] auto seek_from_current([[maybe_unused]] off_t offset) -> ErrorCode override {
         return ErrorCode::ErrorCode_Unsupported;
     }
 
-    [[nodiscard]] auto get_pos(size_t& /*pos*/) -> ErrorCode override {
+    [[nodiscard]] auto get_pos([[maybe_unused]] size_t& pos) -> ErrorCode override {
         return ErrorCode::ErrorCode_Unsupported;
     }
 };
+
+auto test_containers() -> bool;
+auto test_error_handling() -> bool;
+auto test_io_interface() -> bool;
+auto test_wrapped_facade_headers() -> bool;
 
 auto test_containers() -> bool {
     try {
@@ -107,7 +112,7 @@ auto main() -> int {
     }
 
     if (false == test_io_interface()) {
-        std::cerr << "Error: error_handling test failed. Could not use FailureReader.\n";
+        std::cerr << "Error: io_interface test failed. Could not use FailureReader.\n";
         return 3;
     }
 
