@@ -106,11 +106,12 @@ function(add_cpp_library)
     target_sources(
         ${ARG_NAME}
         PUBLIC
-            FILE_SET HEADERS
-            BASE_DIRS
-                "$<BUILD_INTERFACE:${ARG_BUILD_INCLUDE_DIRS}>"
-                "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-            FILES ${ARG_PUBLIC_HEADERS}
+            FILE_SET
+            HEADERS
+                BASE_DIRS
+                    "$<BUILD_INTERFACE:${ARG_BUILD_INCLUDE_DIRS}>"
+                    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+                FILES ${ARG_PUBLIC_HEADERS}
     )
 endfunction()
 

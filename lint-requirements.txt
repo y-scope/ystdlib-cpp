@@ -1,5 +1,5 @@
 clang-format>=20.1.0
 clang-tidy>=19.1.0
 colorama>=0.4.6
-gersemi>=0.16.2
+gersemi>=0.20.0
 yamllint>=1.35.1
