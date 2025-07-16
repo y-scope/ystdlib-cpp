@@ -1,5 +1,0 @@
-if(TARGET ystdlib::containers)
-    return()
-endif()
-
-include("${CMAKE_CURRENT_LIST_DIR}/containers-target.cmake")

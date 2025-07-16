@@ -1,5 +1,0 @@
-if(TARGET ystdlib::wrapped_facade_headers)
-    return()
-endif()
-
-include("${CMAKE_CURRENT_LIST_DIR}/wrapped_facade_headers-target.cmake")
