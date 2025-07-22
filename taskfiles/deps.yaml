@@ -6,7 +6,6 @@ includes:
     taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 vars:
-  G_CATCH2_LIB_NAME: "Catch2"
   G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
 
   # This path must be kept in-sync with its usage in CMakeLists.txt and examples/CMakeLists.txt.
@@ -35,7 +34,7 @@ tasks:
     cmds:
       - task: "dev-utils:cmake:install-remote-tar"
         vars:
-          CMAKE_PACKAGE_NAME: "{{.G_CATCH2_LIB_NAME}}"
+          CMAKE_PACKAGE_NAME: ".Catch2"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           TAR_SHA256: "1ab2de20460d4641553addfdfe6acd4109d871d5531f8f519a52ea4926303087"
           TAR_URL: "https://github.com/catchorg/Catch2/archive/refs/tags/v3.8.0.tar.gz"
