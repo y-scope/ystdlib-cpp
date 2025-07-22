@@ -1,9 +1,6 @@
 version: "3"
 
 includes:
-  build:
-    internal: true
-    taskfile: "build.yaml"
   deps:
     internal: true
     taskfile: "deps.yaml"
@@ -13,6 +10,9 @@ includes:
   utils:
     internal: true
     taskfile: "utils.yaml"
+  ystdlib:
+    internal: true
+    taskfile: "ystdlib.yaml"
 
 tasks:
   build-*:
@@ -61,7 +61,7 @@ tasks:
     vars:
       INSTALL_PREFIX: "{{.G_EXAMPLES_BUILD_DIR}}/deps/ystdlib/{{.BUILD_TYPE}}"
     deps:
-      - task: "build:install"
+      - task: "ystdlib:install"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"

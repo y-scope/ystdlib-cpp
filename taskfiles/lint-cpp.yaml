@@ -1,12 +1,12 @@
 version: "3"
 
 includes:
-  build:
-    internal: true
-    taskfile: "build.yaml"
   examples:
     internal: true
     taskfile: "examples.yaml"
+  ystdlib:
+    internal: true
+    taskfile: "ystdlib.yaml"
 
 vars:
   G_LINT_CLANG_TIDY_DIR: "{{.G_BUILD_DIR}}/lint-clang-tidy"
@@ -73,7 +73,7 @@ tasks:
     desc: "Runs the C++ static analyzers. Only checks for warnings and violations."
     deps:
       - "cpp-configs"
-      - task: "build:generate"
+      - task: "ystdlib:generate"
         vars:
           BUILD_TYPE: "debug"
           TARGET: "all"

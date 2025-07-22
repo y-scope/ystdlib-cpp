@@ -1,12 +1,12 @@
 version: "3"
 
 includes:
-  build:
-    internal: true
-    taskfile: "build.yaml"
   utils:
     internal: true
     taskfile: "utils.yaml"
+  ystdlib:
+    internal: true
+    taskfile: "ystdlib.yaml"
 
 tasks:
   "*-*":
@@ -22,7 +22,7 @@ tasks:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TARGET}}"
     cmds:
-      - task: "build:build"
+      - task: "ystdlib:build"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
           TARGET: "{{.TEST_TARGET}}"
