@@ -4,109 +4,127 @@ includes:
   deps:
     internal: true
     taskfile: "deps.yaml"
-  dev-utils:
-    internal: true
-    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
   utils:
     internal: true
-    taskfile: "utils.yaml"
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
 
 tasks:
-  "*-*":
-    desc: "<target>-<build type>: Builds the specified build target with build type."
-    vars:
-      BUILD_TYPE: "{{index .MATCH 1}}"
-      TARGET: "{{index .MATCH 0}}"
-    deps:
-      - task: "utils:validate-all-args"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
+  build-debug:
+    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    desc: >-
+      build-debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build debug libraries. If
+      ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
+      dependencies.
     cmds:
       - task: "build"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
+          BUILD_TYPE: "debug"
+          LIBRARIES: "{{.ystdlib_LIBRARIES}}"
 
-  clean-*:
-    desc: "clean-<build type>: Clean the build type."
-    vars:
-      BUILD_TYPE: "{{index .MATCH 0}}"
-    deps:
-      - task: "utils:validate-build-type"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-    cmds:
-      - task: "dev-utils:cmake:clean"
-        vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
-
-  install-*-*:
+  build-release:
+    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
     desc: >-
-      install-<target>-<build type> YSTDLIB_INSTALL_PREFIX="<prefix path>": Install the specified
-      build target with build type to the prefix path.
-    vars:
-      BUILD_TYPE: "{{index .MATCH 1}}"
-      TARGET: "{{index .MATCH 0}}"
-    requires:
-      vars: ["YSTDLIB_INSTALL_PREFIX"]
-    deps:
-      - task: "utils:validate-all-args"
+      build-release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build release libraries. If
+      ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
+      dependencies.
+    cmds:
+      - task: "build"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
+          BUILD_TYPE: "release"
+          LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+
+  clean-debug:
+    cmds:
+      - task: "clean"
+        vars:
+          BUILD_TYPE: "debug"
+
+  clean-release:
+    cmds:
+      - task: "clean"
+        vars:
+          BUILD_TYPE: "release"
+
+  install-debug:
+    desc: >-
+      install-debug INSTALL_PREFIX="<prefix path>": Install the debug build into <prefix path>.
+    requires:
+      vars: ["INSTALL_PREFIX"]
     cmds:
       - task: "install"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          INSTALL_PREFIX: "{{.YSTDLIB_INSTALL_PREFIX}}"
-          TARGET: "{{.TARGET}}"
+          BUILD_TYPE: "debug"
+          INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
+
+  install-release:
+    desc: >-
+      install-release INSTALL_PREFIX="<prefix path>": Install the release build into <prefix path>.
+    requires:
+      vars: ["INSTALL_PREFIX"]
+    cmds:
+      - task: "install"
+        vars:
+          BUILD_TYPE: "release"
+          INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
 
   build:
     internal: true
     requires:
-      vars: ["BUILD_TYPE", "TARGET"]
+      vars: ["BUILD_TYPE"]
     deps:
       - task: "generate"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
+          LIBRARIES: "{{.LIBRARIES}}"
     cmds:
-      - task: "dev-utils:cmake:build"
+      - task: "utils:cmake:build"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
-          TARGETS:
-            - "{{.TARGET}}"
+
+  clean:
+    internal: true
+    requires:
+      vars: ["BUILD_TYPE"]
+    cmds:
+      - task: "utils:cmake:clean"
+        vars:
+          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
 
   generate:
     internal: true
     requires:
-      vars: ["BUILD_TYPE", "TARGET"]
+      vars: ["BUILD_TYPE"]
     deps:
       - "deps:all"
     cmds:
-      - task: "dev-utils:cmake:generate"
+      - task: "utils:cmake:generate"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           EXTRA_ARGS:
             - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
+            - |-
+              {{- if .LIBRARIES}}
+                -D{{.G_CMAKE_PACKAGE_NAME}}_LIBRARIES="{{.LIBRARIES}}"
+              {{- end}}
           SOURCE_DIR: "{{.ROOT_DIR}}"
 
   install:
     internal: true
     vars:
-      ABSOLUTE_INSTALL_PREFIX:
-        sh: "realpath '{{.INSTALL_PREFIX}}'"
+      ABSOLUTE_INSTALL_PREFIX: >-
+        {{- if osIsAbs .INSTALL_PREFIX -}}
+          {{.INSTALL_PREFIX}}
+        {{- else -}}
+          {{.USER_WORKING_DIR}}/{{.INSTALL_PREFIX}}
+        {{- end}}
     requires:
-      vars: ["BUILD_TYPE", "INSTALL_PREFIX", "TARGET"]
+      vars: ["BUILD_TYPE", "INSTALL_PREFIX"]
     deps:
       - task: "build"
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
     cmds:
-      - task: "dev-utils:cmake:install"
+      - task: "utils:cmake:install"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           INSTALL_PREFIX: "{{.ABSOLUTE_INSTALL_PREFIX}}"
-          EXTRA_ARGS: ["{{if not (eq .TARGET \"all\")}}--component {{.TARGET}}{{end}}"]

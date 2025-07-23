@@ -63,20 +63,25 @@ task deps:all
 The library can be built directly using [CMake](#using-cmake) or indirectly using
 [Task](#using-task).
 
-### Using Task
+### Using Task {build-task}
 
 To build all libraries:
 ```shell
-task build:all-release
+task ystdlib:build-release
 ```
 
-To build a single library, run:
+To build a subset of libraries, set the parameter `ystdlib_LIBRARIES` to a semicolon-separated (`;`)
+list of library names. The library names match their [directory name in src/](./src/ystdlib). For
+example:
 
 ```shell
-task build:<lib_name>-<build_type>
-e.g.:
-task build:error_handling-release
+task ystdlib:build-release ystdlib_LIBRARIES="containers:io_interface"
 ```
+
+> [!NOTE]
+> Internal dependencies of the libraries you choose will be automatically built, even if you don't
+> explicitly specify them. In the example, specifying `io_interface` automatically adds
+> `wrapped_facade_headers` to the build.
 
 ### Using CMake
 
@@ -103,23 +108,24 @@ cmake --build ./build
 
 ## Installing
 
-### Task
+### Using Task
 
 To build and install all libraries, run:
 
 ```shell
-task build:install-all-release INSTALL_PREFIX="/install/prefix/path"
+task ystdlib:install-release INSTALL_PREFIX="$HOME/.local"
 ```
 
-To build and install a single library, run:
+To build and install a subset of libraries, set the variable `ystdlib_LIBRARIES` the same as in the
+section, [Building: Using Task](build-task). For example:
 
 ```shell
-task build:install-<library>-<build type> INSTALL_PREFIX="<prefix path>"
-e.g.:
-task build:install-error_handling-release INSTALL_PREFIX="/install/prefix/path"
+task ystdlib:install-release \
+    INSTALL_PREFIX="$HOME/.local" \
+    ystdlib_LIBRARIES="containers:io_interface"
 ```
 
-### CMake
+### Using CMake
 
 After [building](#building), to install all built libraries run:
 
@@ -132,15 +138,14 @@ cmake --install "./build" --prefix "$HOME/.local"
 To build and run all unit tests:
 
 ```shell
-task test:all-debug
+task test:debug
 ```
 
-To build and run unit tests for a specific library:
+To build and run unit tests for a subset of libraries, set the variable `ystdlib_LIBRARIES` the same
+as in the section, [Building: Using Task](build-task). For example:
 
 ```shell
-task test:<lib_name>-<build type>
-e.g.:
-task test:error_handling-release
+task test:debug ystdlib_LIBRARIES="containers:io_interface"
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled
