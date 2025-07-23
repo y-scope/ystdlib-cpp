@@ -55,7 +55,7 @@ If you want to open the project in an IDE, run the following command to install 
 dependencies from source:
 
 ```shell
-task deps:all
+task deps:install-all
 ```
 
 ## Building
@@ -138,14 +138,14 @@ cmake --install "./build" --prefix "$HOME/.local"
 To build and run all unit tests:
 
 ```shell
-task test:debug
+task test:run-debug
 ```
 
 To build and run unit tests for a subset of libraries, set the variable `ystdlib_LIBRARIES` the same
 as in the section, [Building: Using Task](build-task). For example:
 
 ```shell
-task test:debug ystdlib_LIBRARIES="containers:io_interface"
+task test:run-debug ystdlib_LIBRARIES="containers:io_interface"
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled

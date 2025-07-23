@@ -1,29 +1,35 @@
 version: "3"
 
 includes:
-  utils:
-    internal: true
-    taskfile: "utils.yaml"
   ystdlib:
     internal: true
     taskfile: "ystdlib.yaml"
 
 tasks:
-  "*-*":
+  run-debug:
+    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
     desc: >-
-      <target>-<build type>: Runs unit tests for the specified test target and build type.
-    vars:
-      BUILD_TYPE: "{{index .MATCH 1}}"
-      TARGET: "{{index .MATCH 0}}"
-      TEST_TARGET: "unit-test-{{.TARGET}}"
-    deps:
-      - task: "utils:validate-all-args"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TARGET}}"
+      debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for debug libraries. If
+      ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
+      dependencies.
     cmds:
-      - task: "ystdlib:build"
+      - task: "run-unit-test"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          TARGET: "{{.TEST_TARGET}}"
-      - "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/testbin/{{.TEST_TARGET}}"
+          BUILD_TYPE: "debug"
+
+  run-release:
+    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    desc: >-
+      release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for release libraries. If
+      ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
+      dependencies.
+    cmds:
+      - task: "run-unit-test"
+        vars:
+          BUILD_TYPE: "release"
+
+  run-unit-test:
+    internal: true
+    deps:
+      - "ystdlib:build-{{.BUILD_TYPE}}"
+    cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/tests/unit-test"
