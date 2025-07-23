@@ -32,4 +32,4 @@ tasks:
     internal: true
     deps:
       - "ystdlib:build-{{.BUILD_TYPE}}"
-    cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/tests/unit-test"
+    cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/testbin/unit-test-all"

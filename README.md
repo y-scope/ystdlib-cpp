@@ -75,7 +75,7 @@ list of library names. The library names match their [directory name in src/](./
 example:
 
 ```shell
-task ystdlib:build-release ystdlib_LIBRARIES="containers:io_interface"
+task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
 ```
 
 > [!NOTE]
@@ -122,7 +122,7 @@ section, [Building: Using Task](build-task). For example:
 ```shell
 task ystdlib:install-release \
     INSTALL_PREFIX="$HOME/.local" \
-    ystdlib_LIBRARIES="containers:io_interface"
+    ystdlib_LIBRARIES="containers;io_interface"
 ```
 
 ### Using CMake
@@ -145,7 +145,7 @@ To build and run unit tests for a subset of libraries, set the variable `ystdlib
 as in the section, [Building: Using Task](build-task). For example:
 
 ```shell
-task test:run-debug ystdlib_LIBRARIES="containers:io_interface"
+task test:run-debug ystdlib_LIBRARIES="containers;io_interface"
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled
