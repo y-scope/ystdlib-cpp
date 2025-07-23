@@ -1,45 +1,37 @@
 version: "3"
 
 includes:
-  deps:
-    internal: true
-    taskfile: "deps.yaml"
-  dev-utils:
-    internal: true
-    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
   utils:
     internal: true
-    taskfile: "utils.yaml"
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
   ystdlib:
     internal: true
     taskfile: "ystdlib.yaml"
 
 tasks:
-  build-*:
-    desc: "build-<build type>: Builds the examples with build type."
-    vars:
-      BUILD_TYPE: "{{index .MATCH 0}}"
-    deps:
-      - task: "utils:validate-build-type"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
+  build-debug:
     cmds:
       - task: "build"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
+          BUILD_TYPE: "debug"
 
-  clean-*:
-    desc: "clean-<build type>: Clean the examples of build type."
-    vars:
-      BUILD_TYPE: "{{index .MATCH 0}}"
-    deps:
-      - task: "utils:validate-build-type"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
+  build-release:
     cmds:
-      - task: "dev-utils:cmake:clean"
+      - task: "build"
         vars:
-          BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          BUILD_TYPE: "release"
+
+  clean-debug:
+    cmds:
+      - task: "clean"
+        vars:
+          BUILD_TYPE: "debug"
+
+  clean-release:
+    cmds:
+      - task: "clean"
+        vars:
+          BUILD_TYPE: "release"
 
   build:
     internal: true
@@ -50,7 +42,16 @@ tasks:
         vars:
           BUILD_TYPE: "{{.BUILD_TYPE}}"
     cmds:
-      - task: "dev-utils:cmake:build"
+      - task: "utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
+
+  clean:
+    internal: true
+    requires:
+      vars: ["BUILD_TYPE"]
+    cmds:
+      - task: "utils:cmake:clean"
         vars:
           BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
 
@@ -59,18 +60,17 @@ tasks:
     requires:
       vars: ["BUILD_TYPE"]
     vars:
-      INSTALL_PREFIX: "{{.G_EXAMPLES_BUILD_DIR}}/deps/ystdlib/{{.BUILD_TYPE}}"
+      YSTDLIB_INSTALL_PREFIX: >-
+        {{.G_EXAMPLES_BUILD_DIR}}/deps/{{.G_CMAKE_PACKAGE_NAME}}/{{.BUILD_TYPE}}
     deps:
-      - task: "ystdlib:install"
+      - task: "ystdlib:install-{{.BUILD_TYPE}}"
         vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
-          TARGET: "all"
+          INSTALL_PREFIX: "{{.LOG_SURGEON_INSTALL_PREFIX}}"
     cmds:
-      - task: "dev-utils:cmake:generate"
+      - task: "utils:cmake:generate"
         vars:
           BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/{{.BUILD_TYPE}}"
           EXTRA_ARGS:
             - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
-            - "-Dystdlib_ROOT={{.INSTALL_PREFIX}}"
+            - "-D{{.G_CMAKE_PACKAGE_NAME}}_ROOT={{.YSTDLIB_INSTALL_PREFIX}}"
           SOURCE_DIR: "{{.ROOT_DIR}}/examples"

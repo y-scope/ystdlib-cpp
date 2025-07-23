@@ -17,10 +17,10 @@ See the [ystdlib README](../README.md).
 
 ```shell
 # debug build
-task build:examples-debug
+task examples:build-debug
 
 # release build
-task build:examples-release
+task examples:build-release
 ```
 
 ### CMake
