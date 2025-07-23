@@ -101,9 +101,9 @@ tasks:
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
           EXTRA_ARGS:
-            - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
-            - |-
-              {{- if .LIBRARIES}}
+            - "-DCMAKE_BUILD_TYPE=\"{{.BUILD_TYPE}}\""
+            - >-
+              {{- if .LIBRARIES -}}
                 -D{{.G_CMAKE_PACKAGE_NAME}}_LIBRARIES="{{.LIBRARIES}}"
               {{- end}}
           SOURCE_DIR: "{{.ROOT_DIR}}"
