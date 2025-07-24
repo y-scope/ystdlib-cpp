@@ -1,15 +1,6 @@
 version: "3"
 
-includes:
-  utils:
-    internal: true
-    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
-
 tasks:
-  default:
-    deps:
-      - "venv"
-
   venv:
     internal: true
     vars:
