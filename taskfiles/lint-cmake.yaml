@@ -6,7 +6,7 @@ includes:
     taskfile: "deps.yaml"
 
 tasks:
-  cmake-check:
+  check-cmake:
     desc: "Runs the CMake linters."
     sources: &cmake_format_src_files
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
@@ -30,7 +30,7 @@ tasks:
         vars:
           FLAGS: "--check"
 
-  cmake-fix:
+  fix-cmake:
     desc: "Runs the CMake linters and fixes all violations."
     sources: *cmake_format_src_files
     deps:

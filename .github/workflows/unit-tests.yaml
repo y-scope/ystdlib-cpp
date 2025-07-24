@@ -60,6 +60,6 @@ jobs:
           }}
         # Currently unit tests rely on cassert and fail to compile in release mode.
         run: |-
-          task test:test-all-debug
+          task test:run-debug
           task examples:build-${{matrix.build_type}}
           ./build/examples/${{matrix.build_type}}/linking-tests
