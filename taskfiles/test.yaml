@@ -33,5 +33,7 @@ tasks:
     requires:
       vars: ["BUILD_TYPE"]
     deps:
-      - "ystdlib:build-{{.BUILD_TYPE}}"
+      - task: "ystdlib:build-{{.BUILD_TYPE}}"
+        vars:
+          ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
     cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/testbin/unit-test-all"
