@@ -75,7 +75,7 @@ tasks:
         vars:
           FLAGS:
             - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
-            - "-p '{{.G_COMPILE_COMMANDS_DB}}'"
+            - "-p '{{.G_YSTDLIB_BUILD_DIR}}/debug/compile_commands.json'"
           OUTPUT_DIR: "{{.G_LINT_CLANG_TIDY_DIR}}"
           ROOT_PATHS: ["{{.G_CPP_SRC_DIR}}"]
           VENV_DIR: "{{.G_LINT_VENV_DIR}}"
