@@ -11,7 +11,7 @@ be installed and linked correctly.
 
 #### Requirements
 
-See the [ystdlib Requirements section](../README.md#Requirements).
+See the [ystdlib Requirements section](../README.md#requirements).
 
 #### Commands
 
