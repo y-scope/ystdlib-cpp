@@ -7,7 +7,7 @@ includes:
 
 tasks:
   run-debug:
-    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
       debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for debug libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
@@ -18,7 +18,7 @@ tasks:
           BUILD_TYPE: "debug"
 
   run-release:
-    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
       release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for release libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal

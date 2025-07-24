@@ -10,7 +10,7 @@ includes:
 
 tasks:
   build-debug:
-    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
       build-debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build debug libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
@@ -22,7 +22,7 @@ tasks:
           LIBRARIES: "{{.ystdlib_LIBRARIES}}"
 
   build-release:
-    # The parameter name ystdlib_LIBRARIES should match the CMakeLists.txt equivalent for consistency.
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
       build-release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build release libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
