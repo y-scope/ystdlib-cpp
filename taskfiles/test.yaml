@@ -30,6 +30,8 @@ tasks:
 
   run-unit-test:
     internal: true
+    requires:
+      vars: ["BUILD_TYPE"]
     deps:
       - "ystdlib:build-{{.BUILD_TYPE}}"
     cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/testbin/unit-test-all"
