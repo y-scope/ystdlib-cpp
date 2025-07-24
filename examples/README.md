@@ -7,13 +7,13 @@ be installed and linked correctly.
 
 ## Building
 
-### Task
+### Using Task
 
 #### Requirements
 
-See the [ystdlib README](../README.md).
+See the [ystdlib Requirements section](../README.md#Requirements).
 
-#### Building
+#### Commands
 
 ```shell
 # debug build
@@ -23,7 +23,7 @@ task examples:build-debug
 task examples:build-release
 ```
 
-### CMake
+### Using CMake
 
 #### Requirements
 
@@ -31,7 +31,7 @@ task examples:build-release
 assume you've built and installed ystdlib to `./build/examples/ystdlib`. If you installed it to a
 different location, adjust the paths accordingly.
 
-#### Building
+#### Commands
 
 ```shell
 cmake -S "./examples" -B "./build/examples" -Dystdlib_ROOT="./build/examples/ystdlib"

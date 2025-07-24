@@ -65,7 +65,7 @@ tasks:
     deps:
       - task: "ystdlib:install-{{.BUILD_TYPE}}"
         vars:
-          INSTALL_PREFIX: "{{.LOG_SURGEON_INSTALL_PREFIX}}"
+          INSTALL_PREFIX: "{{.YSTDLIB_INSTALL_PREFIX}}"
     cmds:
       - task: "utils:cmake:generate"
         vars:
