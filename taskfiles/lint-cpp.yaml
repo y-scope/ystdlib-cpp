@@ -30,7 +30,7 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: "utils:cpp-lint:clang-format"
+      - task: ":utils:cpp-lint:clang-format"
         vars:
           FLAGS: ["--dry-run"]
           INCLUDE_FILENAME_PATTERNS: ["*.cpp", "*.h", "*.hpp"]
@@ -44,7 +44,7 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: "utils:cpp-lint:clang-format"
+      - task: ":utils:cpp-lint:clang-format"
         vars:
           FLAGS: ["-i"]
           INCLUDE_FILENAME_PATTERNS: ["*.cpp", "*.h", "*.hpp"]
@@ -63,7 +63,7 @@ tasks:
       - "cpp-configs"
       - "venv"
     cmds:
-      - task: "utils:cpp-lint:clang-tidy-find"
+      - task: ":utils:cpp-lint:clang-tidy-find"
         vars:
           FLAGS:
             - "--config-file '{{.ROOT_DIR}}/.clang-tidy'"
