@@ -1,5 +1,10 @@
 version: "3"
 
+includes:
+  utils:
+    internal: true
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+
 vars:
   # General variables
   G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
@@ -12,7 +17,7 @@ tasks:
     desc: "Install all dependencies required by ystdlib."
     run: "once"
     cmds:
-      - task: ":utils:cmake:install-deps-and-generate-settings"
+      - task: "utils:cmake:install-deps-and-generate-settings"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           DEP_TASK: "install-all-parallel"
@@ -28,7 +33,7 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:boost:download-and-install"
+      - task: "utils:boost:download-and-install"
         vars:
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
           FILE_SHA256: "d6c69e4459eb5d6ec208250291221e7ff4a2affde9af6e49c9303b89c687461f"
@@ -41,7 +46,7 @@ tasks:
     internal: true
     run: "once"
     cmds:
-      - task: ":utils:cmake:install-remote-tar"
+      - task: "utils:cmake:install-remote-tar"
         vars:
           CMAKE_PACKAGE_NAME: "Catch2"
           CMAKE_SETTINGS_DIR: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}"
