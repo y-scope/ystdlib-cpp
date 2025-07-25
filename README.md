@@ -63,7 +63,7 @@ task deps:install-all
 The library can be built directly using [CMake](#using-cmake) or indirectly using
 [Task](#using-task).
 
-### Using Task {#build-task}
+### <a id="building-using-task" />Using Task
 
 To build all libraries:
 ```shell
@@ -117,7 +117,7 @@ task ystdlib:install-release INSTALL_PREFIX="$HOME/.local"
 ```
 
 To build and install a subset of libraries, set the variable `ystdlib_LIBRARIES` the same as in the
-section, [Building: Using Task](build-task). For example:
+section, [Building: Using Task](#building-using-task). For example:
 
 ```shell
 task ystdlib:install-release \
