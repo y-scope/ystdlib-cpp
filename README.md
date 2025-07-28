@@ -142,7 +142,7 @@ task test:run-debug
 ```
 
 To build and run unit tests for a subset of libraries, set the variable `ystdlib_LIBRARIES` the same
-as in the section, [Building: Using Task](build-task). For example:
+as in the section, [Building: Using Task](#building-using-task). For example:
 
 ```shell
 task test:run-debug ystdlib_LIBRARIES="containers;io_interface"
