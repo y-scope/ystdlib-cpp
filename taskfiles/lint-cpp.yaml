@@ -67,6 +67,7 @@ tasks:
     deps:
       - task: "ystdlib:generate"
         vars:
+          BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
           BUILD_TYPE: "debug"
       - "cpp-configs"
       - "venv"
