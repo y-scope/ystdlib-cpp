@@ -15,11 +15,16 @@ tasks:
       build-debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build debug libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
+    vars:
+      BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
     cmds:
-      - task: "build"
+      - task: "generate"
         vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
           BUILD_TYPE: "debug"
-          LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+      - task: "utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
 
   build-release:
     # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
@@ -27,104 +32,72 @@ tasks:
       build-release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Configure and build release libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
+    vars:
+      BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
     cmds:
-      - task: "build"
+      - task: "generate"
         vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
           BUILD_TYPE: "release"
           LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+      - task: "utils:cmake:build"
+        vars:
+          BUILD_DIR: "{{.BUILD_DIR}}"
 
   clean-debug:
     cmds:
-      - task: "clean"
+      - task: "utils:cmake:clean"
         vars:
-          BUILD_TYPE: "debug"
+          BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
 
   clean-release:
     cmds:
-      - task: "clean"
+      - task: "utils:cmake:clean"
         vars:
-          BUILD_TYPE: "release"
+          BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
 
   install-debug:
     desc: >-
       install-debug INSTALL_PREFIX="<prefix path>": Install the debug build into <prefix path>.
     requires:
-      vars: ["INSTALL_PREFIX"]
+      vars:
+        - "INSTALL_PREFIX"
     cmds:
-      - task: "install"
+      - task: "build-debug"
+      - task: "utils:cmake:install"
         vars:
-          BUILD_TYPE: "debug"
+          BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
 
   install-release:
     desc: >-
       install-release INSTALL_PREFIX="<prefix path>": Install the release build into <prefix path>.
     requires:
-      vars: ["INSTALL_PREFIX"]
+      vars:
+        - "INSTALL_PREFIX"
     cmds:
-      - task: "install"
+      - task: "build-release"
+      - task: "utils:cmake:install"
         vars:
-          BUILD_TYPE: "release"
+          BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
-
-  build:
-    internal: true
-    requires:
-      vars: ["BUILD_TYPE"]
-    deps:
-      - task: "generate"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-          LIBRARIES: "{{.LIBRARIES}}"
-    cmds:
-      - task: "utils:cmake:build"
-        vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
-
-  clean:
-    internal: true
-    requires:
-      vars: ["BUILD_TYPE"]
-    cmds:
-      - task: "utils:cmake:clean"
-        vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
 
   generate:
     internal: true
     requires:
-      vars: ["BUILD_TYPE"]
+      vars:
+        - "BUILD_DIR"
+        - "BUILD_TYPE"
     deps:
       - "deps:install-all"
     cmds:
       - task: "utils:cmake:generate"
         vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
+          BUILD_DIR: "{{.BUILD_DIR}}"
           EXTRA_ARGS:
-            - "-DCMAKE_BUILD_TYPE=\"{{.BUILD_TYPE}}\""
+            - "-DCMAKE_BUILD_TYPE={{.BUILD_TYPE}}"
             - >-
               {{- if .LIBRARIES -}}
                 -D{{.G_CMAKE_PACKAGE_NAME}}_LIBRARIES="{{.LIBRARIES}}"
               {{- end}}
           SOURCE_DIR: "{{.ROOT_DIR}}"
-
-  install:
-    internal: true
-    vars:
-      ABSOLUTE_INSTALL_PREFIX: >-
-        {{- if osIsAbs .INSTALL_PREFIX -}}
-          {{.INSTALL_PREFIX}}
-        {{- else -}}
-          {{.USER_WORKING_DIR}}/{{.INSTALL_PREFIX}}
-        {{- end}}
-    requires:
-      vars: ["BUILD_TYPE", "INSTALL_PREFIX"]
-    deps:
-      - task: "build"
-        vars:
-          BUILD_TYPE: "{{.BUILD_TYPE}}"
-    cmds:
-      - task: "utils:cmake:install"
-        vars:
-          BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}"
-          INSTALL_PREFIX: "{{.ABSOLUTE_INSTALL_PREFIX}}"
