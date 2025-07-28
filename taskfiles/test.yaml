@@ -5,6 +5,9 @@ includes:
     internal: true
     taskfile: "ystdlib.yaml"
 
+vars:
+  G_UNIT_TEST_ALL: "testbin/unit-test-all"
+
 tasks:
   run-debug:
     # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
@@ -13,9 +16,10 @@ tasks:
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
     cmds:
-      - task: "run-unit-test"
+      - task: "ystdlib:build-debug"
         vars:
-          BUILD_TYPE: "debug"
+          ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+      - "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"
 
   run-release:
     # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
@@ -24,16 +28,7 @@ tasks:
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
     cmds:
-      - task: "run-unit-test"
-        vars:
-          BUILD_TYPE: "release"
-
-  run-unit-test:
-    internal: true
-    requires:
-      vars: ["BUILD_TYPE"]
-    deps:
-      - task: "ystdlib:build-{{.BUILD_TYPE}}"
+      - task: "ystdlib:build-release"
         vars:
           ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
-    cmd: "{{.G_YSTDLIB_BUILD_DIR}}/{{.BUILD_TYPE}}/testbin/unit-test-all"
+      - "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"

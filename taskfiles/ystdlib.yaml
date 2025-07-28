@@ -22,6 +22,7 @@ tasks:
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
           BUILD_TYPE: "debug"
+          LIBRARIES: "{{.ystdlib_LIBRARIES}}"
       - task: "utils:cmake:build"
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
