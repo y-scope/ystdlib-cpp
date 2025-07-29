@@ -17,12 +17,13 @@ tasks:
       dependencies.
     vars:
       BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
-    cmds:
+    deps:
       - task: "generate"
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
           BUILD_TYPE: "debug"
           LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+    cmds:
       - task: "utils:cmake:build"
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
@@ -35,12 +36,13 @@ tasks:
       dependencies.
     vars:
       BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
-    cmds:
+    deps:
       - task: "generate"
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
           BUILD_TYPE: "release"
           LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+    cmds:
       - task: "utils:cmake:build"
         vars:
           BUILD_DIR: "{{.BUILD_DIR}}"
@@ -63,8 +65,9 @@ tasks:
     requires:
       vars:
         - "INSTALL_PREFIX"
+    deps:
+      - "build-debug"
     cmds:
-      - task: "build-debug"
       - task: "utils:cmake:install"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}"
@@ -76,8 +79,9 @@ tasks:
     requires:
       vars:
         - "INSTALL_PREFIX"
+    deps:
+      - "build-release"
     cmds:
-      - task: "build-release"
       - task: "utils:cmake:install"
         vars:
           BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
