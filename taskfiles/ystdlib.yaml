@@ -60,15 +60,18 @@ tasks:
           BUILD_DIR: "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}"
 
   install-debug:
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
-      install-debug INSTALL_PREFIX="<prefix path>": Install the debug build into <prefix path>.
+      install-debug INSTALL_PREFIX="<prefix path>" [ystdlib_LIBRARIES="<lib0;...;libn>"]: Install
+      the debug build into <prefix path>. If ystdlib_LIBRARIES is defined, only configure and build
+      the listed libraries and their internal dependencies before installing.
     requires:
       vars:
         - "INSTALL_PREFIX"
     deps:
       - task: "build-debug"
         vars:
-            ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+          ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
     cmds:
       - task: "utils:cmake:install"
         vars:
@@ -76,13 +79,18 @@ tasks:
           INSTALL_PREFIX: "{{.INSTALL_PREFIX}}"
 
   install-release:
+    # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
     desc: >-
-      install-release INSTALL_PREFIX="<prefix path>": Install the release build into <prefix path>.
+      install-release INSTALL_PREFIX="<prefix path>" [ystdlib_LIBRARIES="<lib0;...;libn>"]: Install
+      the release build into <prefix path>. If ystdlib_LIBRARIES is defined, only configure and build
+      the listed libraries and their internal dependencies before installing.
     requires:
       vars:
         - "INSTALL_PREFIX"
     deps:
-      - "build-release"
+      - task: "build-release"
+        vars:
+          ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
     cmds:
       - task: "utils:cmake:install"
         vars:
