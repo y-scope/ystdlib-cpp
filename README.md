@@ -82,7 +82,7 @@ task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
 > explicitly specify them. In the example, specifying `io_interface` automatically adds
 > `wrapped_facade_headers` to the build.
 
-### Using CMake
+### <a id="building-using-cmake" />Using CMake
 
 To build all libraries, run:
 
@@ -126,7 +126,7 @@ task ystdlib:install-release \
 
 ### Using CMake
 
-After [building](#building), to install all built libraries run:
+After [building](#building-using-cmake), to install all built libraries run:
 
 ```shell
 cmake --install "./build" --prefix "$HOME/.local"
