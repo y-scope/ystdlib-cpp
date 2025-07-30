@@ -66,11 +66,12 @@ The library can be built via [Task](#building-using-task) or directly with
 ### <a id="building-using-task" />Using Task
 
 To build all libraries:
+
 ```shell
 task ystdlib:build-release
 ```
 
-To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_LIBRARIES). For
+To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For
 example:
 
 ```shell
@@ -86,7 +87,7 @@ cmake -S . -B ./build
 cmake --build ./build
 ```
 
-To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_LIBRARIES). For
+To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For
 example:
 
 ```shell
@@ -105,7 +106,7 @@ task ystdlib:install-release INSTALL_PREFIX="$HOME/.local"
 ```
 
 To build and install a subset of libraries, set the
-[`ystdlib_LIBRARIES` parameter](#ystdlib_LIBRARIES). For example:
+[`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For example:
 
 ```shell
 task ystdlib:install-release \
@@ -130,7 +131,7 @@ task test:run-debug
 ```
 
 To build and run unit tests for a subset of libraries, set the
-[`ystdlib_LIBRARIES` parameter](#ystdlib_LIBRARIES). For example:
+[`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For example:
 
 ```shell
 task test:run-debug ystdlib_LIBRARIES="containers;io_interface"
@@ -181,7 +182,7 @@ Set by adding it after the task name. For example:
 task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
 ```
 
-At the moment, only build and install tasks in the `ystdlib:` namespace are supported.
+Currently, only build and install tasks in the `ystdlib:` namespace are supported.
 
 #### Using CMake
 
