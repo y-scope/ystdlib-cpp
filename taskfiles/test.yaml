@@ -15,10 +15,11 @@ tasks:
       debug [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for debug libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
-    cmds:
+    deps:
       - task: "ystdlib:build-debug"
         vars:
           ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+    cmds:
       - "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"
 
   run-release:
@@ -27,8 +28,9 @@ tasks:
       release [ystdlib_LIBRARIES="<lib0;...;libn>"]: Run unit tests for release libraries. If
       ystdlib_LIBRARIES is defined, only configure and build the listed libraries and their internal
       dependencies.
-    cmds:
+    deps:
       - task: "ystdlib:build-release"
         vars:
           ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
+    cmds:
       - "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"
