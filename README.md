@@ -166,7 +166,7 @@ Look for all tasks under the `lint` namespace (identified by the `lint:` prefix)
 
 The parameter/variable `ystdlib_LIBRARIES` can be used to target a subset of libraries, by setting
 it to a semicolon-separated (`;`) list of library names. The library names match their
-[directory name in src/](./src/ystdlib).
+[directory name in `src/`](./src/ystdlib).
 
 > [!NOTE]
 > Internal dependencies of the libraries you choose will be automatically built, even if you don't
@@ -175,7 +175,7 @@ it to a semicolon-separated (`;`) list of library names. The library names match
 
 #### Using Task
 
-`ystdlib_LIBRARIES` can be set in Task by adding it after the task name. For example:
+Set by adding it after the task name. For example:
 
 ```shell
 task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
@@ -185,7 +185,7 @@ At the moment, only build and install tasks in the `ystdlib:` namespace are supp
 
 #### Using CMake
 
-`ystdlib_LIBRARIES` can be set in CMake using `-D` in the generation step. For example:
+Set using the `-D` flag in the generation step. For example:
 
 ```shell
 cmake -S . -B ./build -Dystdlib_LIBRARIES="containers;io_interface"
