@@ -97,7 +97,10 @@ cmake --build ./build
 
 ## Installing
 
-### Using Task
+The library can be installed via [Task](#installing-using-task) or directly with
+[CMake](#installing-using-cmake).
+
+### <a id="installing-using-task" />Using Task
 
 To build and install all libraries, run:
 
@@ -114,7 +117,7 @@ task ystdlib:install-release \
     ystdlib_LIBRARIES="containers;io_interface"
 ```
 
-### Using CMake
+### <a id="installing-using-cmake" />Using CMake
 
 After [building](#building-using-cmake), to install all built libraries run:
 
@@ -161,7 +164,7 @@ task -a
 ```
 Look for all tasks under the `lint` namespace (identified by the `lint:` prefix).
 
-## Parameters
+## Build and install parameters
 
 ### `ystdlib_LIBRARIES`
 
