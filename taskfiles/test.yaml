@@ -20,7 +20,7 @@ tasks:
         vars:
           ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
     cmds:
-      - "{{.G_YSTDLIB_DEBUG_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"
+      - "'{{.G_YSTDLIB_DEBUG_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}'"
 
   run-release:
     # The name ystdlib_LIBRARIES should match its CMakeLists.txt equivalent for consistency.
@@ -33,4 +33,4 @@ tasks:
         vars:
           ystdlib_LIBRARIES: "{{.ystdlib_LIBRARIES}}"
     cmds:
-      - "{{.G_YSTDLIB_RELEASE_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}"
+      - "'{{.G_YSTDLIB_RELEASE_BUILD_DIR}}/{{.G_UNIT_TEST_ALL}}'"
