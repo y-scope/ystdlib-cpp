@@ -60,8 +60,7 @@ task deps:install-all
 
 ## Building
 
-The library can be built directly using [CMake](#using-cmake) or indirectly using
-[Task](#using-task).
+The library can be built via [Task](#using-task) or directly with [CMake](#using-cmake).
 
 ### <a id="building-using-task" />Using Task
 
