@@ -166,6 +166,8 @@ Look for all tasks under the `lint` namespace (identified by the `lint:` prefix)
 
 ## Build and install parameters
 
+The following parameters are common between multiple tasks and CMake.
+
 ### `ystdlib_LIBRARIES`
 
 The parameter/variable `ystdlib_LIBRARIES` can be used to target a subset of libraries, by setting
@@ -185,7 +187,8 @@ Set by adding it after the task name. For example:
 task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
 ```
 
-Currently, only build and install tasks in the `ystdlib:` namespace are supported.
+Not all tasks support `ystdlib_LIBRARIES`. You can check if a task supports it by reading its
+description (run `task -a` to view all tasks and descriptions).
 
 #### Using CMake
 
