@@ -119,7 +119,7 @@ task ystdlib:install-release \
 
 ### <a id="installing-using-cmake" />Using CMake
 
-After [building](#building-using-cmake), to install all built libraries run:
+After [building](#building-using-cmake), to install all built libraries, run:
 
 ```shell
 cmake --install "./build" --prefix "$HOME/.local"
