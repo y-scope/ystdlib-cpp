@@ -4,26 +4,25 @@ set: ["u", "pipefail"]
 shopt: ["globstar"]
 
 includes:
-  build: "./taskfiles/build.yaml"
   deps: "./taskfiles/deps.yaml"
+  examples: "./taskfiles/examples.yaml"
   lint: "./taskfiles/lint.yaml"
-  utils: "tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
+  test: "./taskfiles/test.yaml"
+  ystdlib: "./taskfiles/ystdlib.yaml"
 
 vars:
+  # General variables
+  # This must match the package name in CMakeLists.txt.
+  G_CMAKE_PACKAGE_NAME: "ystdlib"
+
+  # Build directories
   G_BUILD_DIR: "{{.ROOT_DIR}}/build"
-  G_CPP_SRC_DIR: "{{.ROOT_DIR}}/src"
-  G_DEPS_DIR: "{{.G_BUILD_DIR}}/deps"
-
-  # These should be kept in-sync with its usage in CMakeLists.txt
-  G_DEPS_CMAKE_SETTINGS_DIR: "{{.G_DEPS_DIR}}/cmake-settings"
-  G_DEPS_CMAKE_SETTINGS_FILE: "{{.G_DEPS_CMAKE_SETTINGS_DIR}}/all.cmake"
-
-  G_TEST_BIN_DIR: "{{.G_BUILD_DIR}}/testbin"
-  G_TEST_TARGET_SUFFIXES:
-    - "all"
-    - "containers"
-    - "error_handling"
-    - "wrapped_facade_headers"
+  G_EXAMPLES_BUILD_DIR: "{{.G_BUILD_DIR}}/examples"
+  G_EXAMPLES_DEBUG_BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/debug"
+  G_EXAMPLES_RELEASE_BUILD_DIR: "{{.G_EXAMPLES_BUILD_DIR}}/release"
+  G_YSTDLIB_BUILD_DIR: "{{.G_BUILD_DIR}}/{{.G_CMAKE_PACKAGE_NAME}}"
+  G_YSTDLIB_DEBUG_BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/debug"
+  G_YSTDLIB_RELEASE_BUILD_DIR: "{{.G_YSTDLIB_BUILD_DIR}}/release"
 
 tasks:
   clean:
@@ -37,13 +36,3 @@ tasks:
     run: "once"
     cmds:
       - "mkdir -p '{{.G_BUILD_DIR}}'"
-
-  test-*:
-    desc: "Runs unit tests for the specified test target."
-    vars:
-      TEST_TARGET: >-
-        {{printf "unit-test-%s" (index .MATCH 0)}}
-    deps:
-      - "build:{{.TEST_TARGET}}"
-    cmds:
-      - "{{.G_TEST_BIN_DIR}}/{{.TEST_TARGET}}"

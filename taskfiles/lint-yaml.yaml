@@ -1,10 +1,9 @@
 version: "3"
 
 tasks:
-  yaml:
+  check-yaml:
     aliases:
-      - "yaml-check"
-      - "yaml-fix"
+      - "fix-yaml"
     desc: "Runs the YAML linters. Only checks for warnings and violations."
     sources:
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"

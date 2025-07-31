@@ -43,6 +43,7 @@ Follow the steps below to develop and contribute to the project.
 * CMake 3.23 or higher
 * Python 3.10 or higher
 * [Task] 3.40.0 or higher
+* [uv] 0.7.10 or higher
 
 ## Set up
 Initialize and update submodules:
@@ -52,33 +53,32 @@ git submodule update --init --recursive
 
 If you want to open the project in an IDE, run the following command to install any necessary
 dependencies from source:
+
 ```shell
 task deps:install-all
 ```
 
 ## Building
 
-The library can be built directly using [CMake](#using-cmake) or indirectly using
-[Task](#using-task).
+The library can be built via [Task](#building-using-task) or directly with
+[CMake](#building-using-cmake).
 
-### Using Task
+### <a id="building-using-task" />Using Task
 
-To build all targets:
+To build all libraries:
+
 ```shell
-task build:all
+task ystdlib:build-release
 ```
 
-To build an executable containing all unit tests:
+To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For
+example:
+
 ```shell
-task build:unit-test-all
+task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
 ```
 
-To build an executable containing a single library's unit tests:
-```shell
-task build:unit-test-<lib_name>
-```
-
-### Using CMake
+### <a id="building-using-cmake" />Using CMake
 
 To build all libraries, run:
 
@@ -87,8 +87,7 @@ cmake -S . -B ./build
 cmake --build ./build
 ```
 
-To build a subset of libraries, set the variable `ystdlib_LIBRARIES` to a semicolon-separated (`;`)
-list of library names. The library names match their [directory name in src/](./src/ystdlib). For
+To build a subset of libraries, set the [`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For
 example:
 
 ```shell
@@ -96,28 +95,49 @@ cmake -S . -B ./build -Dystdlib_LIBRARIES="containers;io_interface"
 cmake --build ./build
 ```
 
-> [!NOTE]
-> Internal dependencies of the libraries you choose will be automatically built, even if you don't
-> explicitly specify them. In the example, specifying `io_interface` automatically adds
-> `wrapped_facade_headers` to the build.
-
 ## Installing
 
-After [building](#building), install with:
+The library can be installed via [Task](#installing-using-task) or directly with
+[CMake](#installing-using-cmake).
+
+### <a id="installing-using-task" />Using Task
+
+To build and install all libraries, run:
+
+```shell
+task ystdlib:install-release INSTALL_PREFIX="$HOME/.local"
+```
+
+To build and install a subset of libraries, set the
+[`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For example:
+
+```shell
+task ystdlib:install-release \
+    INSTALL_PREFIX="$HOME/.local" \
+    ystdlib_LIBRARIES="containers;io_interface"
+```
+
+### <a id="installing-using-cmake" />Using CMake
+
+After [building](#building-using-cmake), to install all built libraries, run:
 
 ```shell
 cmake --install "./build" --prefix "$HOME/.local"
 ```
 
 ## Testing
+
 To build and run all unit tests:
+
 ```shell
-task test-all
+task test:run-debug
 ```
 
-To build and run unit tests for a specific library:
+To build and run unit tests for a subset of libraries, set the
+[`ystdlib_LIBRARIES` parameter](#ystdlib_libraries). For example:
+
 ```shell
-task test-<lib_name>
+task test:run-debug ystdlib_LIBRARIES="containers;io_interface"
 ```
 
 When generating a testing target, the CMake variable `BUILD_TESTING` is followed (unless overruled
@@ -144,4 +164,39 @@ task -a
 ```
 Look for all tasks under the `lint` namespace (identified by the `lint:` prefix).
 
+## Build and install parameters
+
+The following parameters are common between multiple tasks and CMake.
+
+### `ystdlib_LIBRARIES`
+
+The parameter/variable `ystdlib_LIBRARIES` can be used to target a subset of libraries, by setting
+it to a semicolon-separated (`;`) list of library names. The library names match their
+[directory name in `src/`](./src/ystdlib).
+
+> [!NOTE]
+> Internal dependencies of the libraries you choose will be automatically built, even if you don't
+> explicitly specify them. In the following examples, specifying `io_interface` automatically adds
+> `wrapped_facade_headers` to the build.
+
+#### Using Task
+
+Set by adding it after the task name. For example:
+
+```shell
+task ystdlib:build-release ystdlib_LIBRARIES="containers;io_interface"
+```
+
+Not all tasks support `ystdlib_LIBRARIES`. You can check if a task supports it by reading its
+description (run `task -a` to view all tasks and descriptions).
+
+#### Using CMake
+
+Set using the `-D` flag in the generation step. For example:
+
+```shell
+cmake -S . -B ./build -Dystdlib_LIBRARIES="containers;io_interface"
+```
+
 [Task]: https://taskfile.dev
+[uv]: https://docs.astral.sh/uv

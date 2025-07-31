@@ -10,13 +10,14 @@ includes:
   venv:
     flatten: true
     taskfile: "./lint-venv.yaml"
+  utils:
+    internal: true
+    taskfile: "../tools/yscope-dev-utils/exports/taskfiles/utils/utils.yaml"
   yaml:
     flatten: true
     taskfile: "./lint-yaml.yaml"
 
 vars:
-  G_LINT_CPP_DIRS:
-    - "{{.G_CPP_SRC_DIR}}"
   G_LINT_VENV_DIR: "{{.G_BUILD_DIR}}/lint-venv"
   G_LINT_VENV_CHECKSUM_FILE: "{{.G_BUILD_DIR}}/lint#venv.md5"
 
@@ -24,13 +25,13 @@ tasks:
   check:
     desc: "Runs the full suite of linters to identify warnings and violations."
     cmds:
-      - task: "cmake-check"
-      - task: "cpp-check"
-      - task: "yaml-check"
+      - task: "check-cmake"
+      - task: "check-cpp"
+      - task: "check-yaml"
 
   fix:
     desc: "Runs the full suite of linters and fixes some violations."
     cmds:
-      - task: "cmake-fix"
-      - task: "cpp-fix"
-      - task: "yaml-fix"
+      - task: "fix-cmake"
+      - task: "fix-cpp"
+      - task: "fix-yaml"

@@ -1,7 +1,12 @@
 version: "3"
 
+includes:
+  deps:
+    internal: true
+    taskfile: "deps.yaml"
+
 tasks:
-  cmake-check:
+  check-cmake:
     desc: "Runs the CMake linters."
     sources: &cmake_format_src_files
       - "{{.G_LINT_VENV_CHECKSUM_FILE}}"
@@ -25,7 +30,7 @@ tasks:
         vars:
           FLAGS: "--check"
 
-  cmake-fix:
+  fix-cmake:
     desc: "Runs the CMake linters and fixes all violations."
     sources: *cmake_format_src_files
     deps:
@@ -42,7 +47,7 @@ tasks:
         - "FLAGS"
     dir: "{{.ROOT_DIR}}"
     deps:
-      - ":deps:install-all"  # Allow Gersemi to parse 3rdparty CMake modules for linting
+      - "deps:install-all"  # Allow Gersemi to parse 3rdparty CMake modules for linting
       - "venv"
     cmds:
       - |-
