@@ -6,5 +6,5 @@ build
 Testing
 
 # Lint config files
-.clang-format
-.clang-tidy
+/.clang-format
+/.clang-tidy
