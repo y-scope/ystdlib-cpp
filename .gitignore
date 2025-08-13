@@ -4,3 +4,7 @@ build
 
 # CTest directories and files
 Testing
+
+# Lint config files
+.clang-format
+.clang-tidy
