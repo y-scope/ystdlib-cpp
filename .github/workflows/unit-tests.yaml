@@ -43,11 +43,12 @@ jobs:
         run: "npm install -g @go-task/cli"
 
       - if: "'macos-14' == matrix.os"
-        name: "Install macOS 14 deps: coreutils (for md5sum)"
+        name: "Install coreutils (for md5sum)"
         run: |-
           brew install coreutils
 
       - name: "Run unit tests and examples"
+
         # Currently unit tests rely on cassert and fail to compile in release mode.
         run: |-
           task test:run-debug

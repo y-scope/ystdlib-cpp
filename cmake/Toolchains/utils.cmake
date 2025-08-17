@@ -2,10 +2,7 @@
 # with the C++20 features required by the project.
 
 # Checks if the compiler ID and version meet the minimum requirements to support C++20 features
-# required by the project:
-# - AppleClang: version 15+
-# - Clang: version 15+
-# - GNU: version 11+
+# required by the project.
 function(validate_compiler_versions)
     if("AppleClang" STREQUAL "${CMAKE_CXX_COMPILER_ID}")
         set(CXX_COMPILER_MIN_VERSION "15")
