@@ -1,4 +1,4 @@
-include_guard(GLOBAL)
+include_guard()
 
 find_dependency(Boost @BOOST_FIND_PACKAGE_ARGS@)
 
