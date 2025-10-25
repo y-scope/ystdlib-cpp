@@ -1,64 +1,61 @@
 #include "ReaderInterface.hpp"
 
 #include <cstddef>
+#include <span>
 #include <string>
+
+#include <ystdlib/error_handling/Result.hpp>
 
 #include "ErrorCode.hpp"
 
 namespace ystdlib::io_interface {
-auto
-ReaderInterface::read_to_delimiter(char delim, bool keep_delimiter, bool append, std::string& str)
-        -> ErrorCode {
-    if (false == append) {
-        str.clear();
+auto ReaderInterface::read(size_t num_bytes) -> Result<std::string> {
+    std::string str(num_bytes, 0);
+    auto const num_bytes_read{YSTDLIB_ERROR_HANDLING_TRYX(read({str.data(), num_bytes}))};
+    str.resize(num_bytes_read);
+    return str;
+}
+
+auto ReaderInterface::read_exact_length(std::span<char> buf) -> Result<void> {
+    auto const num_bytes_read{YSTDLIB_ERROR_HANDLING_TRYX(read(buf))};
+    if (0 == num_bytes_read) {
+        return ErrorCode{ErrorCodeEnum::EndOfStream};
     }
+    if (num_bytes_read < buf.size()) {
+        return ErrorCode{ErrorCodeEnum::Truncated};
+    }
+    return ystdlib::error_handling::success();
+}
 
-    auto const original_str_length{str.length()};
+auto ReaderInterface::read_exact_length(size_t num_bytes) -> Result<std::string> {
+    std::string str(num_bytes, 0);
+    YSTDLIB_ERROR_HANDLING_TRYV(read_exact_length({str.data(), num_bytes}));
+    return str;
+}
 
-    // Read character by character into str, until we find a delimiter
+auto ReaderInterface::read_to_delimiter(char delim, bool keep_delimiter) -> Result<std::string> {
     char c{0};
-    size_t num_bytes_read{0};
-    while (true) {
-        auto const error_code{read(&c, 1, num_bytes_read)};
-        if (ErrorCode_Success != error_code) {
-            if (ErrorCode_EndOfFile == error_code && str.length() > original_str_length) {
-                return ErrorCode_Success;
-            }
-            return error_code;
-        }
+    std::string str;
 
-        if (delim == c) {
-            break;
-        }
-
+    // The first read needs to succeed
+    c = YSTDLIB_ERROR_HANDLING_TRYX(read_numeric_value<char>());
+    while (delim != c) {
         str += c;
+        auto const result{read_numeric_value<char>()};
+        if (result.has_error()) {
+            auto const error{result.error()};
+            if (ErrorCode{ErrorCodeEnum::EndOfStream} == error
+                || ErrorCode{ErrorCodeEnum::EndOfFile} == error)
+            {
+                return str;
+            }
+            return error;
+        }
+        c = result.value();
     }
-
-    // Add delimiter if necessary
     if (keep_delimiter) {
         str += delim;
     }
-
-    return ErrorCode_Success;
-}
-
-auto ReaderInterface::read_exact_length(char* buf, size_t num_bytes) -> ErrorCode {
-    size_t num_bytes_read{0};
-    auto const error_code{read(buf, num_bytes, num_bytes_read)};
-    if (ErrorCode_Success != error_code) {
-        return error_code;
-    }
-    if (num_bytes_read < num_bytes) {
-        return ErrorCode_Truncated;
-    }
-
-    return ErrorCode_Success;
-}
-
-auto ReaderInterface::read_string(size_t const str_length, std::string& str) -> ErrorCode {
-    // Resize string to fit str_length
-    str.resize(str_length);
-
-    return read_exact_length(str.data(), str_length);
+    return str;
 }
 }  // namespace ystdlib::io_interface
